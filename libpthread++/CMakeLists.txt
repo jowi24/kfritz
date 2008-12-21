@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.6)
+project (libpthread++)
+set(CMAKE_CXX_FLAGS "-g -O2 -Wall" )
+set(SRCS PThread++.cpp)
+add_library(pthread++ STATIC ${SRCS})

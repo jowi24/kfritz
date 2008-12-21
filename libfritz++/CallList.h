@@ -1,0 +1,71 @@
+/*
+ * libfritz++
+ *
+ * Copyright (C) 2007-2008 Joachim Wilke <vdr@joachim-wilke.de>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+
+#ifndef CALLLIST_H_
+#define CALLLIST_H_
+
+#include <string>
+#include <vector>
+#include <PThread++.h>
+
+namespace fritz{
+
+class CallEntry {
+public:
+	std::string date;
+	std::string time;
+	std::string remoteName;
+	std::string remoteNumber;
+	std::string localName;
+	std::string localNumber;
+	std::string duration;
+	time_t      timestamp;
+	bool MatchesFilter();
+};
+
+class CallList : public pthread::PThread
+{
+private:
+	std::vector<CallEntry> callListIn;
+	std::vector<CallEntry> callListMissed;
+	std::vector<CallEntry> callListOut;
+	bool callListRead;
+	time_t lastMissedCall;
+public:
+	enum callType {
+		INCOMING = 1,
+		MISSED   = 2,
+		OUTGOING = 3
+	};
+	CallList();
+	virtual ~CallList();
+	void Action();
+	bool isValid() { return callListRead; }
+	CallEntry *RetrieveEntry(callType type, size_t id);
+	size_t GetSize(callType type);
+	size_t MissedCalls(time_t since);
+	time_t LastMissedCall() { return lastMissedCall; }
+};
+
+}
+
+#endif /*CALLLIST_H_*/
