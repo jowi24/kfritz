@@ -1,0 +1,9 @@
+[Global]
+IconName=internet-telephony
+Comment=KFritz!Box
+
+[Event/incomingCall]
+Name=Incoming Call
+Action=Sound
+Sound=KDE-Im-New-Mail.ogg
+X-Ubuntu-Gettext-Domain=desktop_kfritzbox
