@@ -78,6 +78,7 @@ void CallList::Action() {
 			msg = msg_converted;
 			delete(conv);
 			// parse answer
+			callListAll.clear();
 			callListIn.clear();
 			callListOut.clear();
 			callListMissed.clear();
@@ -109,6 +110,7 @@ void CallList::Action() {
 					durationStop--;
 
 				CallEntry ce;
+				ce.type           = (CallEntry::callType)atoi(&msg[type]);
 				ce.date           = msg.substr(dateStart,     timeStart     - dateStart     -1);
 				ce.time           = msg.substr(timeStart,     nameStart     - timeStart     -1);
 				ce.remoteName     = msg.substr(nameStart,     numberStart   - nameStart     -1);
@@ -134,14 +136,15 @@ void CallList::Action() {
 				if (ce.remoteNumber.compare("1234567") == 0 && ce.date.compare("12.03.2005") == 0)
 					continue;
 
-				switch (atoi(&msg[type])) {
-				case INCOMING:
+				callListAll.push_back(ce);
+				switch (ce.type) {
+				case CallEntry::INCOMING:
 					callListIn.push_back(ce);
 					break;
-				case OUTGOING:
+				case CallEntry::OUTGOING:
 					callListOut.push_back(ce);
 					break;
-				case MISSED:
+				case CallEntry::MISSED:
 					if (lastMissedCall < ce.timestamp)
 						lastMissedCall = ce.timestamp;
 					callListMissed.push_back(ce);
@@ -168,28 +171,32 @@ void CallList::Action() {
 	Tools::GetFritzBoxMutex()->Unlock();
 }
 
-CallEntry *CallList::RetrieveEntry(callType type, size_t id) {
+CallEntry *CallList::RetrieveEntry(CallEntry::callType type, size_t id) {
 	if (id < 0)
 		return NULL;
 	switch (type) {
-	case INCOMING:
+	case CallEntry::ALL:
+		return &callListAll[id];
+	case CallEntry::INCOMING:
 		return &callListIn[id];
-	case OUTGOING:
+	case CallEntry::OUTGOING:
 		return &callListOut[id];
-	case MISSED:
+	case CallEntry::MISSED:
 		return &callListMissed[id];
 	default:
 		return NULL;
 	}
 }
 
-size_t CallList::GetSize(callType type) {
+size_t CallList::GetSize(CallEntry::callType type) {
 	switch (type) {
-	case INCOMING:
+	case CallEntry::ALL:
+		return callListAll.size();
+	case CallEntry::INCOMING:
 		return callListIn.size();
-	case OUTGOING:
+	case CallEntry::OUTGOING:
 		return callListOut.size();
-	case MISSED:
+	case CallEntry::MISSED:
 		return callListMissed.size();
 	default:
 		return 0;

@@ -1,0 +1,3 @@
+2008-12-23: 
+- Added type "ALL" to CallList to retrieve complete list of calls at once.
+- Moved callType from CallList to CallEntry. 
