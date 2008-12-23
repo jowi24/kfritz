@@ -79,7 +79,7 @@ LocalFonbook::~LocalFonbook() {
 
 bool LocalFonbook::Initialize() {
 	setInitialized(false);
-	fonbuchList.clear();
+	fonbookList.clear();
 	char* fileName;
 	int ret = asprintf(&fileName, "%s/__FILE__sv", gConfig->getConfigDir().c_str());
 	if (ret <= 0)
@@ -100,15 +100,15 @@ bool LocalFonbook::Initialize() {
 					FonbookEntry::eType type   = (FonbookEntry::eType) atoi(type_buffer);
 					std::string number 			= number_buffer;
 					FonbookEntry fe(name, number, type);
-					fonbuchList.push_back(fe);
+					fonbookList.push_back(fe);
 				}
 				else {
 					*esyslog << __FILE__ << ": parse error at " << s << std::endl;
 				}
 			}
 			setInitialized(true);
-			*isyslog << __FILE__ << ": read " << fonbuchList.size() << " entries." << std::endl;
-			std::sort(fonbuchList.begin(), fonbuchList.end());
+			*isyslog << __FILE__ << ": read " << fonbookList.size() << " entries." << std::endl;
+			std::sort(fonbookList.begin(), fonbookList.end());
 			return true;
 		}
 	}

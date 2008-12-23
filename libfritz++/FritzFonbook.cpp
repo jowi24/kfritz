@@ -148,7 +148,7 @@ std::string &convertEntities(std::string &s) {
 }
 
 FritzFonbook::FritzFonbook()
-:PThread("cFritzFonbuch")
+:PThread("FritzFonbook")
 {
 	title = "Fritz!Box phone book";
 	techId = "FRITZ";
@@ -171,10 +171,10 @@ void FritzFonbook::Action() {
 		try {
 			retry_delay = retry_delay > 1800 ? 3600 : retry_delay * 2;
 			setInitialized(false);
-			fonbuchList.clear();
+			fonbookList.clear();
 
 			Tools::Login();
-			*dsyslog << __FILE__ << ": sending fonbuch request." << std::endl;
+			*dsyslog << __FILE__ << ": sending fonbook request." << std::endl;
 			tcpclient::HttpClient tc(gConfig->getUrl(), PORT_WWW);
 			tc  <<	"GET /cgi-bin/webcm?getpage=../html/"
 				<<  Tools::GetLang()
@@ -218,7 +218,7 @@ void FritzFonbook::Action() {
 				std::string numberPart = msg.substr(numberStart, numberStop - numberStart+1);
 				if (namePart2.length() && numberPart.length()) {
 					FonbookEntry fe(namePart2, numberPart, FonbookEntry::TYPE_NONE);
-					fonbuchList.push_back(fe);
+					fonbookList.push_back(fe);
 					//*dsyslog << __FILE__ << ": (%s / %s)", fe.number.c_str(), fe.name.c_str() << std::endl;
 				}
 				pos = p1+10;
@@ -252,7 +252,7 @@ void FritzFonbook::Action() {
 
 				if (namePart2.length() && numberPart.length()) {
 					FonbookEntry fe(namePart2, numberPart, type);
-					fonbuchList.push_back(fe);
+					fonbookList.push_back(fe);
 					//*dsyslog << __FILE__ << ": (%s / %s / %i)", fe.number.c_str(), fe.name.c_str(), fe.type << std::endl;
 				}
 				pos = p2+10;
@@ -273,7 +273,7 @@ void FritzFonbook::Action() {
 		}
 	} while (!isInitialized());
 	Tools::GetFritzBoxMutex()->Unlock();
-	std::sort(fonbuchList.begin(), fonbuchList.end());
+	std::sort(fonbookList.begin(), fonbookList.end());
 }
 
 void FritzFonbook::Reload() {

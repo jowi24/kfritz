@@ -20,8 +20,8 @@
  */
 
 
-#ifndef FONBUCHMANAGER_H_
-#define FONBUCHMANAGER_H_
+#ifndef FONBOOKMANAGER_H_
+#define FONBOOKMANAGER_H_
 
 #include <string>
 #include "Fonbook.h"
@@ -81,7 +81,7 @@ public:
 	virtual void setInitialized(bool isInitialized);
 	/**
 	 *  Returns the number of entries in the telephonebook.
-	 * @return the number of entries or cFonbuch::npos, if requesting specific telephonebook entries is not possible for this telephonebook
+	 * @return the number of entries or cFonbook::npos, if requesting specific telephonebook entries is not possible for this telephonebook
 	 */
 	size_t GetFonbookSize();
 	/**
@@ -100,4 +100,4 @@ public:
 
 }
 
-#endif /*FONBUCHMANAGER_H_*/
+#endif /*FONBOOKMANAGER_H_*/

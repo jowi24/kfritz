@@ -64,10 +64,10 @@ Fonbook::Fonbook()
 }
 
 FonbookEntry &Fonbook::ResolveToName(FonbookEntry &fe) {
-	for (unsigned int pos=0; pos < fonbuchList.size(); pos++) {
-		if (Tools::CompareNormalized(fe.getNumber(), fonbuchList[pos].getNumber()) == 0) {
-			fe.setName(fonbuchList[pos].getName());
-			fe.setType(fonbuchList[pos].getType());
+	for (unsigned int pos=0; pos < fonbookList.size(); pos++) {
+		if (Tools::CompareNormalized(fe.getNumber(), fonbookList[pos].getNumber()) == 0) {
+			fe.setName(fonbookList[pos].getName());
+			fe.setType(fonbookList[pos].getType());
 			return fe;
 		}
 	}
@@ -76,14 +76,14 @@ FonbookEntry &Fonbook::ResolveToName(FonbookEntry &fe) {
 	return fe;
 }
 
-FonbookEntry *Fonbook::RetrieveFonbuchEntry(size_t id) {
-	if (id >= GetFonbuchSize())
+FonbookEntry *Fonbook::RetrieveFonbookEntry(size_t id) {
+	if (id >= GetFonbookSize())
 		return NULL;
-	return &fonbuchList[id];
+	return &fonbookList[id];
 }
 
-size_t Fonbook::GetFonbuchSize() {
-	return fonbuchList.size();
+size_t Fonbook::GetFonbookSize() {
+	return fonbookList.size();
 }
 
 }

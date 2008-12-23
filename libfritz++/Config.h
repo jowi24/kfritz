@@ -78,7 +78,7 @@ public:
 	 * activated by this method. These fonbooks are used for reverse lookup on call events.
 	 * The order of the fonbooks determines the priority regarding these lookups.
 	 * Regarding queries to the fonbooks, a pointer is maintained which points to the currently
-	 * "active" fonbook. This pointer can be moved, using FonbookManager::NextFonbuch().
+	 * "active" fonbook. This pointer can be moved, using FonbookManager::NextFonbook().
 	 * @param the list of enabled fonbooks
 	 * @param the currently "active" fonbook
 	 */

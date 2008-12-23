@@ -20,8 +20,8 @@
  */
 
 
-#ifndef FONBUCH_H_
-#define FONBUCH_H_
+#ifndef FONBOOK_H_
+#define FONBOOK_H_
 
 #include <string>
 #include <vector>
@@ -70,7 +70,7 @@ private:
 	bool initialized;
 protected:
 	/**
-	 * The constructor may only be used by cFonbuchManager.
+	 * The constructor may only be used by cFonbookManager.
 	 * Subclasses must make their constructor private, too.
 	 */
 	Fonbook();
@@ -89,7 +89,7 @@ protected:
     /**
      * Data structure for storing the phonebook.
      */
-	std::vector<FonbookEntry> fonbuchList;
+	std::vector<FonbookEntry> fonbookList;
 public:
 	virtual ~Fonbook() {}
 	/**
@@ -109,7 +109,7 @@ public:
 	 * @param id unique identifier of the requested entry
 	 * @return the entry with key id or NULL, if unsuccesful
 	 */
-	virtual FonbookEntry *RetrieveFonbuchEntry(size_t id);
+	virtual FonbookEntry *RetrieveFonbookEntry(size_t id);
 	/**
 	 * Returns if it is possible to display the entries of this phonebook.
 	 * @return true, if this phonebook has displayable entries. "Reverse lookup only" phonebooks must return false here.
@@ -129,7 +129,7 @@ public:
 	 *  Returns the number of entries in the telephonebook.
 	 * @return the number of entries
 	 */
-	virtual size_t GetFonbuchSize();
+	virtual size_t GetFonbookSize();
 	/**
 	 *  Reloads the telephonebook's content
 	 */
@@ -149,4 +149,4 @@ public:
 
 }
 
-#endif /*FONBUCH_H_*/
+#endif /*FONBOOK_H_*/

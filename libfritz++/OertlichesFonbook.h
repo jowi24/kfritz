@@ -20,8 +20,8 @@
  */
 
 
-#ifndef OERTLICHESFONBUCH_H_
-#define OERTLICHESFONBUCH_H_
+#ifndef OERTLICHESFONBOOK_H_
+#define OERTLICHESFONBOOK_H_
 
 #include <string>
 #include "Fonbook.h"
@@ -52,16 +52,16 @@ public:
 	 *  Returns the number of entries in the telephonebook.
 	 * @return the number of entries
 	 */
-	virtual size_t GetFonbuchSize() { return 0; }
+	virtual size_t GetFonbookSize() { return 0; }
 	/**
 	 * Returns a specific telephonebook entry.
 	 * @param id unique identifier of the requested entry
 	 * @return the entry with key id or NULL, if unsuccesful
 	 */
-	virtual FonbookEntry *RetrieveFonbuchEntry(size_t id) { return NULL; }
+	virtual FonbookEntry *RetrieveFonbookEntry(size_t id) { return NULL; }
 
 };
 
 }
 
-#endif /*OERTLICHESFONBUCH_H_*/
+#endif /*OERTLICHESFONBOOK_H_*/

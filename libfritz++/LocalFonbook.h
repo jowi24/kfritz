@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef LOCALFONBUCH_H_
-#define LOCALFONBUCH_H_
+#ifndef LOCALFONBOOK_H_
+#define LOCALFONBOOK_H_
 
 #include "Fonbook.h"
 #include <vector>
@@ -39,4 +39,4 @@ public:
 
 }
 
-#endif /*LOCALFONBUCH_H_*/
+#endif /*LOCALFONBOOK_H_*/
