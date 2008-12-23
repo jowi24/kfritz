@@ -30,10 +30,9 @@
 
 namespace fritz{
 
-Listener::Listener(EventHandler *event, CallList *callList)
+Listener::Listener(EventHandler *event)
 :PThread("fritzlistener")
 {
-	this->callList = callList;
 	this->event = event;
 	tcpclient = new tcpclient::TcpClient(gConfig->getUrl(), PORT_MONITOR);
 }
@@ -153,6 +152,7 @@ void Listener::Action() {
 					if (notify) {
 						if (event) event->HandleDisconnect(connId, partA);
 						// force reload of callList
+						CallList *callList = CallList::getCallList(false);
 						if (callList)
 							callList->Start();
 					}

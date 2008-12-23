@@ -28,12 +28,21 @@
 
 namespace fritz{
 
+CallList *CallList::callList = NULL;
+
 CallList::CallList()
-:PThread("cCallList")
+:PThread("CallList")
 {
 	lastMissedCall = 0;
 	callListRead = false;
 	this->Start();
+}
+
+CallList *CallList::getCallList(bool create){
+	if(!callList && create){
+		callList = new CallList();
+	}
+	return callList;
 }
 
 CallList::~CallList()

@@ -56,12 +56,11 @@ class Listener : public pthread::PThread
 {
 private:
 	EventHandler *event;
-	CallList *callList;
 	tcpclient::TcpClient *tcpclient;
 	std::vector<int> activeConnections;
 
 public:
-	Listener(EventHandler *event, CallList *callList);
+	Listener(EventHandler *event);
 	virtual ~Listener();
 	virtual void Action();
 };

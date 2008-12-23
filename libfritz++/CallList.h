@@ -60,9 +60,11 @@ private:
 	std::vector<CallEntry> callListAll;
 	bool callListRead;
 	time_t lastMissedCall;
+	static CallList *callList;
+    CallList();
 public:
-	CallList();
-	virtual ~CallList();
+	static CallList *getCallList(bool create = true);
+    virtual ~CallList();
 	void Action();
 	bool isValid() { return callListRead; }
 	CallEntry *RetrieveEntry(CallEntry::callType type, size_t id);
