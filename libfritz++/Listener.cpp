@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <sstream>
 #include <vector>
-#include "Fonbook.h"
+#include "FonbookManager.h"
 #include "Config.h"
 #include "Listener.h"
 
@@ -80,40 +80,82 @@ void Listener::Action() {
 				std::string partC   = pos[6] == std::string::npos ? "" : data.substr(pos[5]+1, pos[6]-pos[5]-1);
 				std::string partD   = pos[7] == std::string::npos ? "" : data.substr(pos[6]+1, pos[7]-pos[6]-1);
 
-
 				if (type.compare("CALL") == 0) {
 					// partA => box port
-					// partB => caller Id
-					// partC => called Id
+					// partB => caller Id (local)
+					// partC => called Id (remote)
 					// partD => medium (POTS, SIP[1-9], ISDN, ...)
 
 					// an '#' can be appended to outgoing calls by the phone, so delete it
 					if (partC[partC.length()-1] == '#')
 						partC = partC.substr(0, partC.length()-1);
-					// init display, muting or replay pausing
-					if (event) event->HandleCall(true, connId, partC, partB, partD);
+
+					// apply MSN-filter if enabled
+					bool notify = gConfig->getMsnFilter().size() ? false : true;
+					for (std::vector<std::string>::iterator it = gConfig->getMsnFilter().begin(); it < gConfig->getMsnFilter().end(); it++){
+						if (partB.compare(*it) == 0 )
+							notify = true;
+					}
+					if (notify) {
+						// do reverse lookup
+						std::string remoteName;
+						fritz::FonbookEntry fe(remoteName, partC);
+						FonbookManager::GetFonbook()->ResolveToName(fe);
+						// notify application
+						if (event) event->HandleCall(true, connId, partC, fe.getName(), partB, partD);
+						activeConnections.push_back(connId);
+					}
 
 				} else if (type.compare("RING") == 0) {
-					// partA => caller Id
-					// partB => called Id
+					// partA => caller Id (remote)
+					// partB => called Id (local)
 					// partC => medium (POTS, SIP[1-9], ISDN, ...)
 
-					// init display, muting or replay pausing
-					if (event) event->HandleCall(false, connId, partA, partB, partC);
-
+					// apply MSN-filter if enabled
+					bool notify = gConfig->getMsnFilter().size() ? false : true;
+					for (std::vector<std::string>::iterator it = gConfig->getMsnFilter().begin(); it < gConfig->getMsnFilter().end(); it++){
+						if (partB.compare(*it) == 0 )
+							notify = true;
+					}
+					if (notify) {
+						// do reverse lookup
+						std::string remoteName;
+						fritz::FonbookEntry fe(remoteName, partA);
+						FonbookManager::GetFonbook()->ResolveToName(fe);
+						// notify application
+						if (event) event->HandleCall(false, connId, partA, fe.getName(), partB, partC);
+						activeConnections.push_back(connId);
+					}
 				} else if (type.compare("CONNECT") == 0) {
 					// partA => box port
 					// partB => Id
-
-					// stop call notification
-					if (event) event->HandleConnect(connId);
+					// only notify application if this connection is part of activeConnections
+					bool notify = false;
+					for (std::vector<int>::iterator it = activeConnections.begin(); it < activeConnections.end(); it++) {
+						if (*it == connId) {
+							notify = true;
+							break;
+						}
+					}
+					if (notify)
+						if (event) event->HandleConnect(connId);
 				} else if (type.compare("DISCONNECT") == 0) {
 					// partA => call duration
-
-					if (event) event->HandleDisconnect(connId, partA);
-					// force reload of callList
-					if (callList)
-						callList->Start();
+					// only notify application if this connection is part of activeConnections
+					bool notify = false;
+					for (std::vector<int>::iterator it = activeConnections.begin(); it < activeConnections.end(); it++) {
+						if (*it == connId) {
+							activeConnections.erase(it);
+							notify = true;
+							break;
+						}
+					}
+					if (notify) {
+						if (event) event->HandleDisconnect(connId, partA);
+						// force reload of callList
+						if (callList)
+							callList->Start();
+					}
 				} else {
 					throw tcpclient::TcpException(tcpclient::TcpException::ERR_INVALID_DATA);
 				}

@@ -42,16 +42,16 @@ public:
 	/**
 	 *
 	 */
-	static Fonbook *GetFonbuch();
+	static Fonbook *GetFonbook();
 	/**
 	 *
 	 */
-	static FonbookManager *GetFonbuchManager();
+	static FonbookManager *GetFonbookManager();
 	/**
 	 * Switch to next displayable phonebook.
 	 * @return void
 	 */
-	void NextFonbuch();
+	void NextFonbook();
 	/**
 	 * Resolves the given number to the corresponding name.
 	 * @param number the number to resolve
@@ -63,7 +63,7 @@ public:
 	 * @param id unique identifier of the requested entry
 	 * @return the entry with key id or NULL, if unsuccesful
 	 */
-	FonbookEntry *RetrieveFonbuchEntry(size_t id);
+	FonbookEntry *RetrieveFonbookEntry(size_t id);
 	/**
 	 * Returns if it is possible to display the entries of this phonebook.
 	 * @return true, if this phonebook has displayable entries. "Reverse lookup only" phonebooks must return false here.
@@ -83,7 +83,7 @@ public:
 	 *  Returns the number of entries in the telephonebook.
 	 * @return the number of entries or cFonbuch::npos, if requesting specific telephonebook entries is not possible for this telephonebook
 	 */
-	size_t GetFonbuchSize();
+	size_t GetFonbookSize();
 	/**
 	 *  Reloads the telephonebook's content
 	 */

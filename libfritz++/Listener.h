@@ -24,6 +24,7 @@
 #define FRITZLISTENER_H_
 
 #include <string>
+#include <vector>
 #include <PThread++.h>
 #include <TcpClient++.h>
 #include "CallList.h"
@@ -46,7 +47,7 @@ public:
 	EventHandler() { }
 	virtual ~EventHandler() { }
 
-	virtual void HandleCall(bool outgoing, int connId, std::string remoteParty, std::string localParty, std::string medium) = 0;
+	virtual void HandleCall(bool outgoing, int connId, std::string remoteNumber, std::string remoteName, std::string localParty, std::string medium) = 0;
 	virtual void HandleConnect(int connId) = 0;
 	virtual void HandleDisconnect(int connId, std::string duration) = 0;
 };
@@ -57,6 +58,7 @@ private:
 	EventHandler *event;
 	CallList *callList;
 	tcpclient::TcpClient *tcpclient;
+	std::vector<int> activeConnections;
 
 public:
 	Listener(EventHandler *event, CallList *callList);
