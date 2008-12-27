@@ -1,7 +1,7 @@
 LIB = libtcpclient++.a
 OBJS = TcpClient++.o
 
-CXXFLAGS = -g -O2 -Wall
+CXXFLAGS = -g -O2 -Wall -fPIC
 
 ### libpthread++
 INCLUDES += -I../libpthread++

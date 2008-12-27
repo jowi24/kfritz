@@ -1,7 +1,7 @@
 LIB = libpthread++.a
 OBJS = PThread++.o
 
-CXXFLAGS = -g -O2 -Wall
+CXXFLAGS = -g -O2 -Wall -fPIC
 
 all: $(LIB)
 

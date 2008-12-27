@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 include_directories(../libpthread++)
 project (libtcpclient++)
-set(CMAKE_CXX_FLAGS "-g -O2 -Wall" )
+set(CMAKE_CXX_FLAGS "-g -ggdb -O0 -Wall -fPIC" )
 set(SRCS TcpClient++.cpp)
 add_library(tcpclient++ STATIC ${SRCS})
