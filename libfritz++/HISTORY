@@ -3,3 +3,11 @@
 - Moved callType from CallList to CallEntry. 
 - Implemented in-library msn filtering and reverse-lookups.
 - Renamed various methods in FonbookManager from *Fonbuch* to *Fonbook*.
+- Made CallList a singleton.
+
+2008-12-26:
+- Replaced string tokenizer in Listener.
+
+2008-12-27:
+- Refactored MSN-filter functionality.
+- Added "-fPIC" to Makefiles.

@@ -64,10 +64,10 @@ void CallList::Action() {
 			// force an update of the fritz!box csv list and wait until all data is received
 			tcpclient::HttpClient tc2( gConfig->getUrl(), PORT_WWW);
 			tc2 << "GET /cgi-bin/webcm?getpage=../html/"
-			    <<  Tools::GetLang()
-				<< "/menus/menu2.html&var:lang="
-				<<  Tools::GetLang()
-			    << "&var:pagename=foncalls&var:menu=fon HTTP/1.1\n\n\0";
+			<<  Tools::GetLang()
+			<< "/menus/menu2.html&var:lang="
+			<<  Tools::GetLang()
+			<< "&var:pagename=foncalls&var:menu=fon HTTP/1.1\n\n\0";
 			tc2 >> msg;
 			// get the URL of the CSV-File-Export
 			unsigned int urlPos   = msg.find(".csv");
@@ -78,8 +78,8 @@ void CallList::Action() {
 			msg = "";
 			tcpclient::HttpClient tc(gConfig->getUrl(), PORT_WWW);
 			tc << "GET /cgi-bin/webcm?getpage="
-			   <<  csvUrl
-			   << " HTTP/1.1\n\n\0";
+			<<  csvUrl
+			<< " HTTP/1.1\n\n\0";
 			tc >> msg;
 			// convert answer to current SystemCodeSet (we assume, Fritz!Box sends its answer in latin15)
 			CharSetConv *conv = new CharSetConv("ISO-8859-15", CharSetConv::SystemCharacterTable());
@@ -101,11 +101,11 @@ void CallList::Action() {
 			// parse body
 			int count = 0;
 			while ((pos = msg.find("\n", pos)) != std::string::npos /*&& msg[pos+1] != '\n'*/) {
-			    pos++;
+				pos++;
 				int type          = pos;
 				if (msg[type] < '0' || msg[type] > '9') { // ignore lines not starting with a number (headers, comments, etc.) {
-				  *dsyslog << __FILE__ << ": parser skipped line in calllist" << std::endl;
-				  continue;
+					*dsyslog << __FILE__ << ": parser skipped line in calllist" << std::endl;
+					continue;
 				}
 				int dateStart     = msg.find(';', type)          +1;
 				int timeStart	  = msg.find(' ', dateStart)     +1;
@@ -139,7 +139,7 @@ void CallList::Action() {
 				tmCallTime.tm_sec  = 0;
 
 				ce.timestamp = mktime(&tmCallTime);
-//				dsyslog << "__FILE__<< " (%s / %s / %s / %s / %s / %s / %s)", ce.date.c_str(), ce.time.c_str(), ce.duration.c_str(), ce.remoteNumber.c_str(), ce.remoteName.c_str(), ce.localName.c_str(), ce.localNumber.c_str());
+				//				dsyslog << "__FILE__<< " (%s / %s / %s / %s / %s / %s / %s)", ce.date.c_str(), ce.time.c_str(), ce.duration.c_str(), ce.remoteNumber.c_str(), ce.remoteName.c_str(), ce.localName.c_str(), ce.localNumber.c_str());
 
 				// workaround for AVM debugging entries in CVS list
 				if (ce.remoteNumber.compare("1234567") == 0 && ce.date.compare("12.03.2005") == 0)
@@ -228,34 +228,19 @@ size_t CallList::MissedCalls(time_t since) {
 }
 
 bool CallEntry::MatchesFilter() {
-	if ( gConfig->getMsnFilter().size() != 0) {
-		// check if this entry should be displayed (the entries are filtered
-		// according to the MSN filter)
-		bool display = false;
-		// if local number does contain a MSN out of the MSN filter, it is displayed...
-		for (unsigned int pos=0; pos < gConfig->getMsnFilter().size(); pos++) {
-			if (localNumber.find(gConfig->getMsnFilter()[pos]) != std::string::npos ) {
-				display = true;
-				break;
-			}
-		}
+	// entries are filtered according to the MSN filter)
+	if ( Tools::MatchesMsnFilter(localNumber))
+		return true;
+	else{
 		// if local number does not contain any of the MSNs in MSN filter, we test
 		// if it does contain any number (if POTS is used fritzbox reports "Festnetz"
 		// instead of the local number)
-		if ( display == false ) {
-			bool containsNumber = false;
-			for (unsigned int pos=0; pos < localNumber.size(); pos++) {
-				if (localNumber[pos] >= '0' && localNumber[pos] <= '9') {
-					containsNumber = true;
-					break;
-				}
-			}
-			if (containsNumber == false)
-				display = true;
+		for (unsigned int pos=0; pos < localNumber.size(); pos++) {
+			if (localNumber[pos] >= '0' && localNumber[pos] <= '9')
+				return false;
 		}
-		return display;
+		return true;
 	}
-	return true;
 }
 
 }

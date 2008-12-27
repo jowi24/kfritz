@@ -1,7 +1,7 @@
 LIB = libfritz++.a
 OBJS = CallList.o Config.o Fonbooks.o Fonbook.o FonbookManager.o FritzFonbook.o Listener.o Tools.o LocalFonbook.o Nummerzoeker.o OertlichesFonbook.o
 
-CXXFLAGS = -g -O2 -Wall
+CXXFLAGS = -g -O2 -Wall -fPIC
 
 ### libpthread++
 INCLUDES += -I../libpthread++

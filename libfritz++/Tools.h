@@ -135,6 +135,7 @@ class Tools
 public:
 	Tools();
 	virtual ~Tools();
+	static bool MatchesMsnFilter(const std::string &number);
 	static std::string GetLang();
 	static void Login();
 	static bool InitCall(std::string &number);

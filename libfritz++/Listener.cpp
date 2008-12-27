@@ -27,6 +27,7 @@
 #include "FonbookManager.h"
 #include "Config.h"
 #include "Listener.h"
+#include "Tools.h"
 
 namespace fritz{
 
@@ -62,22 +63,28 @@ void Listener::Action() {
 					}
 					*dsyslog << __FILE__ << ": Got message " << data << std::endl;
 				}
-				// parse message
-				size_t pos[8];
-				memset(pos, -1, 8 * sizeof(size_t));
-				pos[0] = 0;
-				for (int i=1; i<8; i++) {
-					pos[i] = data.find(";", pos[i-1]+1);
-					if (pos[i] == std::string::npos)
-						break;
+
+				// copy message in buffer
+				char *buffer;
+				int ret = asprintf(&buffer, "%s", data.c_str());
+				if (ret <= 0){
+					*esyslog << __FILE__ << ": Could not allocate memory" << std::endl;
+					continue;
 				}
-				std::string date    = data.substr(pos[0], pos[1]-pos[0]);
-				std::string type    = data.substr(pos[1]+1, pos[2]-pos[1]-1);
-				int connId 			= atoi(data.substr(pos[2]+1, pos[3]-pos[2]-1).c_str());
-				std::string partA   = pos[4] == std::string::npos ? "" : data.substr(pos[3]+1, pos[4]-pos[3]-1);
-				std::string partB   = pos[5] == std::string::npos ? "" : data.substr(pos[4]+1, pos[5]-pos[4]-1);
-				std::string partC   = pos[6] == std::string::npos ? "" : data.substr(pos[5]+1, pos[6]-pos[5]-1);
-				std::string partD   = pos[7] == std::string::npos ? "" : data.substr(pos[6]+1, pos[7]-pos[6]-1);
+				// parse buffer
+				char *tok[7];
+				for (size_t i=0; i<7; i++) {
+					tok[i] = strtok(i==0 ? buffer : NULL, ";");
+				}
+				std::string date  = tok[0];
+				std::string type  = tok[1];
+				int connId        = atoi(tok[2]);
+				std::string partA = tok[3] ? tok[3] : "";
+				std::string partB = tok[4] ? tok[4] : "";
+				std::string partC = tok[5] ? tok[5] : "";
+				std::string partD = tok[6] ? tok[6] : "";
+				// after copying all tokens, delete buffer
+				free(buffer);
 
 				if (type.compare("CALL") == 0) {
 					// partA => box port
@@ -89,13 +96,7 @@ void Listener::Action() {
 					if (partC[partC.length()-1] == '#')
 						partC = partC.substr(0, partC.length()-1);
 
-					// apply MSN-filter if enabled
-					bool notify = gConfig->getMsnFilter().size() ? false : true;
-					for (std::vector<std::string>::iterator it = gConfig->getMsnFilter().begin(); it < gConfig->getMsnFilter().end(); it++){
-						if (partB.compare(*it) == 0 )
-							notify = true;
-					}
-					if (notify) {
+					if ( Tools::MatchesMsnFilter(partB) ) {
 						// do reverse lookup
 						std::string remoteName;
 						fritz::FonbookEntry fe(remoteName, partC);
@@ -110,13 +111,7 @@ void Listener::Action() {
 					// partB => called Id (local)
 					// partC => medium (POTS, SIP[1-9], ISDN, ...)
 
-					// apply MSN-filter if enabled
-					bool notify = gConfig->getMsnFilter().size() ? false : true;
-					for (std::vector<std::string>::iterator it = gConfig->getMsnFilter().begin(); it < gConfig->getMsnFilter().end(); it++){
-						if (partB.compare(*it) == 0 )
-							notify = true;
-					}
-					if (notify) {
+					if ( Tools::MatchesMsnFilter(partB) ) {
 						// do reverse lookup
 						std::string remoteName;
 						fritz::FonbookEntry fe(remoteName, partA);

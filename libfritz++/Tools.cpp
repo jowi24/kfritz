@@ -181,6 +181,21 @@ Tools::~Tools()
 {
 }
 
+bool Tools::MatchesMsnFilter(const std::string &number){
+	// if no MSN filter is set, true is returned
+	if (gConfig->getMsnFilter().size() == 0)
+		return true;
+	// if number does contain a MSN out of the MSN filter, true is returned
+	for (size_t pos=0; pos < gConfig->getMsnFilter().size(); pos++) {
+		if (number.find(gConfig->getMsnFilter()[pos]) != std::string::npos ) {
+			//matched
+			return true;
+		}
+	}
+	// no match
+	return false;
+}
+
 std::string Tools::GetLang() {
 	// TODO: this does "not always" work for fw 29.04.67 (behaves indeterministically)
 	//	if ( gConfig->getLang().size() == 0) {
@@ -260,8 +275,8 @@ void Tools::Login() {
 	<<  	"Content-Length: "
 	<<  	23 + UrlEncode(gConfig->getPassword()).size()
 	<<  	"\n\nlogin:command/password="
-	<<  	UrlEncode(gConfig->getPassword())
-	<<  	"\n";
+	<<  	UrlEncode(gConfig->getPassword()) // append a newline here?
+	<<      "\n";
 	tc >> sMsg;
 
 	// determine if login was successful
