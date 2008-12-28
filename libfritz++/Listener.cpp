@@ -31,19 +31,38 @@
 
 namespace fritz{
 
+Listener *Listener::me = NULL;
+
 Listener::Listener(EventHandler *event)
 :PThread("fritzlistener")
 {
 	this->event = event;
 	tcpclient = new tcpclient::TcpClient(gConfig->getUrl(), PORT_MONITOR);
+	this->Start();
 }
 
 Listener::~Listener()
 {
+	this->Cancel();
 	delete tcpclient;
 }
 
+void Listener::CreateListener(EventHandler *event) {
+	EventHandler *oldEvent = me ? me->event : NULL;
+	DeleteListener();
+	if (event || oldEvent)
+		me = new Listener(event ? event : oldEvent);
+	else
+		*esyslog << __FILE__ << ": Invalid call parameter. First call to CreateListener needs event handler object." << std::endl;
+}
 
+void Listener::DeleteListener() {
+	if (me) {
+		*dsyslog << __FILE__ << ": deleting listener" << std::endl;
+		delete me;
+		me = NULL;
+	}
+}
 
 void Listener::Action() {
 	std::string data = "";
@@ -101,8 +120,15 @@ void Listener::Action() {
 						std::string remoteName;
 						fritz::FonbookEntry fe(remoteName, partC);
 						FonbookManager::GetFonbook()->ResolveToName(fe);
+						// resolve SIP names
+						std::string mediumName;
+						if (partD.find("SIP")           != std::string::npos &&
+						    gConfig->getSipNames().size() >= (size_t)atoi(&partD[3]))
+							mediumName = gConfig->getSipNames()[atoi(&partD[3])];
+						else
+							mediumName = partD;
 						// notify application
-						if (event) event->HandleCall(true, connId, partC, fe.getName(), partB, partD);
+						if (event) event->HandleCall(true, connId, partC, fe.getName(), fe.getTypeName(), partB, partD, mediumName);
 						activeConnections.push_back(connId);
 					}
 
@@ -116,8 +142,15 @@ void Listener::Action() {
 						std::string remoteName;
 						fritz::FonbookEntry fe(remoteName, partA);
 						FonbookManager::GetFonbook()->ResolveToName(fe);
+						// resolve SIP names
+						std::string mediumName;
+						if (partC.find("SIP")           != std::string::npos &&
+						    gConfig->getSipNames().size() >= (size_t)atoi(&partC[3]))
+							mediumName = gConfig->getSipNames()[atoi(&partC[3])];
+						else
+							mediumName = partC;
 						// notify application
-						if (event) event->HandleCall(false, connId, partA, fe.getName(), partB, partC);
+						if (event) event->HandleCall(false, connId, partA, fe.getName(), fe.getTypeName(), partB, partC, mediumName);
 						activeConnections.push_back(connId);
 					}
 				} else if (type.compare("CONNECT") == 0) {

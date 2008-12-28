@@ -28,7 +28,7 @@
 
 namespace fritz{
 
-CallList *CallList::callList = NULL;
+CallList *CallList::me = NULL;
 
 CallList::CallList()
 :PThread("CallList")
@@ -39,10 +39,23 @@ CallList::CallList()
 }
 
 CallList *CallList::getCallList(bool create){
-	if(!callList && create){
-		callList = new CallList();
+	if(!me && create){
+		me = new CallList();
 	}
-	return callList;
+	return me;
+}
+
+void CallList::CreateCallList() {
+	DeleteCallList();
+	me = new CallList();
+}
+
+void CallList::DeleteCallList(){
+	if (me){
+		*dsyslog << __FILE__ << ": deleting call list" << std::endl;
+		delete me;
+		me = NULL;
+	}
 }
 
 CallList::~CallList()
@@ -56,8 +69,6 @@ void CallList::Action() {
 	do {
 		try {
 			retry_delay = retry_delay > 1800 ? 3600 : retry_delay * 2;
-			// first, preload phone settings from Fritz!Box
-			Tools::GetPhoneSettings();
 			// now, process call list
 			Tools::Login();
 			*dsyslog << __FILE__ << ": sending callList request." << std::endl;

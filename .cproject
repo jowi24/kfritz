@@ -898,16 +898,12 @@
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
-<storageModule moduleId="org.eclipse.cdt.core.pathentry">
-<pathentry kind="src" path=""/>
-<pathentry kind="out" path=""/>
-<pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
-</storageModule>
+
 <storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
 <buildTargets>
 <target name="cmake" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 <buildCommand>${workspace_loc}/kfritzbox/cmakeeclipse</buildCommand>
-<buildArguments></buildArguments>
+<buildArguments/>
 <buildTarget>cmake</buildTarget>
 <stopOnError>false</stopOnError>
 <useDefaultCommand>false</useDefaultCommand>
@@ -915,7 +911,7 @@
 </target>
 <target name="all" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 <buildCommand>${workspace_loc}/kfritzbox/cmakeeclipse</buildCommand>
-<buildArguments></buildArguments>
+<buildArguments/>
 <buildTarget>all</buildTarget>
 <stopOnError>false</stopOnError>
 <useDefaultCommand>false</useDefaultCommand>
@@ -923,7 +919,7 @@
 </target>
 <target name="clean" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 <buildCommand>${workspace_loc}/kfritzbox/cmakeeclipse</buildCommand>
-<buildArguments></buildArguments>
+<buildArguments/>
 <buildTarget>clean</buildTarget>
 <stopOnError>false</stopOnError>
 <useDefaultCommand>false</useDefaultCommand>
@@ -931,7 +927,7 @@
 </target>
 <target name="deb" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 <buildCommand>${workspace_loc}/kfritzbox/cmakeeclipse</buildCommand>
-<buildArguments></buildArguments>
+<buildArguments/>
 <buildTarget>deb</buildTarget>
 <stopOnError>false</stopOnError>
 <useDefaultCommand>false</useDefaultCommand>
@@ -939,13 +935,19 @@
 </target>
 <target name="deb-install" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 <buildCommand>${workspace_loc}/kfritzbox/cmakeeclipse</buildCommand>
-<buildArguments></buildArguments>
+<buildArguments/>
 <buildTarget>deb-install</buildTarget>
 <stopOnError>false</stopOnError>
 <useDefaultCommand>false</useDefaultCommand>
 <runAllBuilders>true</runAllBuilders>
 </target>
 </buildTargets>
+</storageModule>
+
+<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+<pathentry kind="src" path=""/>
+<pathentry kind="out" path=""/>
+<pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
 </storageModule>
 </cconfiguration>
 </storageModule>

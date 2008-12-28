@@ -334,7 +334,7 @@ bool Tools::InitCall(std::string &number) {
 }
 
 std::string Tools::NormalizeNumber(std::string number) {
-	GetPhoneSettings();
+	GetLocationSettings();
 	// Only for Germany: Remove Call-By-Call Provider Selection Codes 010(0)xx
 	if ( gConfig->getCountryCode() == "49") {
 		if (number[0] == '0' && number[1] == '1' && number[2] == '0') {
@@ -364,7 +364,7 @@ int Tools::CompareNormalized(std::string number1, std::string number2) {
 	return NormalizeNumber(number1).compare(NormalizeNumber(number2));
 }
 
-void Tools::GetPhoneSettings() {
+void Tools::GetLocationSettings() {
 	// if countryCode or regionCode are already set, exit here...
 	if ( gConfig->getCountryCode().size() > 0 || gConfig->getRegionCode().size() > 0)
 		return;
@@ -389,7 +389,7 @@ void Tools::GetPhoneSettings() {
 	}
 	size_t lkzStart = msg.find("telcfg:settings/Location/LKZ");
 	if (lkzStart == std::string::npos) {
-		*esyslog << __FILE__ << ": Parser error in GetPhoneSettings(). Could not find LKZ." << std::endl;
+		*esyslog << __FILE__ << ": Parser error in GetLocationSettings(). Could not find LKZ." << std::endl;
 		*esyslog << __FILE__ << ": LKZ not set! Assuming 49 (Germany)." << std::endl;
 		*esyslog << __FILE__ << ": OKZ not set! Resolving phone numbers may not always work." << std::endl;
 		gConfig->setCountryCode("49");
@@ -399,7 +399,7 @@ void Tools::GetPhoneSettings() {
 	size_t lkzStop  = msg.find("\"", lkzStart);
 	size_t okzStart = msg.find("telcfg:settings/Location/OKZ");
 	if (okzStart == std::string::npos) {
-		*esyslog << __FILE__ << ": Parser error in GetPhoneSettings(). Could not find OKZ." << std::endl;
+		*esyslog << __FILE__ << ": Parser error in GetLocationSettings(). Could not find OKZ." << std::endl;
 		*esyslog << __FILE__ << ": OKZ not set! Resolving phone numbers may not always work." << std::endl;
 		return;
 	}
@@ -418,6 +418,99 @@ void Tools::GetPhoneSettings() {
 	} else {
 		*esyslog << __FILE__ << ": OKZ not set! Resolving phone numbers may not always work." << std::endl;
 	}
+}
+
+void Tools::GetSipSettings(){
+	// if SIP settings are already set, exit here...
+	if ( gConfig->getSipNames().size() > 0 )
+		return;
+	// ...otherwise get settings from Fritz!Box.
+	*dsyslog << __FILE__ << ": Looking up SIP Settings..." << std::endl;
+	std::string msg;
+	try {
+		Login();
+		tcpclient::HttpClient hc(gConfig->getUrl(), PORT_WWW);
+		hc << "GET /cgi-bin/webcm?getpage=../html/"
+		<<  Tools::GetLang()
+		<< "/menus/menu2.html&var%3Alang="
+		<<  Tools::GetLang()
+		<< "&var%3Apagename=siplist&var%3Amenu=fon HTTP/1.1\n\n";
+		hc >> msg;
+	} catch (tcpclient::TcpException te) {
+		*esyslog << __FILE__ << ": cTcpException - " << te.what() << std::endl;
+		return;
+	} catch (ToolsException te) {
+		*esyslog << __FILE__ << ": cToolsException - " << te.what() << std::endl;
+		return;
+	}
+	std::vector<std::string> sipNames;
+
+	// check if the structure of the HTML page matches our search pattern
+	if (msg.find("function AuswahlDisplay") == std::string::npos){
+		*esyslog << __FILE__ << ": Parser error in GetSipSettings(). Could not find SIP list." << std::endl;
+		*esyslog << __FILE__ << ": SIP provider names not set! Usage of SIP provider names not possible." << std::endl;
+		return;
+	}
+
+	size_t sipStart = 0;
+	for(size_t i=0; i < 10; i++){
+		sipStart = msg.find("AuswahlDisplay(\"", sipStart +1);
+		if (sipStart == std::string::npos) {
+			// end of list reached
+			break;
+		}
+		size_t hostStart = msg.rfind("ProviderDisplay(\"",sipStart);
+		if (hostStart == std::string::npos) {
+			// something is wrong with the structure of the HTML page
+			*esyslog << __FILE__ << ": Parser error in GetSipSettings(). Could not find SIP provider name." << std::endl;
+			*esyslog << __FILE__ << ": SIP provider names not set! Usage of SIP provider names not possible." << std::endl;
+			return;
+		}
+		hostStart += 17;
+		size_t hostStop      = msg.find("\")", hostStart);
+		std::string hostName = msg.substr(hostStart, hostStop - hostStart);
+		std::string sipName  = hostName;
+
+		// now translate hostname into real provider name according to internal translation table of fritzbox
+		size_t tableStart     = msg.find("function ProviderDisplay");
+		size_t tableStop      = msg.find("}", tableStart);
+		size_t tableHostStart = msg.find("case \"",   tableStart);
+		if (tableStart     == std::string::npos || tableStop     == std::string::npos ||
+			tableHostStart == std::string::npos) {
+				// something is wrong with the structure of the HTML page
+				*esyslog << __FILE__ << ": Parser error in GetSipSettings(). Could not find SIP provider name." << std::endl;
+				*esyslog << __FILE__ << ": SIP provider names not set! Usage of SIP provider names not possible." << std::endl;
+				return;
+			}
+		while (tableHostStart <= tableStop && tableHostStart != std::string::npos) {
+			size_t tableHostStop  = msg.find("\"",        tableHostStart + 6);
+			size_t tableNameStart = msg.find("return \"", tableHostStop);
+			size_t tableNameStop  = msg.find("\"",        tableNameStart + 8);
+			if (tableHostStart == std::string::npos || tableHostStop == std::string::npos ||
+				tableNameStart == std::string::npos || tableNameStop == std::string::npos) {
+				// something is wrong with the structure of the HTML page
+				*esyslog << __FILE__ << ": Parser error in GetSipSettings(). Could not find SIP provider name." << std::endl;
+				*esyslog << __FILE__ << ": SIP provider names not set! Usage of SIP provider names not possible." << std::endl;
+				return;
+			}
+			tableHostStart += 6;
+			std::string tableHost = msg.substr(tableHostStart, tableHostStop - tableHostStart);
+			tableNameStart += 8;
+			std::string tableName = msg.substr(tableNameStart, tableNameStop - tableNameStart);
+			if (hostName.find(tableHost) != std::string::npos) {
+				// we found a match in the table
+				sipName = tableName;
+				break;
+			}
+			// search the next table line
+			tableHostStart = msg.find("case \"",   tableNameStop);
+		}
+
+		sipNames.push_back(sipName);
+		*dsyslog << __FILE__ << ": Found SIP" << i << " (" << hostName << ") provider name " << sipName << std::endl;
+	}
+	gConfig->setSipNames(sipNames);
+
 }
 
 }

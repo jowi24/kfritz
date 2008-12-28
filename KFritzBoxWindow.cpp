@@ -23,49 +23,85 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KLocale>
-
-#include "KFritzBoxWindow.h"
-#include "Log.h"
-#include <Config.h>
 #include <KApplication>
 #include <KAction>
 #include <KLocale>
 #include <KActionCollection>
 #include <KStandardAction>
-#include <KListWidget>
+#include <QTextCodec>
+
+#include <FonbookManager.h>
+#include <Config.h>
+#include "KFritzBoxWindow.h"
+#include "Log.h"
 
 KFritzBoxWindow::KFritzBoxWindow()
 {
-	logArea = new KTextEdit();
-	KListWidget *list = new KListWidget();
-	list->addItem(new QListWidgetItem("Test"));
-	setCentralWidget(list);
-	fritz::Config::SetupLogging(new LogStream(LogBuf::DEBUG, logArea),
-                    			new LogStream(LogBuf::INFO,  logArea),
-	                      		new LogStream(LogBuf::ERROR, logArea));
+//	logArea = new KTextEdit();
 
-	KAction* clearAction = new KAction(this);
-	clearAction->setText(i18n("Clear"));
-	clearAction->setIcon(KIcon("document-new"));
-	clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
-	actionCollection()->addAction("clear", clearAction);
-	connect(clearAction, SIGNAL(triggered(bool)), logArea, SLOT(clear()));
+//	fritz::Config::SetupLogging(new LogStream(LogBuf::DEBUG, logArea),
+//                    			new LogStream(LogBuf::INFO,  logArea),
+//	                      		new LogStream(LogBuf::ERROR, logArea));
 
+	std::vector<std::string> vFonbook;
+	vFonbook.push_back("FRITZ");
+	vFonbook.push_back("OERT");
+	fritz::FonbookManager::CreateFonbookManager(vFonbook, "FRITZ");
+
+	fritz::CallList::CreateCallList();
+
+	tree = new QTreeView(this);
+	tree->setAlternatingRowColors(true);
+	tree->setItemsExpandable(false);
+	tree->setRootIsDecorated(false);
+	tree->setSortingEnabled(true);
+	tree->setUniformRowHeights(true);
+	tree->setAcceptDrops(false);
+	tree->setDragEnabled(false);
+	//tree->setSizePolicy()
+	setCentralWidget(tree);
+
+	modelFonbook  = new KFonbookModel();
+	modelCalllist = new KCalllistModel();
+
+	KAction* aShowLog = new KAction(this);
+	aShowLog->setText(i18n("Logfile"));
+	aShowLog->setIcon(KIcon("text-rtf"));
+	actionCollection()->addAction("showLog", aShowLog);
+	connect(aShowLog, SIGNAL(triggered(bool)), this, SLOT(showLog(bool)));
+
+	KAction* aShowFonbook = new KAction(this);
+	aShowFonbook->setText(i18n("Fonbook"));
+	aShowFonbook->setIcon(KIcon("x-office-address-book"));
+	actionCollection()->addAction("showFonbook", aShowFonbook);
+	connect(aShowFonbook, SIGNAL(triggered(bool)), this, SLOT(showFonbook(bool)));
+
+	KAction* aShowCalllist = new KAction(this);
+	aShowCalllist->setText(i18n("Calllist"));
+	aShowCalllist->setIcon(KIcon("application-x-gnumeric"));
+	actionCollection()->addAction("showCalllist", aShowCalllist);
+	connect(aShowCalllist, SIGNAL(triggered(bool)), this, SLOT(showCalllist(bool)));
+
+//	clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
-
-	// init actions
-	KAction* clearAction = new KAction(this);
-	clearAction->setText(i18n("Clear"));
-	clearAction->setIcon(KIcon("document-new"));
-	clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
-	actionCollection()->addAction("clear", clearAction);
-	connect(clearAction, SIGNAL(triggered(bool)), textArea, SLOT(clear()));
-
-	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 	setupGUI();
+}
+
+void KFritzBoxWindow::showFonbook(bool b) {
+	tree->setModel(modelFonbook);
+}
+
+void KFritzBoxWindow::showCalllist(bool b) {
+	tree->setModel(modelCalllist);
+}
+
+void KFritzBoxWindow::showLog(bool b) {
+//	setCentralWidget(logArea);
 }
 
 KFritzBoxWindow::~KFritzBoxWindow()
 {
+	fritz::FonbookManager::DeleteFonbookManager();
+	fritz::CallList::DeleteCallList();
 }

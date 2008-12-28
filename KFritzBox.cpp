@@ -23,29 +23,30 @@
 #include <KAboutData>
 #include <KCmdLineArgs>
 #include <KMessageBox>
+#include <vector>
 
 #include <Config.h>
+#include <FonbookManager.h>
 #include "KFritzBox.h"
 #include "KFritzBoxWindow.h"
 #include "KEventHandler.h"
 
+//TODO: use KUniqueApplication ?
 
 KFritzBox::KFritzBox(QWidget *mainWindow, KAboutData *aboutData)
 :KSystemTrayIcon("internet-telephony", mainWindow)
 {
 	this->aboutData = aboutData;
 
-	// init libfritz++
 	KEventHandler *eventHandler = new KEventHandler();
-	fritz::Config::Setup("fritz.box", "");
-	fritz::Listener *listener = new fritz::Listener(eventHandler, NULL);
-	listener->Start();
+	fritz::Listener::CreateListener(eventHandler);
 	connect(eventHandler, SIGNAL(notify(QString)), this, SLOT(notify(QString)));
 
 }
 
 KFritzBox::~KFritzBox()
 {
+	fritz::Listener::DeleteListener();
 }
 
 void KFritzBox::notify(QString message) {
@@ -57,6 +58,7 @@ void KFritzBox::notify(QString message) {
 
 int main (int argc, char *argv[])
 {
+	// init KDE-stuff
 	KAboutData aboutData(
 			// The program name used internally.
 			"kfritzbox",
@@ -86,8 +88,16 @@ int main (int argc, char *argv[])
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KApplication app;
 
+	// init libfritz++
+	fritz::Config::Setup("fritz.box", "JmH44b76");
+
+	std::vector<std::string> vMsn;
+	vMsn.push_back("3020431");
+	fritz::Config::SetupMsnFilter(vMsn);
+
+	// create GUI elements
 	KFritzBoxWindow *mainWindow = new KFritzBoxWindow();
-	KFritzBox *trayIcon = new KFritzBox(mainWindow, &aboutData);
+	KFritzBox *trayIcon 	    = new KFritzBox(mainWindow, &aboutData);
 	trayIcon->show();
 
 

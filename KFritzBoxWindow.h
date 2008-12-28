@@ -24,14 +24,28 @@
 
 #include <KXmlGuiWindow>
 #include <KTextEdit>
+#include <QTreeView>
+#include "KFonbookModel.h"
+#include "KCalllistModel.h"
 
 class KFritzBoxWindow : public KXmlGuiWindow
 {
+	Q_OBJECT
 private:
 	KTextEdit* logArea;
+	KFonbookModel *modelFonbook;
+	KCalllistModel *modelCalllist;
+	//KCalllistModel *modelCalllist;
+	QTreeView *tree;
 public:
 	KFritzBoxWindow();
 	virtual ~KFritzBoxWindow();
+
+private slots:
+void showFonbook(bool b);
+void showCalllist(bool b);
+void showLog(bool b);
+
 };
 
 #endif /*KFRITZBOXWINDOW_H_*/

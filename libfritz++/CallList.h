@@ -60,10 +60,19 @@ private:
 	std::vector<CallEntry> callListAll;
 	bool callListRead;
 	time_t lastMissedCall;
-	static CallList *callList;
+	static CallList *me;
     CallList();
 public:
 	static CallList *getCallList(bool create = true);
+	/**
+	 * Activate call list support.
+	 * This method fetches the call list from the fritz box. Following calls to
+	 * CallList::getCallList() return a reference to this call list object.
+	 * If CreateCallList is not called before a call to getCallList() this triggers fetching
+	 * the call list in a separate thread (which is possibly not wanted).
+	 */
+	static void CreateCallList();
+	static void DeleteCallList();
     virtual ~CallList();
 	void Action();
 	bool isValid() { return callListRead; }

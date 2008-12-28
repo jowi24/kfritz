@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<gui name="kfritzbox" version="1">
+<gui name="kfritzbox" version="2">
   <ToolBar name="mainToolBar" >
     <text>Main Toolbar</text>
-    <Action name="clear" />
+    <Action name="showFonbook" />
+    <Action name="showCalllist" />
+    <Action name="showLog" />
   </ToolBar>
   <MenuBar>
     <Menu name="file" >
-      <Action name="clear" />
+      <Action name="showLog" />
+    </Menu>
+    <Menu name="view" >
+    <Action name="showFonbook" />
+    <Action name="showCalllist" />
     </Menu>
   </MenuBar>
 </gui>

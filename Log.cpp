@@ -27,7 +27,6 @@ LogBuf::LogBuf(eLogType type, KTextEdit *widget) {
 	char	*ptr = new char[BUFFER_SIZE];
 	setp(ptr, ptr + BUFFER_SIZE);
 	setg(0, 0, 0);
-	this->textedit = te;
 	this->type = type;
 	this->widget = widget;
 	connect(this, SIGNAL(signalAppend(QString)), this, SLOT(slotAppend(QString)));

@@ -141,7 +141,8 @@ public:
 	static bool InitCall(std::string &number);
 	static std::string NormalizeNumber(std::string number);
 	static int CompareNormalized(std::string number1, std::string number2);
-	static void GetPhoneSettings();
+	static void GetLocationSettings();
+	static void GetSipSettings();
 	static pthread::Mutex* GetFritzBoxMutex() {return mutex;}
 private:
 	static std::string UrlEncode(std::string &s);

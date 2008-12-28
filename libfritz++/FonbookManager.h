@@ -40,13 +40,32 @@ private:
 public:
 	virtual ~FonbookManager();
 	/**
-	 *
+	 * Creates the central FonbookManager and activates certain fonbooks.
+	 * This method instantiates the fonbookmanager. Following calls to
+	 * getFonbookManager() return a reference to this object.
+	 * CreateFonbookManager should be called before any call to getFonbookManager() to allow
+	 * the configured fonbooks to initialize and fetch data which may be done in separate threads.
+	 * If some of the fonbooks provided by libfritz++ shall be used, they need to be
+	 * activated by this method. These fonbooks are used for reverse lookup on call events.
+	 * The order of the fonbooks determines the priority regarding these lookups.
+	 * Regarding queries to the fonbooks, a pointer is maintained which points to the currently
+	 * "active" fonbook. This pointer can be moved, using FonbookManager::NextFonbook().
+	 * @param the list of enabled fonbooks
+	 * @param the currently "active" fonbook
+	 */
+	static void CreateFonbookManager( std::vector <std::string> vFonbookID, std::string activeFonbook);
+	/**
+	 * Returns the instance object of the FonbookManager casted to Fonbook.
 	 */
 	static Fonbook *GetFonbook();
 	/**
-	 *
+	 * Returns the instance object of the FonbookManager
 	 */
 	static FonbookManager *GetFonbookManager();
+	/*
+	 * Deletes the FonbookManager instance.
+	 */
+	static void DeleteFonbookManager();
 	/**
 	 * Switch to next displayable phonebook.
 	 * @return void

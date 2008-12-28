@@ -47,7 +47,7 @@ public:
 	EventHandler() { }
 	virtual ~EventHandler() { }
 
-	virtual void HandleCall(bool outgoing, int connId, std::string remoteNumber, std::string remoteName, std::string localParty, std::string medium) = 0;
+	virtual void HandleCall(bool outgoing, int connId, std::string remoteNumber, std::string remoteName, std::string remoteType, std::string localParty, std::string medium, std::string mediumName) = 0;
 	virtual void HandleConnect(int connId) = 0;
 	virtual void HandleDisconnect(int connId, std::string duration) = 0;
 };
@@ -55,12 +55,22 @@ public:
 class Listener : public pthread::PThread
 {
 private:
+	static Listener *me;
 	EventHandler *event;
 	tcpclient::TcpClient *tcpclient;
 	std::vector<int> activeConnections;
-
-public:
 	Listener(EventHandler *event);
+public:
+	/**
+	 * Activate listener support.
+	 * This method instantiates a Listener object, which takes care of call events from the
+	 * Fritz!Box. The application has to provide an EventHandler object, which has to inherit
+	 * fritz::EventHandler. The listener notifies the application about call events using this object.
+	 * @param A pointer to the eventHandler. Subsequent calls to CreateListener, e.g., in case of
+	 * configuration changes, can ommit this parameter. Then, the existing EventHandler is used.
+	 */
+	static void CreateListener(EventHandler *event = NULL);
+	static void DeleteListener();
 	virtual ~Listener();
 	virtual void Action();
 };

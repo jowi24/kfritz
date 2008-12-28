@@ -19,26 +19,33 @@
  *
  */
 
-
+#include <Tools.h>
 #include "KEventHandler.h"
 
 KEventHandler::KEventHandler() {
-
+	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
 }
 
 KEventHandler::~KEventHandler() {
 
 }
 
-void KEventHandler::HandleCall(bool outgoing, int connId, std::string remoteParty, std::string localParty, std::string medium)
+void KEventHandler::HandleCall(bool outgoing, int connId, std::string remoteNumber, std::string remoteName, std::string remoteType, std::string localParty, std::string medium, std::string mediumName)
 {
-	QString message;
+	QString qRemoteName = inputCodec->toUnicode(remoteName.c_str());
+	if (remoteType.size() > 0){
+		qRemoteName += " ";
+		qRemoteName += remoteType.c_str();
+	}
+	//QString qLocalParty = inputCodec->toUnicode(localParty.c_str());
+	QString qMediumName     = inputCodec->toUnicode(mediumName.c_str());
+	QString qMessage;
 	if (outgoing)
-		message=i18n("Outgoing call to %1 using %2", remoteParty.c_str(), medium.c_str());
+		qMessage=i18n("Outgoing call to %1 using %2",   qRemoteName.size() ? qRemoteName : remoteNumber.c_str(),                                    qMediumName);
 	else
-		message=i18n("Incoming call from %1 using %2", remoteParty.c_str(), medium.c_str());
+		qMessage=i18n("Incoming call from %1 using %2", qRemoteName.size() ? qRemoteName : remoteNumber.size() ? remoteNumber.c_str() : "unknown",  qMediumName);
 
-	emit notify(message);
+	emit notify(qMessage);
 }
 
 void KEventHandler::HandleConnect(int connId)

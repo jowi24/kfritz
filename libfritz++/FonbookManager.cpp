@@ -63,7 +63,34 @@ FonbookManager::FonbookManager()
 FonbookManager::~FonbookManager()
 {
 	for (size_t i= 0; i < fonbooks.size(); i++) {
+		*dsyslog << __FILE__ << ": deleting fonbook with ID: " << fonbooks[i]->GetTechId() << std::endl;
 		delete(fonbooks[i]);
+	}
+}
+
+void FonbookManager::CreateFonbookManager( std::vector <std::string> vFonbookID, std::string activeFonbook){
+	if (gConfig) {
+		// if there is already a FonbookManager, delete it, so it can adapt to configuration changes
+		DeleteFonbookManager();
+		// save new list of fonbook ids
+		gConfig->setFonbookIDs(vFonbookID);
+		// check if activeFonbook is valid
+		if (activeFonbook.size() > 0) {
+			bool activeFonbookValid = false;
+			for (unsigned int pos = 0; pos < vFonbookID.size(); pos++)
+				if (vFonbookID[pos].compare(activeFonbook) == 0) {
+					activeFonbookValid = true;
+					break;
+				}
+			if (activeFonbookValid)
+				gConfig->setActiveFonbook(activeFonbook);
+			else
+				*esyslog << __FILE__ << ": Invalid call parameter. ActiveFonbook '" << activeFonbook << "'is not enabled or unknown" << std::endl;
+		}
+		// create fonbookmanger (was deleted above) so that it can initialize all fonbooks
+		me = new FonbookManager();
+	} else {
+		*esyslog << __FILE__ << ": Wrong call sequence. Configuration does not exist when trying to create FonbookManager."  << std::endl;
 	}
 }
 
@@ -77,6 +104,14 @@ FonbookManager* FonbookManager::GetFonbookManager() {
 	if (!me)
 		me = new FonbookManager();
 	return me;
+}
+
+void FonbookManager::DeleteFonbookManager() {
+	if (me){
+		*dsyslog << __FILE__ << ": deleting Fonbook Manager" << std::endl;
+		delete me;
+		me = NULL;
+	}
 }
 
 void FonbookManager::NextFonbook() {
