@@ -28,9 +28,6 @@
 #include <string>
 
 #define RETRY_DELAY 60
-#define PORT_WWW 80
-#define PORT_MONITOR 1012
-
 
 namespace fritz {
 
@@ -41,11 +38,13 @@ namespace fritz {
  */
 class Config {
 
-private:
+protected:
 	struct sConfig{
 		std::string configDir;              			// path to plugins' config files (e.g., local phone book)
 		std::string lang;                   			// webinterface language
 		std::string url;                    			// fritz!box url
+		int         uiPort;								// the port of the fritz box web interface
+		int 		listenerPort;						// the port of the fritz box call monitor
 		std::string password;               			// fritz!box web interface password
 		std::string countryCode;            			// fritz!box country-code
 		std::string regionCode;             			// fritz!box region-code
@@ -93,6 +92,8 @@ public:
 	std::string &getLang( )                           { return mConfig.lang; }
 	void setLang( std::string l )                     { mConfig.lang = l; }
 	std::string &getUrl( )                            { return mConfig.url; }
+	int getUiPort( )								  { return mConfig.uiPort; }
+	int getListenerPort( )						      { return mConfig.listenerPort; }
 	std::string &getPassword( )                       { return mConfig.password; }
 	std::string &getCountryCode( )        	          { return mConfig.countryCode; }
 	void setCountryCode( std::string cc )             { mConfig.countryCode = cc; }

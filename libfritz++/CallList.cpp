@@ -73,7 +73,7 @@ void CallList::Action() {
 			Tools::Login();
 			*dsyslog << __FILE__ << ": sending callList request." << std::endl;
 			// force an update of the fritz!box csv list and wait until all data is received
-			tcpclient::HttpClient tc2( gConfig->getUrl(), PORT_WWW);
+			tcpclient::HttpClient tc2( gConfig->getUrl(), gConfig->getUiPort());
 			tc2 << "GET /cgi-bin/webcm?getpage=../html/"
 			<<  Tools::GetLang()
 			<< "/menus/menu2.html&var:lang="
@@ -87,7 +87,7 @@ void CallList::Action() {
 			std::string csvUrl    = msg.substr(urlStart, urlStop-urlStart);
 			// retrieve csv list
 			msg = "";
-			tcpclient::HttpClient tc(gConfig->getUrl(), PORT_WWW);
+			tcpclient::HttpClient tc(gConfig->getUrl(), gConfig->getUiPort());
 			tc << "GET /cgi-bin/webcm?getpage="
 			<<  csvUrl
 			<< " HTTP/1.1\n\n\0";

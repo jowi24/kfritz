@@ -37,7 +37,7 @@ Listener::Listener(EventHandler *event)
 :PThread("fritzlistener")
 {
 	this->event = event;
-	tcpclient = new tcpclient::TcpClient(gConfig->getUrl(), PORT_MONITOR);
+	tcpclient = new tcpclient::TcpClient(gConfig->getUrl(), gConfig->getListenerPort());
 	this->Start();
 }
 
@@ -83,27 +83,14 @@ void Listener::Action() {
 					*dsyslog << __FILE__ << ": Got message " << data << std::endl;
 				}
 
-				// copy message in buffer
-				char *buffer;
-				int ret = asprintf(&buffer, "%s", data.c_str());
-				if (ret <= 0){
-					*esyslog << __FILE__ << ": Could not allocate memory" << std::endl;
-					continue;
-				}
-				// parse buffer
-				char *tok[7];
-				for (size_t i=0; i<7; i++) {
-					tok[i] = strtok(i==0 ? buffer : NULL, ";");
-				}
-				std::string date  = tok[0];
-				std::string type  = tok[1];
-				int connId        = atoi(tok[2]);
-				std::string partA = tok[3] ? tok[3] : "";
-				std::string partB = tok[4] ? tok[4] : "";
-				std::string partC = tok[5] ? tok[5] : "";
-				std::string partD = tok[6] ? tok[6] : "";
-				// after copying all tokens, delete buffer
-				free(buffer);
+				// split line into tokens
+				std::string date  = Tools::Tokenize(data, ';', 0);
+				std::string type  = Tools::Tokenize(data, ';', 1);
+				int connId        = atoi(Tools::Tokenize(data, ';', 2).c_str());
+				std::string partA = Tools::Tokenize(data, ';', 3);
+				std::string partB = Tools::Tokenize(data, ';', 4);
+				std::string partC = Tools::Tokenize(data, ';', 5);
+				std::string partD = Tools::Tokenize(data, ';', 6);
 
 				if (type.compare("CALL") == 0) {
 					// partA => box port

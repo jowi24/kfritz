@@ -136,14 +136,15 @@ public:
 	Tools();
 	virtual ~Tools();
 	static bool MatchesMsnFilter(const std::string &number);
-	static std::string GetLang();
+	static std::string GetLang(bool login = true);
 	static void Login();
 	static bool InitCall(std::string &number);
 	static std::string NormalizeNumber(std::string number);
 	static int CompareNormalized(std::string number1, std::string number2);
-	static void GetLocationSettings();
+	static void GetLocationSettings(bool login = true);
 	static void GetSipSettings();
 	static pthread::Mutex* GetFritzBoxMutex() {return mutex;}
+	static std::string Tokenize(const std::string &buffer, const char delimiter, size_t pos);
 private:
 	static std::string UrlEncode(std::string &s);
 	static pthread::Mutex* mutex;

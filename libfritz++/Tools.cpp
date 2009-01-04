@@ -196,7 +196,7 @@ bool Tools::MatchesMsnFilter(const std::string &number){
 	return false;
 }
 
-std::string Tools::GetLang() {
+std::string Tools::GetLang(bool login) {
 	// TODO: this does "not always" work for fw 29.04.67 (behaves indeterministically)
 	//	if ( gConfig->getLang().size() == 0) {
 	//		std::string sMsg;
@@ -236,9 +236,9 @@ std::string Tools::GetLang() {
 	//		}
 	//	}
 	// Workaround: "Try-and-Error"
-	if ( gConfig->getLang().size() == 0) {
-		Login();
-		tcpclient::HttpClient tc(gConfig->getUrl(), PORT_WWW);
+	if ( gConfig && gConfig->getLang().size() == 0) {
+		if (login) Login();
+		tcpclient::HttpClient tc(gConfig->getUrl(), gConfig->getUiPort());
 		std::vector<std::string> langs;
 		langs.push_back("en");
 		langs.push_back("de");
@@ -269,7 +269,7 @@ void Tools::Login() {
 	std::string sMsg;
 
 	*dsyslog << __FILE__ << ": sending login request to fritz.box." << std::endl;
-	tcpclient::HttpClient tc( gConfig->getUrl(), PORT_WWW);
+	tcpclient::HttpClient tc( gConfig->getUrl(), gConfig->getUiPort());
 	tc   <<		"POST /cgi-bin/webcm HTTP/1.1\n"
 	<<  	"Content-Type: application/x-www-form-urlencoded\n"
 	<<  	"Content-Length: "
@@ -313,7 +313,7 @@ bool Tools::InitCall(std::string &number) {
 	try {
 		Login();
 		*isyslog << __FILE__ << ": sending call init request " << number.c_str() << std::endl;
-		tcpclient::HttpClient tc( gConfig->getUrl(), PORT_WWW);
+		tcpclient::HttpClient tc( gConfig->getUrl(), gConfig->getUiPort());
 		tc  <<	"POST /cgi-bin/webcm HTTP/1.1\n"
 		<<	"Content-Type: application/x-www-form-urlencoded\n"
 		<<	"Content-Length: "
@@ -364,16 +364,16 @@ int Tools::CompareNormalized(std::string number1, std::string number2) {
 	return NormalizeNumber(number1).compare(NormalizeNumber(number2));
 }
 
-void Tools::GetLocationSettings() {
+void Tools::GetLocationSettings(bool login) {
 	// if countryCode or regionCode are already set, exit here...
-	if ( gConfig->getCountryCode().size() > 0 || gConfig->getRegionCode().size() > 0)
+	if ( !gConfig || gConfig->getCountryCode().size() > 0 || gConfig->getRegionCode().size() > 0)
 		return;
 	// ...otherwise get settings from Fritz!Box.
 	*dsyslog << __FILE__ << ": Looking up Phone Settings..." << std::endl;
 	std::string msg;
 	try {
-		Login();
-		tcpclient::HttpClient hc(gConfig->getUrl(), PORT_WWW);
+		if (login) Login();
+		tcpclient::HttpClient hc(gConfig->getUrl(), gConfig->getUiPort());
 		hc << "GET /cgi-bin/webcm?getpage=../html/"
 		<<  Tools::GetLang()
 		<< "/menus/menu2.html&var%3Alang="
@@ -429,7 +429,7 @@ void Tools::GetSipSettings(){
 	std::string msg;
 	try {
 		Login();
-		tcpclient::HttpClient hc(gConfig->getUrl(), PORT_WWW);
+		tcpclient::HttpClient hc(gConfig->getUrl(), gConfig->getUiPort());
 		hc << "GET /cgi-bin/webcm?getpage=../html/"
 		<<  Tools::GetLang()
 		<< "/menus/menu2.html&var%3Alang="
@@ -511,6 +511,22 @@ void Tools::GetSipSettings(){
 	}
 	gConfig->setSipNames(sipNames);
 
+}
+
+std::string Tools::Tokenize(const std::string &buffer, const char delimiter, size_t pos) {
+	size_t tokenStart = 0;
+	for (size_t i=0; i<pos; i++) {
+		tokenStart = buffer.find(delimiter, tokenStart+1);
+		if (tokenStart == std::string::npos)
+			return "";
+	}
+	if (tokenStart > 0)
+		tokenStart++;
+	size_t tokenStop = buffer.find(delimiter, tokenStart);
+	if (tokenStop == std::string::npos)
+		tokenStop = buffer.size();
+	std::string token = buffer.substr(tokenStart, tokenStop - tokenStart);
+	return token;
 }
 
 }

@@ -175,7 +175,7 @@ void FritzFonbook::Action() {
 
 			Tools::Login();
 			*dsyslog << __FILE__ << ": sending fonbook request." << std::endl;
-			tcpclient::HttpClient tc(gConfig->getUrl(), PORT_WWW);
+			tcpclient::HttpClient tc(gConfig->getUrl(), gConfig->getUiPort());
 			tc  <<	"GET /cgi-bin/webcm?getpage=../html/"
 				<<  Tools::GetLang()
 				<<	"/menus/menu2.html"
