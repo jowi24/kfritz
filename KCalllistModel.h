@@ -24,6 +24,7 @@ public:
     virtual QModelIndex index(int row, int column,
     		                  const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &child) const;
+    virtual void sort(int column, Qt::SortOrder order);
 private:
 	fritz::CallList *calllist;
 	QTextCodec *inputCodec;

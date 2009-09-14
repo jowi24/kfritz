@@ -1,0 +1,65 @@
+2008-12-23: 
+- Added type "ALL" to CallList to retrieve complete list of calls at once.
+- Moved callType from CallList to CallEntry. 
+- Implemented in-library msn filtering and reverse-lookups.
+- Renamed various methods in FonbookManager from *Fonbuch* to *Fonbook*.
+- Made CallList a singleton.
+
+2008-12-26:
+- Replaced string tokenizer in Listener.
+
+2008-12-27:
+- Refactored MSN-filter functionality.
+- Added "-fPIC" to Makefiles.
+- A call to Config::SetupFonbookIDs now deletes a previously instantiated FonbookManager
+  to allow multiple calls to SetupFonbookIDs in case of configuration changes.
+- Introduced new method CallList::DeleteCallList() to explicitly delete the singleton instance.
+
+2008-12-28:
+- Made Listener a singleton. A call to Listener::CreateListener() is used to activate this feature.
+- Introduced new method CallList::CreateCallList() to explicitly pre-fetch the call list before
+  calling CallList::getCallList().
+- Moved Config::SetupFonbookIDs to FonbookManager::CreateFonbookManager().
+- Renamed Tools::GetPhoneSettings() to Tools::GetLocationSettings().
+- Added resolving of SIP[0-9] to real provider names.
+
+2008-12-19:
+- removed the port defines and replaced them by two new fields in class Config to allow easier unit testing
+- default LKZ to 49 (Germany) if an error occurs
+
+2009-02-23:
+- added exception catch in Tools::GetLang() and Tools::Login()
+
+2009-03-27:
+- Removed the default of countryCode = "49" if Tools::GetLocationSettings() fails. This task is 
+  handed over to the caller, see next.
+- Added new parameters to Config::Setup() to give default values for countryCode and regionCode.
+  The default parameters are used, when auto-detection in Tools::GetLocationSettings() fails. The
+  new parameter locationSettingsDetected indicates whether auto-detection was successful. In this
+  case, the given default values are overwritten to give the caller access to the new values.
+
+2009-04-08:
+- Fixed naming of local phonebook. The recommended name is now localphonebook.csv, the old name 
+  localfonbuch.csv is still accepted. The directory remains $vdrconfigdir/plugins/fritzbox/.
+  
+2009-05-18:
+- Updated OertlichesFonbook to new website layout
+
+2009-05-31:
+- Fixed naming of local phonebook. The plugin now really looks for a file called 
+  localphonebook.csv.
+  
+2009-06-01:
+- Provided Interface to add entries to phone books. By default, existing implementations do not 
+  support this feature.
+- Implemented adding of entries in local phone book.  
+
+2009-08-23
+- Implemented new login method for Fritz!Box firmware >= xx.04.74 using SIDs. This needs 
+  features from openssl library. For compiling, libssl-dev (or similar) is needed.
+  
+2009-08-26
+- Adapted to new tcpclient++
+- Fixed a warning warn_unused_result in LocalFonbook.cpp
+- Fixed wrong HTTP-GET header in Nummerzoeker.cpp
+ 

@@ -21,6 +21,7 @@
 
 
 #include "Log.h"
+#include <cstdio>
 
 LogBuf::LogBuf(eLogType type, KTextEdit *widget) {
 	const unsigned int BUFFER_SIZE = 1024;

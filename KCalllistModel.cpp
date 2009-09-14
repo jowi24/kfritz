@@ -5,6 +5,7 @@
  *      Author: joachim
  */
 
+#include <iostream>
 #include <KIcon>
 #include "Tools.h"
 #include "KCalllistModel.h"
@@ -125,4 +126,30 @@ QModelIndex KCalllistModel::parent(const QModelIndex & child) const
 	return QModelIndex();
 }
 
-
+void KCalllistModel::sort(int column, Qt::SortOrder order) {
+	fritz::CallEntry::eElements element;
+	switch (column) {
+	case 0:
+		element = fritz::CallEntry::ELEM_TYPE;
+		break;
+	case 1:
+		element = fritz::CallEntry::ELEM_DATE;
+		break;
+	case 2:
+		element = fritz::CallEntry::ELEM_REMOTENAME; //TODO: not 100% correct
+		break;
+	case 3:
+		element = fritz::CallEntry::ELEM_LOCALNAME; //TODO: not 100% correct
+		break;
+	case 4:
+		element = fritz::CallEntry::ELEM_DURATION;
+		break;
+	default:
+		std::cout << __FILE__ << "invalid column to sort for in KCalllistModel" << std::endl;
+		return;
+		break;
+	}
+	calllist->Sort(element, order == Qt::AscendingOrder);
+	emit dataChanged(index(0,                       0,                          QModelIndex()),
+			         index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
+}

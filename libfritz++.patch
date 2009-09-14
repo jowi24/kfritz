@@ -1,0 +1,286 @@
+Index: libfritz++/Fonbook.cpp
+===================================================================
+--- libfritz++/Fonbook.cpp	(revision 246)
++++ libfritz++/Fonbook.cpp	(working copy)
+@@ -19,14 +19,14 @@
+  *
+  */
+ 
+-
++#include <algorithm>
+ #include "Fonbook.h"
+ #include "Tools.h"
+ #include "Config.h"
+ 
+ namespace fritz{
+ 
+-FonbookEntry::FonbookEntry(std::string &name, std::string &number, eType type) {
++FonbookEntry::FonbookEntry(std::string name, std::string number, eType type) {
+ 	this->name   = name;
+ 	this->number = number;
+ 	this->type   = type;
+@@ -55,6 +55,36 @@
+ 	}
+ }
+ 
++class FonbookEntrySort {
++private:
++	bool ascending;
++	FonbookEntry::eElements element;
++public:
++	FonbookEntrySort(FonbookEntry::eElements element = FonbookEntry::ELEM_NAME, bool ascending = true) {
++		this->element   = element;
++		this->ascending = ascending;
++	}
++	bool operator() (FonbookEntry fe1, FonbookEntry fe2){
++		switch(element) {
++		case FonbookEntry::ELEM_NAME:
++			return ((fe1.getName() < fe2.getName()) ^ !ascending);
++			break;
++		case FonbookEntry::ELEM_TYPE:
++			if (ascending)
++				return (fe1.getTypeName() < fe2.getTypeName());
++			else
++				return (fe1.getTypeName() > fe2.getTypeName());
++			break;
++		case FonbookEntry::ELEM_NUMBER:
++			return ((fe1.getNumber() < fe2.getNumber()) ^ !ascending);
++			break;
++		default:
++			*esyslog << __FILE__ << ": invalid element given for sorting." << std::endl;
++			return false;
++		}
++	}
++};
++
+ Fonbook::Fonbook()
+ {
+ 	title       = "Phonebook";
+@@ -86,4 +116,9 @@
+ 	return fonbookList.size();
+ }
+ 
++void Fonbook::Sort(FonbookEntry::eElements element, bool ascending) {
++	FonbookEntrySort fes(element, ascending);
++	std::sort(fonbookList.begin(), fonbookList.end(), fes);
++}
++
+ }
+Index: libfritz++/CallList.cpp
+===================================================================
+--- libfritz++/CallList.cpp	(revision 246)
++++ libfritz++/CallList.cpp	(working copy)
+@@ -25,9 +25,49 @@
+ #include <TcpClient++.h>
+ #include <time.h>
+ #include <stdlib.h>
++#include <algorithm>
+ 
+ namespace fritz{
+ 
++class CallEntrySort {
++private:
++	bool ascending;
++	CallEntry::eElements element;
++public:
++	CallEntrySort(CallEntry::eElements element = CallEntry::ELEM_DATE, bool ascending = true) {
++		this->element   = element;
++		this->ascending = ascending;
++	}
++	bool operator() (CallEntry ce1, CallEntry ce2){
++		switch(element) {
++		case CallEntry::ELEM_DATE:
++			return ((ce1.timestamp < ce2.timestamp) ^ !ascending);
++			break;
++		case CallEntry::ELEM_DURATION:
++			return ((ce1.duration < ce2.duration) ^ !ascending); //TODO: sort int?
++			break;
++		case CallEntry::ELEM_LOCALNAME:
++			return ((ce1.localName < ce2.localName) ^ !ascending);
++			break;
++		case CallEntry::ELEM_LOCALNUMBER:
++			return ((ce1.localNumber < ce2.localNumber) ^ !ascending);
++			break;
++		case CallEntry::ELEM_REMOTENAME:
++			return ((ce1.remoteName < ce2.remoteName) ^ !ascending);
++			break;
++		case CallEntry::ELEM_REMOTENUMBER:
++			return ((ce1.remoteNumber < ce2.remoteNumber) ^ !ascending);
++			break;
++		case CallEntry::ELEM_TYPE:
++			return ((ce1.type < ce2.type) ^ !ascending);
++			break;
++		default:
++			*esyslog << __FILE__ << ": invalid element given for sorting." << std::endl;
++			return false;
++		}
++	}
++};
++
+ CallList *CallList::me = NULL;
+ 
+ CallList::CallList()
+@@ -130,7 +170,7 @@
+ 					durationStop--;
+ 
+ 				CallEntry ce;
+-				ce.type           = (CallEntry::callType)atoi(&msg[type]);
++				ce.type           = (CallEntry::eCallType)atoi(&msg[type]);
+ 				ce.date           = msg.substr(dateStart,     timeStart     - dateStart     -1);
+ 				ce.time           = msg.substr(timeStart,     nameStart     - timeStart     -1);
+ 				ce.remoteName     = msg.substr(nameStart,     numberStart   - nameStart     -1);
+@@ -191,7 +231,7 @@
+ 	Tools::GetFritzBoxMutex()->Unlock();
+ }
+ 
+-CallEntry *CallList::RetrieveEntry(CallEntry::callType type, size_t id) {
++CallEntry *CallList::RetrieveEntry(CallEntry::eCallType type, size_t id) {
+ 	if (id < 0)
+ 		return NULL;
+ 	switch (type) {
+@@ -208,7 +248,7 @@
+ 	}
+ }
+ 
+-size_t CallList::GetSize(CallEntry::callType type) {
++size_t CallList::GetSize(CallEntry::eCallType type) {
+ 	switch (type) {
+ 	case CallEntry::ALL:
+ 		return callListAll.size();
+@@ -238,6 +278,11 @@
+ 	return missedCalls;
+ }
+ 
++void CallList::Sort(CallEntry::eElements element, bool ascending) {
++	CallEntrySort ces(element, ascending);
++	std::sort(callListAll.begin(), callListAll.end(), ces); //TODO: other lists?
++}
++
+ bool CallEntry::MatchesFilter() {
+ 	// entries are filtered according to the MSN filter)
+ 	if ( Tools::MatchesMsnFilter(localNumber))
+Index: libfritz++/CallList.h
+===================================================================
+--- libfritz++/CallList.h	(revision 246)
++++ libfritz++/CallList.h	(working copy)
+@@ -33,13 +33,22 @@
+ 
+ class CallEntry {
+ public:
+-	enum callType {
++	enum eCallType {
+ 		ALL      = 0,
+ 		INCOMING = 1,
+ 		MISSED   = 2,
+ 		OUTGOING = 3
+ 	};
+-	callType    type;
++	enum eElements {
++		ELEM_TYPE,
++		ELEM_DATE,
++		ELEM_REMOTENAME,
++		ELEM_REMOTENUMBER,
++		ELEM_LOCALNAME,
++		ELEM_LOCALNUMBER,
++		ELEM_DURATION,
++	};
++	eCallType   type;
+ 	std::string date;
+ 	std::string time;
+ 	std::string remoteName;
+@@ -76,10 +85,17 @@
+     virtual ~CallList();
+ 	void Action();
+ 	bool isValid() { return callListRead; }
+-	CallEntry *RetrieveEntry(CallEntry::callType type, size_t id);
+-	size_t GetSize(CallEntry::callType type);
++	CallEntry *RetrieveEntry(CallEntry::eCallType type, size_t id);
++	size_t GetSize(CallEntry::eCallType type);
+ 	size_t MissedCalls(time_t since);
+ 	time_t LastMissedCall() { return lastMissedCall; }
++	/**
++	 * Sorts the calllist's entries by the given element and in given order.
++	 * @param the element used for sorting
++	 * @param true if sort order is ascending, false otherwise
++	 */
++	void Sort(CallEntry::eElements element = CallEntry::ELEM_DATE, bool ascending = true);
++
+ };
+ 
+ }
+Index: libfritz++/Fonbook.h
+===================================================================
+--- libfritz++/Fonbook.h	(revision 246)
++++ libfritz++/Fonbook.h	(working copy)
+@@ -41,16 +41,21 @@
+ 		TYPE_MOBILE,
+ 		TYPE_WORK
+ 	};
++	enum eElements {
++		ELEM_NAME   = 0,
++		ELEM_TYPE   = 1,
++		ELEM_NUMBER = 2,
++	};
+ private:
+ 	std::string name;
+ 	std::string number;
+ 	eType type;
+ public:
+-	FonbookEntry(std::string &name, std::string &number, eType type = TYPE_NONE);
+-	std::string &getName() { return name; }
++	FonbookEntry(std::string name, std::string number, eType type = TYPE_NONE);
++	std::string getName() const { return name; }
+ 	void setName(std::string name) { this->name = name; }
+-	std::string &getNumber() { return number; }
+-	eType getType() { return type; }
++	std::string getNumber() const { return number; }
++	eType getType() const { return type; }
+ 	void setType(eType type) { this->type = type; }
+ 	std::string getTypeName();
+ 	bool operator<(const FonbookEntry & fe) const;
+@@ -145,6 +150,12 @@
+ 	 * @return the technical id
+ 	 */
+ 	virtual std::string &GetTechId() { return techId; }
++	/**
++	 * Sorts the phonebook's entries by the given element and in given order.
++	 * @param the element used for sorting
++	 * @param true if sort order is ascending, false otherwise
++	 */
++	virtual void Sort(FonbookEntry::eElements element = FonbookEntry::ELEM_NAME, bool ascending = true);
+ };
+ 
+ }
+Index: libfritz++/FonbookManager.cpp
+===================================================================
+--- libfritz++/FonbookManager.cpp	(revision 246)
++++ libfritz++/FonbookManager.cpp	(working copy)
+@@ -172,6 +172,11 @@
+ 		GetActiveFonbook()->setInitialized(isInitialized);
+ }
+ 
++void FonbookManager::Sort(FonbookEntry::eElements element, bool ascending){
++	if (GetActiveFonbook())
++		GetActiveFonbook()->Sort(element, ascending);
++}
++
+ size_t FonbookManager::GetFonbookSize() {
+ 	return GetActiveFonbook() ? GetActiveFonbook()->GetFonbookSize() : 0;
+ }
+Index: libfritz++/FonbookManager.h
+===================================================================
+--- libfritz++/FonbookManager.h	(revision 246)
++++ libfritz++/FonbookManager.h	(working copy)
+@@ -99,6 +99,12 @@
+ 	 */
+ 	virtual void setInitialized(bool isInitialized);
+ 	/**
++	 * Sorts the phonebook's entries by the given element and in given order.
++	 * @param the element used for sorting
++	 * @param true if sort order is ascending, false otherwise
++	 */
++	virtual void Sort(FonbookEntry::eElements element = FonbookEntry::ELEM_NAME, bool ascending = true);
++	/**
+ 	 *  Returns the number of entries in the telephonebook.
+ 	 * @return the number of entries or cFonbook::npos, if requesting specific telephonebook entries is not possible for this telephonebook
+ 	 */

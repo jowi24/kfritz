@@ -1,0 +1,5 @@
+2008-12-27
+- Added "-fPIC" to the Makefiles
+
+2009-03-11
+- Added missing include in PThread++.h to fix compiler issue with g++-3.3

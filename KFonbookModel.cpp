@@ -95,7 +95,11 @@ QModelIndex KFonbookModel::index(int row, int column, const QModelIndex & parent
 		return createIndex(row, column);
 }
 
-
+void KFonbookModel::sort(int column, Qt::SortOrder order) {
+	fonbook->Sort((fritz::FonbookEntry::eElements) column, order == Qt::AscendingOrder);
+	emit dataChanged(index(0,                       0,                          QModelIndex()),
+			         index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
+}
 
 
 

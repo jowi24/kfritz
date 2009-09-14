@@ -90,10 +90,16 @@ KFritzBoxWindow::KFritzBoxWindow()
 
 void KFritzBoxWindow::showFonbook(bool b) {
 	tree->setModel(modelFonbook);
+	tree->sortByColumn(0, Qt::AscendingOrder); //sort by Name
+	for (int pos=0; pos<modelFonbook->columnCount(QModelIndex()); pos++)
+		tree->resizeColumnToContents(pos);
 }
 
 void KFritzBoxWindow::showCalllist(bool b) {
 	tree->setModel(modelCalllist);
+	tree->sortByColumn(1, Qt::DescendingOrder); //sort by Date
+	for (int pos=0; pos<modelCalllist->columnCount(QModelIndex()); pos++)
+		tree->resizeColumnToContents(pos);
 }
 
 void KFritzBoxWindow::showLog(bool b) {
