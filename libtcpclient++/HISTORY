@@ -1,0 +1,23 @@
+2008-12-27
+- Added "-fPIC" to the Makefiles
+
+2009-08-25
+- Removed references from TcpClient and HttpClient constructors
+- Made TcpClient and HttpClient simpler and more flexible
+  * now inheriting TcpClient from std::iostream 
+  * created corresponding TcpClientBuf class 
+  * deleted obsolete functions, now provided by std::iostream
+
+2009-08-26
+- Introducing stream manipulators for use with HttpClient
+  * get - for HTTP-GET requests, accepts URL including parameters as input; flush to commit
+  * post - for HTTP-POST request, accepts URL, then flush, then POST data; flush to commit
+- Added simple example for testing
+- Implemented handling of additional headers
+
+2009-11-16
+- TcpClient now performs Connect() already in the constructor, therefore may throw a TcpExecption 
+
+2009-12-08
+- Simplified implementation of connection disconnect
+
