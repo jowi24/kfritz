@@ -67,16 +67,13 @@ public:
 	bool operator() (FonbookEntry fe1, FonbookEntry fe2){
 		switch(element) {
 		case FonbookEntry::ELEM_NAME:
-			return ((fe1.getName() < fe2.getName()) ^ !ascending);
+			return (ascending ? (fe1.getName() < fe2.getName()) : (fe1.getName() > fe2.getName()));
 			break;
 		case FonbookEntry::ELEM_TYPE:
-			if (ascending)
-				return (fe1.getTypeName() < fe2.getTypeName());
-			else
-				return (fe1.getTypeName() > fe2.getTypeName());
+			return (ascending ? (fe1.getTypeName() < fe2.getTypeName()) : (fe1.getTypeName() > fe2.getTypeName()));
 			break;
 		case FonbookEntry::ELEM_NUMBER:
-			return ((fe1.getNumber() < fe2.getNumber()) ^ !ascending);
+			return (ascending ? (fe1.getNumber() < fe2.getNumber()) : (fe1.getNumber() > fe2.getNumber()));
 			break;
 		default:
 			*esyslog << __FILE__ << ": invalid element given for sorting." << std::endl;

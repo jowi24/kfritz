@@ -41,25 +41,25 @@ public:
 	bool operator() (CallEntry ce1, CallEntry ce2){
 		switch(element) {
 		case CallEntry::ELEM_DATE:
-			return ((ce1.timestamp < ce2.timestamp) ^ !ascending);
+			return (ascending ? (ce1.timestamp < ce2.timestamp) : (ce1.timestamp > ce2.timestamp));
 			break;
 		case CallEntry::ELEM_DURATION:
-			return ((ce1.duration < ce2.duration) ^ !ascending); //TODO: sort int?
+			return (ascending ? (ce1.duration < ce2.duration) : (ce1.duration > ce2.duration)); //TODO: sort int?
 			break;
 		case CallEntry::ELEM_LOCALNAME:
-			return ((ce1.localName < ce2.localName) ^ !ascending);
+			return (ascending ? (ce1.localName < ce2.localName) : (ce1.localName > ce2.localName));
 			break;
 		case CallEntry::ELEM_LOCALNUMBER:
-			return ((ce1.localNumber < ce2.localNumber) ^ !ascending);
+			return (ascending ? (ce1.localNumber < ce2.localNumber) : (ce1.localNumber > ce2.localNumber));
 			break;
 		case CallEntry::ELEM_REMOTENAME:
-			return ((ce1.remoteName < ce2.remoteName) ^ !ascending);
+			return (ascending ? (ce1.remoteName < ce2.remoteName) : (ce1.remoteName > ce2.remoteName));
 			break;
 		case CallEntry::ELEM_REMOTENUMBER:
-			return ((ce1.remoteNumber < ce2.remoteNumber) ^ !ascending);
+			return (ascending ? (ce1.remoteNumber < ce2.remoteNumber) : (ce1.remoteNumber > ce2.remoteNumber));
 			break;
 		case CallEntry::ELEM_TYPE:
-			return ((ce1.type < ce2.type) ^ !ascending);
+			return (ascending ? (ce1.type < ce2.type) : (ce1.type > ce2.type));
 			break;
 		default:
 			*esyslog << __FILE__ << ": invalid element given for sorting." << std::endl;
