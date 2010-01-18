@@ -22,6 +22,7 @@
 
 #include "Log.h"
 #include <cstdio>
+#include <iostream>
 
 LogBuf::LogBuf(eLogType type, KTextEdit *widget) {
 	const unsigned int BUFFER_SIZE = 1024;
@@ -34,7 +35,8 @@ LogBuf::LogBuf(eLogType type, KTextEdit *widget) {
 }
 
 void LogBuf::slotAppend(QString m) {
-	widget->append(m);
+	widget->insertPlainText(m);
+	std::cout << m.toStdString();
 }
 
 

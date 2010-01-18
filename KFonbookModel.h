@@ -13,6 +13,7 @@
 #include <FonbookManager.h>
 
 class KFonbookModel : public QAbstractItemModel  {
+	Q_OBJECT
 public:
 	KFonbookModel();
 	virtual ~KFonbookModel();
@@ -26,10 +27,12 @@ public:
     virtual QModelIndex parent(const QModelIndex &child) const;
     virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 
-
 private:
 	fritz::Fonbook *fonbook;
 	QTextCodec *inputCodec;
+	int lastRows;
+private slots:
+	void check();
 };
 
 #endif /* KFONBOOKMODEL_H_ */

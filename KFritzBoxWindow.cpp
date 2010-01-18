@@ -28,6 +28,7 @@
 #include <KLocale>
 #include <KActionCollection>
 #include <KStandardAction>
+#include <KTabWidget>
 #include <QTextCodec>
 
 #include <FonbookManager.h>
@@ -35,13 +36,9 @@
 #include "KFritzBoxWindow.h"
 #include "Log.h"
 
-KFritzBoxWindow::KFritzBoxWindow()
+KFritzBoxWindow::KFritzBoxWindow(KTextEdit *logArea)
 {
-//	logArea = new KTextEdit();
-
-//	fritz::Config::SetupLogging(new LogStream(LogBuf::DEBUG, logArea),
-//                    			new LogStream(LogBuf::INFO,  logArea),
-//	                      		new LogStream(LogBuf::ERROR, logArea));
+	this->logArea = logArea;
 
 	std::vector<std::string> vFonbook;
 	vFonbook.push_back("FRITZ");
@@ -50,64 +47,88 @@ KFritzBoxWindow::KFritzBoxWindow()
 
 	fritz::CallList::CreateCallList();
 
-	tree = new QTreeView(this);
-	tree->setAlternatingRowColors(true);
-	tree->setItemsExpandable(false);
-	tree->setRootIsDecorated(false);
-	tree->setSortingEnabled(true);
-	tree->setUniformRowHeights(true);
-	tree->setAcceptDrops(false);
-	tree->setDragEnabled(false);
-	//tree->setSizePolicy()
-	setCentralWidget(tree);
-
 	modelFonbook  = new KFonbookModel();
+	connect(modelFonbook, SIGNAL(modelReset()), SLOT(modelFonbookReset()));
 	modelCalllist = new KCalllistModel();
+	connect(modelCalllist, SIGNAL(modelReset()), SLOT(modelCalllistReset()));
 
-	KAction* aShowLog = new KAction(this);
-	aShowLog->setText(i18n("Logfile"));
-	aShowLog->setIcon(KIcon("text-rtf"));
-	actionCollection()->addAction("showLog", aShowLog);
-	connect(aShowLog, SIGNAL(triggered(bool)), this, SLOT(showLog(bool)));
-
-	KAction* aShowFonbook = new KAction(this);
-	aShowFonbook->setText(i18n("Fonbook"));
-	aShowFonbook->setIcon(KIcon("x-office-address-book"));
-	actionCollection()->addAction("showFonbook", aShowFonbook);
-	connect(aShowFonbook, SIGNAL(triggered(bool)), this, SLOT(showFonbook(bool)));
-
-	KAction* aShowCalllist = new KAction(this);
-	aShowCalllist->setText(i18n("Calllist"));
-	aShowCalllist->setIcon(KIcon("application-x-gnumeric"));
-	actionCollection()->addAction("showCalllist", aShowCalllist);
-	connect(aShowCalllist, SIGNAL(triggered(bool)), this, SLOT(showCalllist(bool)));
+//	KAction* aShowLog = new KAction(this);
+//	aShowLog->setText(i18n("Logfile"));
+//	aShowLog->setIcon(KIcon("text-rtf"));
+//	actionCollection()->addAction("showLog", aShowLog);
+//	connect(aShowLog, SIGNAL(triggered(bool)), this, SLOT(showLog(bool)));
+//
+//	KAction* aShowFonbook = new KAction(this);
+//	aShowFonbook->setText(i18n("Fonbook"));
+//	aShowFonbook->setIcon(KIcon("x-office-address-book"));
+//	actionCollection()->addAction("showFonbook", aShowFonbook);
+//	connect(aShowFonbook, SIGNAL(triggered(bool)), this, SLOT(showFonbook(bool)));
+//
+//	KAction* aShowCalllist = new KAction(this);
+//	aShowCalllist->setText(i18n("Calllist"));
+//	aShowCalllist->setIcon(KIcon("application-x-gnumeric"));
+//	actionCollection()->addAction("showCalllist", aShowCalllist);
+//	connect(aShowCalllist, SIGNAL(triggered(bool)), this, SLOT(showCalllist(bool)));
 
 //	clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
+	treeFonbook = new QTreeView(this);
+	treeFonbook->setAlternatingRowColors(true);
+	treeFonbook->setItemsExpandable(false);
+	treeFonbook->setRootIsDecorated(false);
+	treeFonbook->setSortingEnabled(true);
+	treeFonbook->setUniformRowHeights(true);
+	treeFonbook->setAcceptDrops(false);
+	treeFonbook->setDragEnabled(false);
+
+	treeFonbook->setModel(modelFonbook);
+	treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
+
+	treeCallList = new QTreeView(this);
+	treeCallList->setAlternatingRowColors(true);
+	treeCallList->setItemsExpandable(false);
+	treeCallList->setRootIsDecorated(false);
+	treeCallList->setSortingEnabled(true);
+	treeCallList->setUniformRowHeights(true);
+	treeCallList->setAcceptDrops(false);
+	treeCallList->setDragEnabled(false);
+
+	treeCallList->setModel(modelCalllist);
+	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
+
+	logArea->setReadOnly(true);
+
+	KTabWidget *w = new KTabWidget();
+	setCentralWidget(w);
+	w->addTab(treeFonbook,  KIcon("x-office-address-book"), 	i18n("Fonbook"));
+	w->addTab(treeCallList, KIcon("application-x-gnumeric"), 	i18n("Calllist"));
+	w->addTab(logArea, 		KIcon("text-rtf"), 					i18n("Log"));
+
 	setupGUI();
 }
 
-void KFritzBoxWindow::showFonbook(bool b __attribute__((unused))) {
-	tree->setModel(modelFonbook);
-	tree->sortByColumn(0, Qt::AscendingOrder); //sort by Name
-	for (int pos=0; pos<modelFonbook->columnCount(QModelIndex()); pos++)
-		tree->resizeColumnToContents(pos);
-}
-
-void KFritzBoxWindow::showCalllist(bool b __attribute__((unused))) {
-	tree->setModel(modelCalllist);
-	tree->sortByColumn(1, Qt::DescendingOrder); //sort by Date
-	for (int pos=0; pos<modelCalllist->columnCount(QModelIndex()); pos++)
-		tree->resizeColumnToContents(pos);
-}
-
-void KFritzBoxWindow::showLog(bool b __attribute__((unused))) {
-//	setCentralWidget(logArea);
-}
+//void KFritzBoxWindow::showFonbook(bool b __attribute__((unused))) {
+//}
+//
+//void KFritzBoxWindow::showCalllist(bool b __attribute__((unused))) {
+//}
+//
+//void KFritzBoxWindow::showLog(bool b __attribute__((unused))) {
+//}
 
 KFritzBoxWindow::~KFritzBoxWindow()
 {
 	fritz::FonbookManager::DeleteFonbookManager();
 	fritz::CallList::DeleteCallList();
+}
+
+void KFritzBoxWindow::modelFonbookReset() {
+	for (int pos=0; pos<modelFonbook->columnCount(QModelIndex()); pos++)
+		treeFonbook->resizeColumnToContents(pos);
+}
+
+void KFritzBoxWindow::modelCalllistReset() {
+	for (int pos=0; pos<modelCalllist->columnCount(QModelIndex()); pos++)
+		treeCallList->resizeColumnToContents(pos);
 }

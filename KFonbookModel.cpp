@@ -6,6 +6,7 @@
  */
 
 #include <KIcon>
+#include <QTimer>
 #include "KFonbookModel.h"
 #include <Tools.h>
 #include <iostream>
@@ -14,6 +15,11 @@ KFonbookModel::KFonbookModel() {
 	// get the fonbook resource
 	fonbook = fritz::FonbookManager::GetFonbook();
 	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
+
+	QTimer *timer = new QTimer();
+	connect(timer, SIGNAL(timeout()), SLOT(check()));
+	timer->start(1000);
+	lastRows = 0;
 }
 
 KFonbookModel::~KFonbookModel() {
@@ -103,10 +109,9 @@ void KFonbookModel::sort(int column, Qt::SortOrder order) {
 			         index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
 }
 
-
-
-
-
-
-
-
+void KFonbookModel::check() {
+	if (lastRows != rowCount(QModelIndex())) {
+		reset();
+		lastRows = rowCount(QModelIndex());
+	}
+}

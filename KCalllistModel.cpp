@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <KIcon>
+#include <QTimer>
 #include "Tools.h"
 #include "KCalllistModel.h"
 
@@ -15,7 +16,10 @@ KCalllistModel::KCalllistModel() {
 	calllist = fritz::CallList::getCallList();
 	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
 
-
+	QTimer *timer = new QTimer();
+	connect(timer, SIGNAL(timeout()), SLOT(check()));
+	timer->start(1000);
+	lastRows = 0;
 }
 
 KCalllistModel::~KCalllistModel() {
@@ -102,7 +106,7 @@ QVariant KCalllistModel::headerData(int section, Qt::Orientation orientation, in
 		default:
 			return QVariant();
 		}
-	}else {
+	} else {
 		return QVariant();
 	}
 }
@@ -153,5 +157,12 @@ void KCalllistModel::sort(int column, Qt::SortOrder order) {
 	}
 	calllist->Sort(element, order == Qt::AscendingOrder);
 	emit dataChanged(index(0,                       0,                          QModelIndex()),
-			         index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
+				     index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
+}
+
+void KCalllistModel::check() {
+	if (lastRows != rowCount(QModelIndex())) {
+		reset();
+		lastRows = rowCount(QModelIndex());
+	}
 }

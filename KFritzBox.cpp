@@ -30,6 +30,7 @@
 #include "KFritzBox.h"
 #include "KFritzBoxWindow.h"
 #include "KEventHandler.h"
+#include "Log.h"
 
 //TODO: use KUniqueApplication ?
 
@@ -66,18 +67,18 @@ int main (int argc, char *argv[])
 			// If null, program name is used instead.
 			0,
 			// A displayable program name string.
-			ki18n("KFritz!Box"),
+			ki18n("KFritz"),
 			// The program version string.
 			"1.0",
 			// Short description of what the app does.
-			ki18n("Notify about phone activity on your Fritz!Box"),
+			ki18n("Notifies about phone activity and browses calllists and telephonebook on your Fritz!Box"),
 			// The license this code is released under
 			KAboutData::License_GPL,
 			// Copyright Statement
-			ki18n("(c) 2008"),
+			ki18n("(c) 2008-2010"),
 			// Optional text shown in the About box.
 			// Can contain any information desired.
-			ki18n(""),
+			ki18n("Developed by Matthias Becker and Joachim Wilke."),
 			// The program homepage string.
 			"http://www.joachim-wilke.de/kfritzbox.htm",
 			// The bug report email address
@@ -88,18 +89,23 @@ int main (int argc, char *argv[])
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KApplication app;
 
-	// init libfritz++
-	//fritz::Config::Setup("fritz.box", "JmH44b76");
-	fritz::Config::Setup("localhost", "echnaton49");
-	fritz::Config::SetupPorts(9900, 9980);
+	// init libfritz++ loggin
+	KTextEdit *logArea = new KTextEdit();
+	fritz::Config::SetupLogging(new LogStream(LogBuf::DEBUG, logArea),
+			                    new LogStream(LogBuf::INFO, logArea),
+			                    new LogStream(LogBuf::ERROR, logArea));
+	// start libfritz++
+	fritz::Config::Setup("fritz.box", "JmH44b76"); //TODO: solve some other way?
+	//fritz::Config::Setup("localhost", "echnaton49");
+	//fritz::Config::SetupPorts(9900, 9980);
 
 
 	std::vector<std::string> vMsn;
-	vMsn.push_back("3020431");
+	vMsn.push_back("3020431"); //TODO: solve some other way?
 	fritz::Config::SetupMsnFilter(vMsn);
 
-	// create GUI elements
-	KFritzBoxWindow *mainWindow = new KFritzBoxWindow();
+	// create GUI elements, hand-over logArea to mainWindow
+	KFritzBoxWindow *mainWindow = new KFritzBoxWindow(logArea);
 	KFritzBox *trayIcon 	    = new KFritzBox(mainWindow, &aboutData);
 	trayIcon->show();
 

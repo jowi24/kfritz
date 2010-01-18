@@ -1,0 +1,43 @@
+2008-12-21:
+- Created SVN for kfritz
+
+2008-12-23:
+- Adapted to changes in libfritz++
+  * Made CallList a singleton.
+  * Renamed various methods in fonbook classes from *Fonbuch* to *Fonbook*.
+  * Implemented in-library msn filtering and reverse-lookups.
+  * Renamed various methods in FonbookManager from *Fonbuch* to *Fonbook*.
+  * Introduced callType::ALL to get one complete call list (containing missed, incoming and outgoing)
+  * Moved callType to CallEntry
+
+2008-12-27:
+- Added "-fPIC" to Makefiles.
+
+2008-12-28:
+- Adapted to changes in libfritz++
+  * A call to Config::SetupFonbookIDs now deletes a previously instantiated FonbookManager to allow multiple calls to SetupFonbookIDs in case of configuration changes.
+  * Introduced new method CallList::DeleteCallList() to explicitly delete the singleton instance.                                                                      
+  * Made Listener a singleton. A call to Listener::CreateListener() is used to activate this feature.                                                                  
+  * Introduced new method CallList::CreateCallList() to explicitly pre-fetch the call list before calling CallList::getCallList().
+  * Moved Config::SetupFonbookIDs to FonbookManager::CreateFonbookManager().
+  * Renamed Tools::GetPhoneSettings() to Tools::GetLocationSettings().
+  * Added resolving of SIP[0-9] to real provider names.
+
+2009-09-14:
+- Adapted to changes in libfritz++
+  * added sort routines to libfritz++
+- added sort routines to KCalllistModel and KFonbookModel
+
+2010-01-17:
+- Adapted to changes in libfritz++
+  * Fixed a possible segfault when sorting calllists and fonbooks
+
+2010-01-18:
+- Adapted to changes in libfritz++
+  * Added Config::SetupPorts() to provide non-standard ports
+  * Removed useless check in CallList::RetrieveEntry()                                    
+  * Fixed some warnings about ununsed parameters in base-classes and empty implementations
+- Fixed some warnings about ununsed parameters
+- Added debug mode to cmake file                     
+- Now logging to both UI and stdout
+- Introduced tabs for fonbook, calllist and log

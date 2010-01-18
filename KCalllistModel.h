@@ -13,6 +13,7 @@
 #define KCALLLISTMODEL_H_
 
 class KCalllistModel : public QAbstractItemModel {
+	Q_OBJECT
 public:
 	KCalllistModel();
 	virtual ~KCalllistModel();
@@ -28,6 +29,9 @@ public:
 private:
 	fritz::CallList *calllist;
 	QTextCodec *inputCodec;
+	int lastRows;
+private slots:
+	void check();
 };
 
 #endif /* KCALLLISTMODEL_H_ */

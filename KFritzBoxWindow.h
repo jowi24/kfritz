@@ -35,16 +35,17 @@ private:
 	KTextEdit* logArea;
 	KFonbookModel *modelFonbook;
 	KCalllistModel *modelCalllist;
-	//KCalllistModel *modelCalllist;
-	QTreeView *tree;
+	QTreeView *treeFonbook, *treeCallList;
 public:
-	KFritzBoxWindow();
+	KFritzBoxWindow(KTextEdit *logArea);
 	virtual ~KFritzBoxWindow();
 
 private slots:
-void showFonbook(bool b);
-void showCalllist(bool b);
-void showLog(bool b);
+void modelCalllistReset();
+void modelFonbookReset();
+//void showFonbook(bool b);
+//void showCalllist(bool b);
+//void showLog(bool b);
 
 };
 
