@@ -107,8 +107,9 @@ QVariant KCalllistModel::headerData(int section, Qt::Orientation orientation, in
 	}
 }
 
-int KCalllistModel::columnCount(const QModelIndex & parent) const
+int KCalllistModel::columnCount(const QModelIndex & parent __attribute__((unused))) const
 {
+	// the number of columns is independent of the current parent, ignoring this parameter
 	return 5;
 }
 
@@ -121,8 +122,9 @@ int KCalllistModel::rowCount(const QModelIndex & parent) const
 		return calllist->GetSize(fritz::CallEntry::ALL);
 }
 
-QModelIndex KCalllistModel::parent(const QModelIndex & child) const
+QModelIndex KCalllistModel::parent(const QModelIndex & child __attribute__((unused))) const
 {
+	// always returning QModelIndex() == 'child has no parent'; ignoring parameter
 	return QModelIndex();
 }
 

@@ -89,7 +89,10 @@ int main (int argc, char *argv[])
 	KApplication app;
 
 	// init libfritz++
-	fritz::Config::Setup("fritz.box", "JmH44b76");
+	//fritz::Config::Setup("fritz.box", "JmH44b76");
+	fritz::Config::Setup("localhost", "echnaton49");
+	fritz::Config::SetupPorts(9900, 9980);
+
 
 	std::vector<std::string> vMsn;
 	vMsn.push_back("3020431");

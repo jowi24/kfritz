@@ -29,8 +29,9 @@ int KFonbookModel::rowCount(const QModelIndex & parent) const
 		return fonbook->GetFonbookSize();
 }
 
-int KFonbookModel::columnCount(const QModelIndex & parent) const
+int KFonbookModel::columnCount(const QModelIndex & parent __attribute__((unused))) const
 {
+	// number of columns is independent of parent, ignoring parameter
 	return 3;
 }
 
@@ -82,8 +83,9 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const
 	return QVariant();
 }
 
-QModelIndex KFonbookModel::parent(const QModelIndex & child) const
+QModelIndex KFonbookModel::parent(const QModelIndex & child __attribute__((unused))) const
 {
+	// always returning QModelIndex() == 'child has no parent'; ignoring parameter
 	return QModelIndex();
 }
 

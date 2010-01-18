@@ -4,14 +4,15 @@ find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 include_directories(${KDE4_INCLUDES})
 set(kfritzbox_SRCS KFritzBox.cpp KFritzBoxWindow.cpp KEventHandler.cpp KFonbookModel.cpp KCalllistModel.cpp Log.cpp)
-set(CMAKE_CXX_FLAGS "-fexceptions -g -ggdb -O0 -Wall" ) 
+set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_CXX_FLAGS_DEBUG "-fexceptions -g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG" ) 
 
 subdirs(libtcpclient++)
 subdirs(libpthread++)
 subdirs(libfritz++)
 INCLUDE_DIRECTORIES(libfritz++ libtcpclient++ libpthread++)
 
-find_package(ssl)
+
 
 kde4_add_executable(kfritzbox ${kfritzbox_SRCS})
 target_link_libraries(kfritzbox ${KDE4_KDEUI_LIBS} fritz++ tcpclient++ pthread++ ssl)

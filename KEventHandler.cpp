@@ -30,7 +30,7 @@ KEventHandler::~KEventHandler() {
 
 }
 
-void KEventHandler::HandleCall(bool outgoing, int connId, std::string remoteNumber, std::string remoteName, std::string remoteType, std::string localParty, std::string medium, std::string mediumName)
+void KEventHandler::HandleCall(bool outgoing, int connId __attribute__((unused)), std::string remoteNumber, std::string remoteName, std::string remoteType, std::string localParty __attribute__((unused)), std::string medium __attribute__((unused)), std::string mediumName)
 {
 	QString qRemoteName = inputCodec->toUnicode(remoteName.c_str());
 	if (remoteType.size() > 0){
@@ -48,11 +48,11 @@ void KEventHandler::HandleCall(bool outgoing, int connId, std::string remoteNumb
 	emit notify(qMessage);
 }
 
-void KEventHandler::HandleConnect(int connId)
+void KEventHandler::HandleConnect(int connId __attribute__((unused)))
 {
 }
 
-void KEventHandler::HandleDisconnect(int connId, std::string duration)
+void KEventHandler::HandleDisconnect(int connId __attribute__((unused)), std::string duration __attribute__((unused)))
 {
 }
 
