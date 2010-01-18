@@ -21,3 +21,6 @@
 2009-12-08
 - Simplified implementation of connection disconnect
 
+2010-01-18:
+- Simplified second constructor of TcpClient to TcpClient(TcpClientBuf *buf), dropping 
+  hostname and port. Adapted HttpClient.
