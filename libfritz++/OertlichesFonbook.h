@@ -58,7 +58,7 @@ public:
 	 * @param id unique identifier of the requested entry
 	 * @return the entry with key id or NULL, if unsuccesful
 	 */
-	virtual FonbookEntry *RetrieveFonbookEntry(size_t id) { return NULL; }
+	virtual FonbookEntry *RetrieveFonbookEntry(size_t id __attribute__((unused))) { return NULL; }
 
 };
 

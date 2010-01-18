@@ -124,7 +124,7 @@ public:
 	 * @param fe a new phonebook entry
 	 * @return true, if add was sucessful
 	 */
-	virtual bool AddFonbookEntry(FonbookEntry fe) { return false; }
+	virtual bool AddFonbookEntry(FonbookEntry fe __attribute__((unused))) { return false; }
 	/**
 	 * Returns if it is possible to display the entries of this phonebook.
 	 * @return true, if this phonebook has displayable entries. "Reverse lookup only" phonebooks must return false here.

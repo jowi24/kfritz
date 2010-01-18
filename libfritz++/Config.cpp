@@ -60,7 +60,14 @@ void Config::Setup(std::string hostname, std::string password,
 	Tools::GetSipSettings();
 }
 
-void Config::SetupMsnFilter( std::vector <std::string> vMsn){
+void Config::SetupPorts ( size_t listener, size_t ui ) {
+	if (gConfig) {
+		gConfig->mConfig.listenerPort = listener;
+		gConfig->mConfig.uiPort = ui;
+	}
+}
+
+void Config::SetupMsnFilter( std::vector <std::string> vMsn) {
 	if (gConfig)
 		gConfig->mConfig.msn = vMsn;
 }

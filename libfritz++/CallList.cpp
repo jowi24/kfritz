@@ -189,8 +189,6 @@ void CallList::Action() {
 }
 
 CallEntry *CallList::RetrieveEntry(CallEntry::eCallType type, size_t id) {
-	if (id < 0)
-		return NULL;
 	switch (type) {
 	case CallEntry::ALL:
 		return &callListAll[id];
