@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile/>
+  <group name="FritzBox">
+    <entry name="Hostname" type="String">
+      <label>Host name</label>
+      <tooltip>The host name of the Fritz!Box.</tooltip>
+      <whatsthis>This is the host name of the Fritz!Box in your network. Most probably this is "fritz.box". As an alternative you can also use the IP address instead of the host name.</whatsthis>
+      <default>fritz.box</default>
+    </entry>
+    <entry name="CountryCode" type="String">
+      <label>Country code</label>
+      <tooltip>The country code the Fritz!Box is located in.</tooltip>
+      <whatsthis>This is the country code your Fritz!Box is located in. Normally this is read automatically from your Fritz!Box so you do not need to specify it here.</whatsthis>
+      <default>49</default>
+    </entry>
+    <entry name="AreaCode" type="String">
+      <label>Area code</label>
+      <tooltip>The area code the Fritz!Box is located in.</tooltip>
+      <whatsthis>This is the area code your Fritz!Box is located in. Normally this is read automatically from your Fritz!Box so you do not need to specify it here.</whatsthis>
+    </entry>
+  </group>
+  <group name="Events">
+    <entry name="ShowIncomingCalls" type="Bool">
+     <label>Notify on incoming calls</label>
+     <tooltip>Notify on incoming calls</tooltip>   
+     <default>true</default>
+    </entry>
+    <entry name="ShowOutgoingCalls" type="Bool">
+     <label>Notify on outgoing calls</label>
+     <tooltip>Notify on outgoing calls</tooltip>   
+     <default>false</default>
+    </entry>    
+  </group>  
+  <group name="Phonebooks">
+    <entry name="PhonebookList" type="StringList">
+      <label>Phone books</label>
+      <tooltip>List of active phone books.</tooltip>
+    </entry>
+  </group>   
+</kcfg>

@@ -19,8 +19,10 @@
  *
  */
 
-#include <Tools.h>
 #include "KEventHandler.h"
+
+#include <Tools.h>
+#include <KNotification>
 
 KEventHandler::KEventHandler() {
 	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
@@ -45,7 +47,10 @@ void KEventHandler::HandleCall(bool outgoing, int connId __attribute__((unused))
 	else
 		qMessage=i18n("Incoming call from %1 using %2", qRemoteName.size() ? qRemoteName : remoteNumber.size() ? remoteNumber.c_str() : "unknown",  qMediumName);
 
-	emit notify(qMessage);
+	KNotification *notification= new KNotification ( "incomingCall" );
+	notification->setText(qMessage);
+	notification->sendEvent();
+
 }
 
 void KEventHandler::HandleConnect(int connId __attribute__((unused)))

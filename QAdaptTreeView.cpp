@@ -7,24 +7,22 @@
 
 #include "QAdaptTreeView.h"
 
-QAdaptTreeView::QAdaptTreeView() {
-	connect(model, SIGNAL(dataChanged(const QModelIndex &, const
-	QModelIndex& ) ), this, SLOT(adaptColumns(const QModelIndex &,
-	const
-	               QModelIndex&) ) );
-
+QAdaptTreeView::QAdaptTreeView(QWidget *parent)
+:QTreeView(parent) {
+//	connect(model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex& )),			SLOT(adaptColumns(const QModelIndex &, const QModelIndex&)));
 }
 
 QAdaptTreeView::~QAdaptTreeView() {
-	// TODO Auto-generated destructor stub
+
 }
 
-void QAdaptTreeView::adaptColumns(const QModelIndex &topleft, const QModelIndex &bottomRight) {
-    int firstColumn= topleft.column();
-    int lastColumn = bottomRight.column();
+void QAdaptTreeView::reset() {
+	QTreeView::reset();
+	adaptColumns();
+}
+
+void QAdaptTreeView::adaptColumns() {
     // Resize the column to the size of its contents
-    do {
-           resizeColumnToContents(firstColumn);
-           firstColumn++;
-    } while (firstColumn < lastColumn);
+    for (int col=0; col < model()->columnCount(QModelIndex()); col++)
+           resizeColumnToContents(col);
 }

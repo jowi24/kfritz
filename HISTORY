@@ -41,3 +41,12 @@
 - Added debug mode to cmake file                     
 - Now logging to both UI and stdout
 - Introduced tabs for fonbook, calllist and log
+
+2010-01-24:
+- Implemented configuration dialog. 
+  Hostname, area code and country code are now configurable
+- Using KNotify for notification only, now
+- Refactored KFonbookModel and KCalllistModel using a generic base class KFritzModel
+- Moved all libfritz initialization to a threaded class LibFritzInit, 
+  speeding up application start
+

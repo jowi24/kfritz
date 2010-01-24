@@ -24,28 +24,29 @@
 
 #include <KXmlGuiWindow>
 #include <KTextEdit>
+#include <KTabWidget>
 #include <QTreeView>
 #include "KFonbookModel.h"
 #include "KCalllistModel.h"
+#include "LibFritzInit.h"
+#include "QAdaptTreeView.h"
 
 class KFritzBoxWindow : public KXmlGuiWindow
 {
 	Q_OBJECT
 private:
-	KTextEdit* logArea;
 	KFonbookModel *modelFonbook;
 	KCalllistModel *modelCalllist;
-	QTreeView *treeFonbook, *treeCallList;
+	QAdaptTreeView *treeFonbook, *treeCallList;
+	KTabWidget *tabWidget;
+	LibFritzInit *libFritzInit;
 public:
-	KFritzBoxWindow(KTextEdit *logArea);
+	KFritzBoxWindow();
 	virtual ~KFritzBoxWindow();
-
-private slots:
-void modelCalllistReset();
-void modelFonbookReset();
-//void showFonbook(bool b);
-//void showCalllist(bool b);
-//void showLog(bool b);
+public Q_SLOTS:
+	void showSettings(bool b);
+	void showNotificationSettings(bool b);
+	void updateConfiguration(const QString &dialogName);
 
 };
 

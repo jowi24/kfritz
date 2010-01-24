@@ -19,6 +19,8 @@
  *
  */
 
+#include "KFritzBox.h"
+
 #include <KApplication>
 #include <KAboutData>
 #include <KCmdLineArgs>
@@ -27,10 +29,7 @@
 
 #include <Config.h>
 #include <FonbookManager.h>
-#include "KFritzBox.h"
 #include "KFritzBoxWindow.h"
-#include "KEventHandler.h"
-#include "Log.h"
 
 //TODO: use KUniqueApplication ?
 
@@ -39,23 +38,12 @@ KFritzBox::KFritzBox(QWidget *mainWindow, KAboutData *aboutData)
 {
 	this->aboutData = aboutData;
 
-	KEventHandler *eventHandler = new KEventHandler();
-	fritz::Listener::CreateListener(eventHandler);
-	connect(eventHandler, SIGNAL(notify(QString)), this, SLOT(notify(QString)));
-
 }
 
 KFritzBox::~KFritzBox()
 {
-	fritz::Listener::DeleteListener();
 }
 
-void KFritzBox::notify(QString message) {
-	showMessage(aboutData->programName(), message);
-	KNotification *notification= new KNotification ( "incomingCall" );
-	notification->setText(message);
-	notification->sendEvent();
-}
 
 int main (int argc, char *argv[])
 {
@@ -89,26 +77,10 @@ int main (int argc, char *argv[])
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KApplication app;
 
-	// init libfritz++ loggin
-	KTextEdit *logArea = new KTextEdit();
-	fritz::Config::SetupLogging(new LogStream(LogBuf::DEBUG, logArea),
-			                    new LogStream(LogBuf::INFO, logArea),
-			                    new LogStream(LogBuf::ERROR, logArea));
-	// start libfritz++
-	fritz::Config::Setup("fritz.box", "JmH44b76"); //TODO: solve some other way?
-	//fritz::Config::Setup("localhost", "echnaton49");
-	//fritz::Config::SetupPorts(9900, 9980);
-
-
-	std::vector<std::string> vMsn;
-	vMsn.push_back("3020431"); //TODO: solve some other way?
-	fritz::Config::SetupMsnFilter(vMsn);
-
 	// create GUI elements, hand-over logArea to mainWindow
-	KFritzBoxWindow *mainWindow = new KFritzBoxWindow(logArea);
+	KFritzBoxWindow *mainWindow = new KFritzBoxWindow();
 	KFritzBox *trayIcon 	    = new KFritzBox(mainWindow, &aboutData);
 	trayIcon->show();
-
-
+//	mainWindow->show();
 	return app.exec();
 }

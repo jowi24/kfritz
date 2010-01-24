@@ -11,11 +11,13 @@
 #include <qtreeview.h>
 
 class QAdaptTreeView: public QTreeView {
+	Q_OBJECT
 public:
-	QAdaptTreeView();
+	QAdaptTreeView(QWidget *parent);
 	virtual ~QAdaptTreeView();
+	void adaptColumns();
 private slots:
-	void adaptColumns(const QModelIndex &topleft, const QModelIndex &bottomRight);
+	virtual void reset();
 };
 
 #endif /* QADAPTTREEVIEW_H_ */

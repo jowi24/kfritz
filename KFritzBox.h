@@ -25,7 +25,6 @@
 #include <QObject>
 #include <KSystemTrayIcon>
 #include <KAboutData>
-#include <KNotification>
 #include <Listener.h>
 #include "KEventHandler.h"
 
@@ -38,8 +37,6 @@ public:
 	virtual ~KFritzBox();
 private:
 	KAboutData *aboutData;
-private slots:
-	void notify(QString message);
 };
 
 #endif /*KFRITZBOX_H_*/

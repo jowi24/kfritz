@@ -19,6 +19,8 @@
  *
  */
 
+#include "KFritzBoxWindow.h"
+
 #include <KApplication>
 #include <KAction>
 #include <KActionCollection>
@@ -28,52 +30,55 @@
 #include <KLocale>
 #include <KActionCollection>
 #include <KStandardAction>
-#include <KTabWidget>
+#include <KConfigSkeleton>
+#include <KConfigDialog>
+#include <KNotifyConfigWidget>
 #include <QTextCodec>
-
-#include <FonbookManager.h>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
 #include <Config.h>
-#include "KFritzBoxWindow.h"
+
+#include "KSettings.h"
+#include "ui_KSettingsFritzBox.h"
 #include "Log.h"
 
-KFritzBoxWindow::KFritzBoxWindow(KTextEdit *logArea)
+
+KFritzBoxWindow::KFritzBoxWindow()
 {
-	this->logArea = logArea;
+	KTextEdit *logArea = new KTextEdit(this);
+	fritz::Config::SetupLogging(new LogStream(LogBuf::DEBUG, logArea),
+			                    new LogStream(LogBuf::INFO, logArea),
+			                    new LogStream(LogBuf::ERROR, logArea));
 
-	std::vector<std::string> vFonbook;
-	vFonbook.push_back("FRITZ");
-	vFonbook.push_back("OERT");
-	fritz::FonbookManager::CreateFonbookManager(vFonbook, "FRITZ");
-
-	fritz::CallList::CreateCallList();
+	// init libfritz++ in background
+	libFritzInit = new LibFritzInit();
 
 	modelFonbook  = new KFonbookModel();
-	connect(modelFonbook, SIGNAL(modelReset()), SLOT(modelFonbookReset()));
+	//connect(modelFonbook, SIGNAL(modelReset()), SLOT(modelFonbookReset()));
+	connect(libFritzInit, SIGNAL(ready(bool)), modelFonbook, SLOT(libReady(bool)));
 	modelCalllist = new KCalllistModel();
-	connect(modelCalllist, SIGNAL(modelReset()), SLOT(modelCalllistReset()));
+	//connect(modelCalllist, SIGNAL(modelReset()), SLOT(modelCalllistReset()));
+	connect(libFritzInit, SIGNAL(ready(bool)), modelCalllist, SLOT(libReady(bool)));
 
-//	KAction* aShowLog = new KAction(this);
-//	aShowLog->setText(i18n("Logfile"));
-//	aShowLog->setIcon(KIcon("text-rtf"));
-//	actionCollection()->addAction("showLog", aShowLog);
-//	connect(aShowLog, SIGNAL(triggered(bool)), this, SLOT(showLog(bool)));
-//
-//	KAction* aShowFonbook = new KAction(this);
-//	aShowFonbook->setText(i18n("Fonbook"));
-//	aShowFonbook->setIcon(KIcon("x-office-address-book"));
-//	actionCollection()->addAction("showFonbook", aShowFonbook);
-//	connect(aShowFonbook, SIGNAL(triggered(bool)), this, SLOT(showFonbook(bool)));
-//
-//	KAction* aShowCalllist = new KAction(this);
-//	aShowCalllist->setText(i18n("Calllist"));
-//	aShowCalllist->setIcon(KIcon("application-x-gnumeric"));
-//	actionCollection()->addAction("showCalllist", aShowCalllist);
-//	connect(aShowCalllist, SIGNAL(triggered(bool)), this, SLOT(showCalllist(bool)));
+	KAction* aShowSettings = new KAction(this);
+	aShowSettings->setText(i18n("Configure KFritz"));
+	aShowSettings->setIcon(KIcon("preferences-other"));
+	actionCollection()->addAction("showSettings", aShowSettings);
+	connect(aShowSettings, SIGNAL(triggered(bool)), this, SLOT(showSettings(bool)));
 
-//	clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
+	KAction* aShowNotifySettings = new KAction(this);
+	aShowNotifySettings->setText(i18n("Configure Notifications"));
+	aShowNotifySettings->setIcon(KIcon("preferences-desktop-notification"));
+	actionCollection()->addAction("showNotifySettings", aShowNotifySettings);
+	connect(aShowNotifySettings, SIGNAL(triggered(bool)), this, SLOT(showNotificationSettings(bool)));
+
+
+	//	clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
+
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
-	treeFonbook = new QTreeView(this);
+	treeFonbook = new QAdaptTreeView(this);
 	treeFonbook->setAlternatingRowColors(true);
 	treeFonbook->setItemsExpandable(false);
 	treeFonbook->setRootIsDecorated(false);
@@ -85,7 +90,7 @@ KFritzBoxWindow::KFritzBoxWindow(KTextEdit *logArea)
 	treeFonbook->setModel(modelFonbook);
 	treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
 
-	treeCallList = new QTreeView(this);
+	treeCallList = new QAdaptTreeView(this);
 	treeCallList->setAlternatingRowColors(true);
 	treeCallList->setItemsExpandable(false);
 	treeCallList->setRootIsDecorated(false);
@@ -99,36 +104,49 @@ KFritzBoxWindow::KFritzBoxWindow(KTextEdit *logArea)
 
 	logArea->setReadOnly(true);
 
-	KTabWidget *w = new KTabWidget();
-	setCentralWidget(w);
-	w->addTab(treeFonbook,  KIcon("x-office-address-book"), 	i18n("Fonbook"));
-	w->addTab(treeCallList, KIcon("application-x-gnumeric"), 	i18n("Calllist"));
-	w->addTab(logArea, 		KIcon("text-rtf"), 					i18n("Log"));
+	tabWidget = new KTabWidget();
+	setCentralWidget(tabWidget);
+	tabWidget->addTab(treeFonbook,  KIcon("x-office-address-book"), 	i18n("Fonbook"));
+	tabWidget->addTab(treeCallList, KIcon("application-x-gnumeric"), 	i18n("Calllist"));
+	// this tab has to be removed in the destructor, because of logArea being an 'external' object
+	tabWidget->addTab(logArea, 		KIcon("text-rtf"), 					i18n("Log"));
 
 	setupGUI();
 }
 
-//void KFritzBoxWindow::showFonbook(bool b __attribute__((unused))) {
-//}
-//
-//void KFritzBoxWindow::showCalllist(bool b __attribute__((unused))) {
-//}
-//
-//void KFritzBoxWindow::showLog(bool b __attribute__((unused))) {
-//}
-
 KFritzBoxWindow::~KFritzBoxWindow()
 {
+	// move logging to console
+	fritz::Config::SetupLogging(&std::clog, &std::cout, &std::cerr);
+	tabWidget->removeTab(2);
+
 	fritz::FonbookManager::DeleteFonbookManager();
 	fritz::CallList::DeleteCallList();
+
+	delete libFritzInit;
 }
 
-void KFritzBoxWindow::modelFonbookReset() {
-	for (int pos=0; pos<modelFonbook->columnCount(QModelIndex()); pos++)
-		treeFonbook->resizeColumnToContents(pos);
+void KFritzBoxWindow::showSettings(bool b __attribute__((unused))) {
+	KConfigDialog *confDialog = new KConfigDialog(this, "settings", KSettings::self());
+
+	QWidget *frameFritzBox = new QWidget( this );
+	frameFritzBox->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    Ui_KSettingsFritzBox uiFritzBox;
+    uiFritzBox.setupUi(frameFritzBox);
+
+	confDialog->addPage(frameFritzBox, "Fritz!Box", "modem", "Configure connection to Fritz!Box");
+	confDialog->addPage(new QWidget(this), "Phone books", "x-office-address-book", "Select phone books to use" );
+
+	connect(confDialog, SIGNAL(settingsChanged(const QString &)), this, SLOT(updateConfiguration(const QString &)));
+
+	confDialog->show();
 }
 
-void KFritzBoxWindow::modelCalllistReset() {
-	for (int pos=0; pos<modelCalllist->columnCount(QModelIndex()); pos++)
-		treeCallList->resizeColumnToContents(pos);
+void KFritzBoxWindow::showNotificationSettings(bool b __attribute__((unused))) {
+    KNotifyConfigWidget::configure(this);
 }
+
+void KFritzBoxWindow::updateConfiguration(const QString &dialogName __attribute__((unused))){
+	libFritzInit->start();
+}
+

@@ -5,14 +5,14 @@
  *      Author: joachim
  */
 
-#include <QAbstractItemModel>
-#include <QTextCodec>
-#include <CallList.h>
-
 #ifndef KCALLLISTMODEL_H_
 #define KCALLLISTMODEL_H_
 
-class KCalllistModel : public QAbstractItemModel {
+#include <CallList.h>
+
+#include "KFritzModel.h"
+
+class KCalllistModel : public KFritzModel {
 	Q_OBJECT
 public:
 	KCalllistModel();
@@ -22,16 +22,12 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual QModelIndex index(int row, int column,
-    		                  const QModelIndex &parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex &child) const;
     virtual void sort(int column, Qt::SortOrder order);
+
 private:
 	fritz::CallList *calllist;
-	QTextCodec *inputCodec;
-	int lastRows;
 private slots:
-	void check();
+	void libReady(bool isReady);
 };
 
 #endif /* KCALLLISTMODEL_H_ */

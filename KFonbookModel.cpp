@@ -5,21 +5,12 @@
  *      Author: joachim
  */
 
-#include <KIcon>
-#include <QTimer>
 #include "KFonbookModel.h"
-#include <Tools.h>
-#include <iostream>
+
+#include <KIcon>
 
 KFonbookModel::KFonbookModel() {
-	// get the fonbook resource
-	fonbook = fritz::FonbookManager::GetFonbook();
-	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
-
-	QTimer *timer = new QTimer();
-	connect(timer, SIGNAL(timeout()), SLOT(check()));
-	timer->start(1000);
-	lastRows = 0;
+	fonbook = NULL;
 }
 
 KFonbookModel::~KFonbookModel() {
@@ -27,22 +18,24 @@ KFonbookModel::~KFonbookModel() {
 }
 
 int KFonbookModel::rowCount(const QModelIndex & parent) const
-{
+		{
+	if (!fonbook)
+		return 0;
 	if (parent.isValid())
 		// the model does not have any hierarchy
 		return 0;
 	else
 		return fonbook->GetFonbookSize();
-}
+		}
 
 int KFonbookModel::columnCount(const QModelIndex & parent __attribute__((unused))) const
-{
+		{
 	// number of columns is independent of parent, ignoring parameter
 	return 3;
-}
+		}
 
 QVariant KFonbookModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
+		{
 	if (role != Qt::DisplayRole)
 		return QVariant();
 	if (orientation == Qt::Horizontal){
@@ -63,10 +56,11 @@ QVariant KFonbookModel::headerData(int section, Qt::Orientation orientation, int
 		return QVariant();
 	}
 
-}
+		}
 
-QVariant KFonbookModel::data(const QModelIndex & index, int role) const
-{
+QVariant KFonbookModel::data(const QModelIndex & index, int role) const{
+	if (!fonbook)
+		return QVariant();
 	if (role == Qt::DecorationRole && index.column() == 0)
 		return QVariant(KIcon("document-new"));
 	if (role != Qt::DisplayRole)
@@ -75,43 +69,34 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const
 	fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
 	switch (index.column()) {
 	case 0:
-		return QVariant(inputCodec->toUnicode(fe->getName().c_str()));
+		return QVariant(toLocalEncoding(fe->getName()));
 		break;
 	case 1:
-		return QVariant(inputCodec->toUnicode(fe->getTypeName().c_str()));
+		return QVariant(toLocalEncoding(fe->getTypeName()));
 		break;
 	case 2:
-		return QVariant(inputCodec->toUnicode(fe->getNumber().c_str()));
+		return QVariant(toLocalEncoding(fe->getNumber()));
 		break;
 	default:
 		return QVariant();
 	}
 	return QVariant();
-}
-
-QModelIndex KFonbookModel::parent(const QModelIndex & child __attribute__((unused))) const
-{
-	// always returning QModelIndex() == 'child has no parent'; ignoring parameter
-	return QModelIndex();
-}
-
-QModelIndex KFonbookModel::index(int row, int column, const QModelIndex & parent) const
-{
-	if (parent.isValid())
-		return QModelIndex();
-	else
-		return createIndex(row, column);
-}
+		}
 
 void KFonbookModel::sort(int column, Qt::SortOrder order) {
+	if (!fonbook)
+		return;
 	fonbook->Sort((fritz::FonbookEntry::eElements) column, order == Qt::AscendingOrder);
 	emit dataChanged(index(0,                       0,                          QModelIndex()),
-			         index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
+			index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
 }
 
-void KFonbookModel::check() {
-	if (lastRows != rowCount(QModelIndex())) {
-		reset();
-		lastRows = rowCount(QModelIndex());
+void KFonbookModel::libReady(bool isReady) {
+	KFritzModel::libReady(isReady);
+	if (isReady){
+		// get the fonbook resource
+		fonbook = fritz::FonbookManager::GetFonbook();
 	}
+	else
+		fonbook = NULL;
 }

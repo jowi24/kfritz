@@ -5,37 +5,21 @@
  *      Author: joachim
  */
 
-#include <iostream>
-#include <KIcon>
-#include <QTimer>
-#include "Tools.h"
 #include "KCalllistModel.h"
 
-KCalllistModel::KCalllistModel() {
-	// get the calllist resource
-	calllist = fritz::CallList::getCallList();
-	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
+#include <KIcon>
 
-	QTimer *timer = new QTimer();
-	connect(timer, SIGNAL(timeout()), SLOT(check()));
-	timer->start(1000);
-	lastRows = 0;
+KCalllistModel::KCalllistModel() {
+	calllist = NULL;
 }
 
 KCalllistModel::~KCalllistModel() {
 	// TODO: somthing to do here?
 }
 
-QModelIndex KCalllistModel::index(int row, int column, const QModelIndex & parent) const
-{
-	if (parent.isValid())
-		return QModelIndex();
-	else
-		return createIndex(row, column);
-}
-
-QVariant KCalllistModel::data(const QModelIndex & index, int role) const
-{
+QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
+	if (!calllist)
+		return QVariant();
 	if (role == Qt::DecorationRole && index.column() == 0)
 		return QVariant(KIcon("document-new"));
 	if (role != Qt::DisplayRole)
@@ -58,32 +42,31 @@ QVariant KCalllistModel::data(const QModelIndex & index, int role) const
 			// this type is not part of the call list (it's just a "meta" type)
 			break;
 		}
-	case 1:
-		return QVariant(inputCodec->toUnicode((ce->date+" "+ce->time).c_str()));
-		break;
-	case 2:
-		if (ce->remoteName.size() == 0)
-			if (ce->remoteNumber.size() == 0)
-				return QVariant("unknown");
+		case 1:
+			return QVariant(toLocalEncoding((ce->date+" "+ce->time)));
+			break;
+		case 2:
+			if (ce->remoteName.size() == 0)
+				if (ce->remoteNumber.size() == 0)
+					return QVariant("unknown");
+				else
+					return QVariant(toLocalEncoding(ce->remoteNumber));
 			else
-				return QVariant(inputCodec->toUnicode(ce->remoteNumber.c_str()));
-		else
-			return QVariant(inputCodec->toUnicode(ce->remoteName.c_str()));
-		break;
-	case 3:
-		return QVariant(inputCodec->toUnicode(ce->localName.c_str()));
-		break;
-	case 4:
-		return QVariant(inputCodec->toUnicode(ce->duration.c_str()));
-		break;
-	default:
-		return QVariant();
+				return QVariant(toLocalEncoding(ce->remoteName));
+			break;
+		case 3:
+			return QVariant(toLocalEncoding(ce->localName));
+			break;
+		case 4:
+			return QVariant(toLocalEncoding(ce->duration));
+			break;
+		default:
+			return QVariant();
 	}
 	return QVariant();
 }
 
-QVariant KCalllistModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
+QVariant KCalllistModel::headerData(int section, Qt::Orientation orientation, int role) const {
 	if (role != Qt::DisplayRole)
 		return QVariant();
 	if (orientation == Qt::Horizontal){
@@ -111,14 +94,14 @@ QVariant KCalllistModel::headerData(int section, Qt::Orientation orientation, in
 	}
 }
 
-int KCalllistModel::columnCount(const QModelIndex & parent __attribute__((unused))) const
-{
+int KCalllistModel::columnCount(const QModelIndex & parent __attribute__((unused))) const {
 	// the number of columns is independent of the current parent, ignoring this parameter
 	return 5;
 }
 
-int KCalllistModel::rowCount(const QModelIndex & parent) const
-{
+int KCalllistModel::rowCount(const QModelIndex & parent) const {
+	if (!calllist)
+		return 0;
 	if (parent.isValid())
 		// the model does not have any hierarchy
 		return 0;
@@ -126,13 +109,9 @@ int KCalllistModel::rowCount(const QModelIndex & parent) const
 		return calllist->GetSize(fritz::CallEntry::ALL);
 }
 
-QModelIndex KCalllistModel::parent(const QModelIndex & child __attribute__((unused))) const
-{
-	// always returning QModelIndex() == 'child has no parent'; ignoring parameter
-	return QModelIndex();
-}
-
 void KCalllistModel::sort(int column, Qt::SortOrder order) {
+	if (!calllist)
+		return;
 	fritz::CallEntry::eElements element;
 	switch (column) {
 	case 0:
@@ -157,12 +136,15 @@ void KCalllistModel::sort(int column, Qt::SortOrder order) {
 	}
 	calllist->Sort(element, order == Qt::AscendingOrder);
 	emit dataChanged(index(0,                       0,                          QModelIndex()),
-				     index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
+			index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
 }
 
-void KCalllistModel::check() {
-	if (lastRows != rowCount(QModelIndex())) {
-		reset();
-		lastRows = rowCount(QModelIndex());
+void KCalllistModel::libReady(bool isReady) {
+	KFritzModel::libReady(isReady);
+	if(isReady){
+		// get the calllist resource
+		calllist = fritz::CallList::getCallList();
 	}
+	else
+		calllist = NULL;
 }

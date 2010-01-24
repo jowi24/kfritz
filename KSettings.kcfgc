@@ -1,0 +1,6 @@
+File=kfritzbox.kcfg
+ClassName=KSettings
+ItemAccessors=true
+Mutators=true
+Singleton=true
+SetUserTexts=true

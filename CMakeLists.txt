@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.6)
 project (kfritzbox)
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
-include_directories(${KDE4_INCLUDES})
-set(kfritzbox_SRCS KFritzBox.cpp KFritzBoxWindow.cpp KEventHandler.cpp KFonbookModel.cpp KCalllistModel.cpp Log.cpp)
+include_directories(${KDE4_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
+set(kfritzbox_SRCS KFritzBox.cpp KFritzBoxWindow.cpp KEventHandler.cpp KFonbookModel.cpp KFritzModel.cpp KCalllistModel.cpp LibFritzInit.cpp Log.cpp QAdaptTreeView.cpp)
 set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_FLAGS_DEBUG "-fexceptions -g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG" ) 
 
@@ -13,10 +13,11 @@ subdirs(libfritz++)
 INCLUDE_DIRECTORIES(libfritz++ libtcpclient++ libpthread++)
 
 
-
+kde4_add_kcfg_files(kfritzbox_SRCS GENERATE_MOC KSettings.kcfgc)
+kde4_add_ui_files(kfritzbox_SRCS KSettingsFritzBox.ui)
 kde4_add_executable(kfritzbox ${kfritzbox_SRCS})
-target_link_libraries(kfritzbox ${KDE4_KDEUI_LIBS} fritz++ tcpclient++ pthread++ ssl)
+target_link_libraries(kfritzbox ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} fritz++ tcpclient++ pthread++ ssl)
 install(TARGETS kfritzbox  ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES kfritzbox.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kfritzbox)
 install(FILES kfritzboxui.rc DESTINATION ${DATA_INSTALL_DIR}/kfritzbox)
-
+install(FILES kfritzbox.kcfg DESTINATION ${KCFG_INSTALL_DIR})
