@@ -117,7 +117,7 @@ public:
 	static bool MatchesMsnFilter(const std::string &number);
 	static std::string NormalizeNumber(std::string number);
 	static int CompareNormalized(std::string number1, std::string number2);
-	static void GetLocationSettings();
+	static bool GetLocationSettings();
 	static void GetSipSettings();
 	static std::string Tokenize(const std::string &buffer, const char delimiter, size_t pos);
 };

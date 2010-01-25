@@ -34,8 +34,9 @@ private:
 	static pthread::Mutex* mutex;
     std::string CalculateLoginResponse(std::string challenge);
 	std::string UrlEncode(std::string &s);
-	void Login() throw(tcpclient::TcpException);
+	bool Login() throw(tcpclient::TcpException);
 	std::string GetLang() throw(tcpclient::TcpException);
+	bool validPassword;
 public:
 	FritzClient ();
 	virtual ~FritzClient();
@@ -44,6 +45,7 @@ public:
 	std::string RequestSipSettings();
 	std::string RequestCallList();
 	std::string RequestFonbook();
+	bool hasValidPassword() { return validPassword; }
 };
 
 }

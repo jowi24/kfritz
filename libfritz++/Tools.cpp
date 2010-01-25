@@ -231,7 +231,7 @@ int Tools::CompareNormalized(std::string number1, std::string number2) {
 	return NormalizeNumber(number1).compare(NormalizeNumber(number2));
 }
 
-void Tools::GetLocationSettings() {
+bool Tools::GetLocationSettings() {
 	//	get settings from Fritz!Box.
 	FritzClient fc;
 	std::string msg = fc.RequestLocationSettings();
@@ -240,7 +240,7 @@ void Tools::GetLocationSettings() {
 	if (lkzStart == std::string::npos) {
 		*esyslog << __FILE__ << ": Parser error in GetLocationSettings(). Could not find LKZ." << std::endl;
 		*esyslog << __FILE__ << ": LKZ/OKZ not set! Resolving phone numbers may not always work." << std::endl;
-		return;
+		return fc.hasValidPassword();
 	}
 	lkzStart += 37;
 	size_t lkzStop  = msg.find("\"", lkzStart);
@@ -248,7 +248,7 @@ void Tools::GetLocationSettings() {
 	if (okzStart == std::string::npos) {
 		*esyslog << __FILE__ << ": Parser error in GetLocationSettings(). Could not find OKZ." << std::endl;
 		*esyslog << __FILE__ << ": OKZ not set! Resolving phone numbers may not always work." << std::endl;
-		return;
+		return fc.hasValidPassword();
 	}
 	okzStart += 37;
 	size_t okzStop = msg.find("\"", okzStart);
@@ -264,6 +264,7 @@ void Tools::GetLocationSettings() {
 	} else {
 		*esyslog << __FILE__ << ": OKZ not set! Resolving phone numbers may not always work." << std::endl;
 	}
+	return fc.hasValidPassword();
 }
 
 void Tools::GetSipSettings() {

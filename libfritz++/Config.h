@@ -74,7 +74,7 @@ public:
 	 * @param Sets the default value for countryCode. If locationSettingsDetected == true, this returns the detected countryCode.
 	 * @param Sets the default value for regionCode. If locationSettingsDetected == true, this returns the detected regionCode.
 	 */
-	void static Setup( std::string hostname="fritz.box", std::string password="",
+	bool static Setup( std::string hostname="fritz.box", std::string password="",
 			           bool *locationSettingsDetected = NULL,
 			           std::string *countryCode = NULL, std::string *regionCode = NULL);
 	/**

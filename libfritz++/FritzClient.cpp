@@ -31,7 +31,7 @@
 		bool dataRead = false;                       \
 		do {  				                         \
 			try {                                    \
-				Login();                             \
+				validPassword = Login();                             \
 				retry_delay = retry_delay > 1800 ? 3600 : retry_delay * 2;
 
 #define RETRY_END																							\
@@ -99,10 +99,10 @@ std::string FritzClient::UrlEncode(std::string &s_input) {
 	return result;
 }
 
-void FritzClient::Login() throw(tcpclient::TcpException) {
+bool FritzClient::Login() throw(tcpclient::TcpException) {
 	// when using SIDs, a new login is only needed if the last request was more than 5 minutes ago
 	if (gConfig->getLoginType() == Config::SID && (time(NULL) - gConfig->getLastRequestTime() < 300)) {
-		return;
+		return true;
 	}
 
 	// detect type of login once
@@ -141,7 +141,7 @@ void FritzClient::Login() throw(tcpclient::TcpException) {
 		size_t pwdFlag = sXml.find("<iswriteaccess>");
 		if (pwdFlag == std::string::npos) {
 			*esyslog << __FILE__ << ": Error - Expected <iswriteacess> not found in login_sid.xml." << std::endl;
-			return;
+			return false;
 		}
 		pwdFlag += 15;
 		if (sXml[pwdFlag] == '1') {
@@ -149,7 +149,7 @@ void FritzClient::Login() throw(tcpclient::TcpException) {
 			size_t sidStart = sXml.find("<SID>");
 			if (sidStart == std::string::npos) {
 				*esyslog << __FILE__ << ": Error - Expected <SID> not found in login_sid.xml." << std::endl;
-				return;
+				return false;
 			}
 			sidStart += 5;
 			// save SID
@@ -160,7 +160,7 @@ void FritzClient::Login() throw(tcpclient::TcpException) {
 			size_t challengeStart = sXml.find("<Challenge>");
 			if (challengeStart == std::string::npos) {
 				*esyslog << __FILE__ << ": Error - Expected <Challenge> not found in login_sid.xml." << std::endl;
-				return;
+				return false;
 			}
 			challengeStart += 11;
 			size_t challengeStop = sXml.find("<", challengeStart);
@@ -181,7 +181,7 @@ void FritzClient::Login() throw(tcpclient::TcpException) {
 			size_t sidStart = sMsg.find("name=\"sid\"");
 			if (sidStart == std::string::npos) {
 				*esyslog << __FILE__ << ": Error - Expected sid field not found." << std::endl;
-				return;
+				return false;
 			}
 			sidStart = sMsg.find("value=\"", sidStart + 10) + 7;
 			size_t sidStop = sMsg.find("\"", sidStart);
@@ -195,15 +195,18 @@ void FritzClient::Login() throw(tcpclient::TcpException) {
 			if (isValidSid) {
 				*dsyslog << __FILE__ << ": login successful." << std::endl;
 				gConfig->updateLastRequestTime();
-			} else
+				return true;
+			} else {
 				*esyslog << __FILE__ << ": login failed!." << std::endl;
+				return false;
+			}
 		}
 	}
 	if (gConfig->getLoginType() == Config::PASSWORD) {
 		*dsyslog << __FILE__ << ": logging into fritz box using old scheme without SIDs." << std::endl;
 		// no password, no login
 		if ( gConfig->getPassword().length() == 0)
-			return;
+			return true; //TODO?
 
 		std::string sMsg;
 
@@ -219,9 +222,12 @@ void FritzClient::Login() throw(tcpclient::TcpException) {
 		// determine if login was successful
 		if (sMsg.find("class=\"errorMessage\"") != std::string::npos) {
 			*esyslog << __FILE__ << ": login failed, check your password settings." << std::endl;
+			return false;
 		}
 		*dsyslog << __FILE__ << ": login successful." << std::endl;
+		return true;
 	}
+	return false;
 }
 
 std::string FritzClient::GetLang() throw(tcpclient::TcpException) {

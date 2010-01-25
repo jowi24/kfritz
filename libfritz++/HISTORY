@@ -114,3 +114,12 @@
 - Added Config::SetupPorts() to provide non-standard ports
 - Fixed some warnings about ununsed parameters in base-classes and empty implementations
 - Removed useless check in CallList::RetrieveEntry()
+
+2010-01-25:
+- FritzClient::Login() now returns a bool wether login was successful
+- FritzClient::hasValidPassword() can now be used to determine the result of the last Login()
+- Tools::GetLocationSettings() now returns a bool wether the password used 
+  to access the FB was valid
+
+  
+  
