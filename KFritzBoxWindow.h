@@ -25,6 +25,7 @@
 #include <KXmlGuiWindow>
 #include <KTextEdit>
 #include <KTabWidget>
+#include <KWallet/Wallet>
 #include <QTreeView>
 #include "KFonbookModel.h"
 #include "KCalllistModel.h"
@@ -40,13 +41,18 @@ private:
 	QAdaptTreeView *treeFonbook, *treeCallList;
 	KTabWidget *tabWidget;
 	LibFritzInit *libFritzInit;
+	QString fbPassword;
+	void saveToWallet(KWallet::Wallet *wallet);
+	bool showPasswordDialog(QString &password, bool offerSaving = false);
+	void setupActions();
 public:
 	KFritzBoxWindow();
 	virtual ~KFritzBoxWindow();
 public Q_SLOTS:
 	void showSettings(bool b);
 	void showNotificationSettings(bool b);
-	void updateConfiguration(const QString &dialogName);
+	void updateConfiguration(const QString &dialogName = QString());
+	void reenterPassword();
 
 };
 

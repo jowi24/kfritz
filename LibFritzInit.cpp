@@ -1,8 +1,22 @@
 /*
- * LibFritzInit.cpp
+ * KFritzBox
  *
- *  Created on: Jan 22, 2010
- *      Author: jo
+ * Copyright (C) 2010 Joachim Wilke <vdr@joachim-wilke.de>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
  */
 
 #include "LibFritzInit.h"
@@ -13,41 +27,38 @@
 #include <KGlobal>
 #include <KConfig>
 #include <KConfigGroup>
-#include <KWallet/Wallet>
 
 #include "KSettings.h"
 
-LibFritzInit::LibFritzInit() {
+LibFritzInit::LibFritzInit(QString password) {
 	eventHandler = NULL;
+	setPassword(password);
 	start();
 }
 
 LibFritzInit::~LibFritzInit() {
+	fritz::Listener::DeleteListener();
 	if (eventHandler)
 		delete eventHandler;
-	fritz::Listener::DeleteListener();
-}
-
-QString LibFritzInit::getBoxPwd() {
-//	KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
-//	if (wallet) {
-//		if (!wallet->hasFolder(aboutData.appName()))
-//			wallet->createFolder(aboutData.appName());
-//		wallet->setFolder(aboutData.appName());
-//
-//	} else {
-//	}
-
 }
 
 void LibFritzInit::run() {
+
 	emit ready(false);
+
 	bool locationSettingsDetected;
 	std::string countryCode = KSettings::countryCode().toStdString();
 	std::string areaCode = KSettings::areaCode().toStdString();
 
 	// start libfritz++
-	fritz::Config::Setup(KSettings::hostname().toStdString(), "JmH44b76", &locationSettingsDetected, &countryCode, &areaCode);
+	bool validPassword = fritz::Config::Setup(KSettings::hostname().toStdString(),
+			                                  password.toStdString(),
+			                                  &locationSettingsDetected, &countryCode, &areaCode);
+	if (!validPassword) {
+		emit invalidPassword();
+		return;
+	}
+
 	if (locationSettingsDetected) {
 		KSettings::setCountryCode(QString(countryCode.c_str()));
 		KSettings::setAreaCode(QString(areaCode.c_str()));
@@ -69,4 +80,8 @@ void LibFritzInit::run() {
 	fritz::CallList::CreateCallList();
 
 	emit ready(true);
+}
+
+void LibFritzInit::setPassword(QString password) {
+	this->password = password;
 }

@@ -49,4 +49,8 @@
 - Refactored KFonbookModel and KCalllistModel using a generic base class KFritzModel
 - Moved all libfritz initialization to a threaded class LibFritzInit, 
   speeding up application start
-
+  
+2010-01-25:
+- Modified LogStream to support logging from libfritz++ and main program.
+  Introduced logging macros DBG, INF, ERR
+- Added support for password saving using KWallet

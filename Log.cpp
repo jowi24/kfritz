@@ -24,21 +24,26 @@
 #include <cstdio>
 #include <iostream>
 
-LogBuf::LogBuf(eLogType type, KTextEdit *widget) {
+LogBuf::LogBuf(eLogType type) {
 	const unsigned int BUFFER_SIZE = 1024;
 	char	*ptr = new char[BUFFER_SIZE];
 	setp(ptr, ptr + BUFFER_SIZE);
 	setg(0, 0, 0);
 	this->type = type;
-	this->widget = widget;
+	logWidget = NULL;
 	connect(this, SIGNAL(signalAppend(QString)), this, SLOT(slotAppend(QString)));
 }
 
-void LogBuf::slotAppend(QString m) {
-	widget->insertPlainText(m);
-	std::cout << m.toStdString();
+void LogBuf::setLogWidget(KTextEdit *te) {
+	logWidget = te;
 }
 
+
+void LogBuf::slotAppend(QString m) {
+	if (logWidget)
+		logWidget->insertPlainText(m);
+	std::cout << m.toStdString();
+}
 
 void LogBuf::PutBuffer(void)
 {
@@ -59,6 +64,8 @@ void LogBuf::PutBuffer(void)
 			break;
 		case DEBUG:
 			emit signalAppend(buffer);
+			break;
+		default:
 			break;
 		}
 
@@ -89,9 +96,22 @@ LogBuf::~LogBuf() {
 	delete[] pbase();
 }
 
-LogStream::LogStream(LogBuf::eLogType type, KTextEdit *te)
-:std::ostream(new LogBuf(type, te))
+LogStream::LogStream(LogBuf::eLogType type)
+:std::ostream(buffer = new LogBuf(type))
 {
 }
+
+LogStream *LogStream::setLogWidget(KTextEdit *te) {
+	buffer->setLogWidget(te);
+	return this;
+}
+
+LogStream *LogStream::getLogStream(LogBuf::eLogType type) {
+	if (!streams[type])
+		streams[type] = new LogStream(type);
+	return streams[type];
+}
+
+LogStream *LogStream::streams[];
 
 

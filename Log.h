@@ -25,6 +25,11 @@
 #ifndef LOG_H_
 #define LOG_H_
 
+#define DBG(x) *LogStream::getLogStream(LogBuf::DEBUG) << __FILE__ << ":" << __LINE__ << " " << (x) << std::endl;
+#define INF(x) *LogStream::getLogStream(LogBuf::INFO)  << __FILE__ << ":" << __LINE__ << " " << (x) << std::endl;
+#define ERR(x) *LogStream::getLogStream(LogBuf::ERROR) << __FILE__ << ":" << __LINE__ << " " << (x) << std::endl;
+
+
 class LogBuf : public QObject, public std::streambuf {
 	Q_OBJECT
 
@@ -33,28 +38,34 @@ public:
 		DEBUG,
 		INFO,
 		ERROR,
+		NumLogTypes
 	};
 private:
 	void	PutBuffer(void);
 	void	PutChar(char c);
 	eLogType type;
-	KTextEdit *widget;
+	KTextEdit *logWidget;
 protected:
 	int	overflow(int);
 	int	sync();
 public:
-	LogBuf(eLogType type, KTextEdit *te);
+	LogBuf(eLogType type);
 	virtual ~LogBuf();
-signals:
+	void setLogWidget(KTextEdit *te);
+Q_SIGNALS:
 	void signalAppend(QString m);
-private slots:
+private Q_SLOTS:
 	void slotAppend(QString m);
 };
 
 class LogStream: public std::ostream {
+private:
+	LogBuf *buffer;
+	static LogStream *streams[LogBuf::NumLogTypes];
+	LogStream(LogBuf::eLogType type); //-> use getLogStream()
 public:
-	LogStream(LogBuf::eLogType type, KTextEdit *te);
-	//virtual ~LogStream();
+	LogStream *setLogWidget(KTextEdit *te);
+	static LogStream *getLogStream(LogBuf::eLogType type);
 };
 
 #endif /* LOG_H_ */

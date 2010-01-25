@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<gui name="kfritzbox" version="3">
+<gui name="kfritzbox" version="4"
+	xmlns="http://www.kde.org/standards/kxmlgui/1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0
+	http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
   <ToolBar name="mainToolBar" >
   </ToolBar>
   <MenuBar>
