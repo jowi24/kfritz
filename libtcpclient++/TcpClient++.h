@@ -96,6 +96,7 @@ public:
 class TcpClientBuf : public std::streambuf {
 private:
 	bool connected;
+	pthread::Mutex mutex;
 	int fd;
 	void Write(std::string &s);
 	void Connect();
@@ -139,8 +140,7 @@ private:
 	eState state;
 	char internalBuffer[BUF_SIZE];
 public:
-	HttpClientBuf(std::string hostname, int port)
-	: TcpClientBuf(hostname, port) {}
+	HttpClientBuf(std::string hostname, int port);
 	void SetState(eState state);
 protected:
 	int	sync();

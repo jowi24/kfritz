@@ -124,6 +124,7 @@ TcpClientBuf::TcpClientBuf(std::string hostname, int port) throw(tcpclient::TcpE
 
 TcpClientBuf::~TcpClientBuf() {
 	Disconnect();
+	mutex.Lock(); // proceed only when any activity is done
 }
 
 TcpClient::~TcpClient() {
@@ -205,6 +206,7 @@ void TcpClientBuf::Disconnect() {
 // ----- Stuff for reading from socket ----------------------------------------
 
 bool TcpClientBuf::Receive() {
+	mutex.Lock();
 	if (!connected)
 		Connect();
 	int size = 0;
@@ -221,6 +223,7 @@ bool TcpClientBuf::Receive() {
 		connected = false;
 		if (fd >= 0)
 			close(fd);
+		mutex.Unlock();
 		if (size == -1) {
 			// there occurred an error
 			throw TcpException(TcpException::ERR_SOCKET_ERROR);
@@ -230,6 +233,7 @@ bool TcpClientBuf::Receive() {
 	setg(inputBuffer, inputBuffer, inputBuffer + size);
 	// trace socket readings
 	TraceFile::getTraceFile().write(hostname, port, false, std::string(inputBuffer, size));
+	mutex.Unlock();
 	return true;
 }
 
@@ -243,16 +247,19 @@ int TcpClientBuf::underflow() {
 // ----- Stuff for writing to socket -------------------------------------------
 
 void TcpClientBuf::Write(std::string &s) {
+	mutex.Lock();
 	if (!connected)
 		Connect();
 	int size = send(fd, s.c_str(), s.length(), 0);
 	if (size == -1) {
 		connected = false;
 		close(fd);
+		mutex.Unlock();
 		throw TcpException(TcpException::ERR_CONNECTION_RESET);
 	}
 	// Trace socket writings
 	TraceFile::getTraceFile().write(hostname, port, true, s);
+	mutex.Unlock();
 }
 
 void TcpClientBuf::PutBuffer() {
@@ -300,6 +307,12 @@ std::iostream& HttpClient::operator>> (std::string &s) {
 	}
 	return *this;
 }
+
+HttpClientBuf::HttpClientBuf(std::string hostname, int port)
+: TcpClientBuf(hostname, port) {
+	state = PLAIN;
+}
+
 
 int HttpClientBuf::sync() {
 	std::string buffer(pbase(), pptr() - pbase());
