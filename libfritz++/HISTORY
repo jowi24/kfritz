@@ -121,5 +121,6 @@
 - Tools::GetLocationSettings() now returns a bool wether the password used 
   to access the FB was valid
 
-  
+2010-01-27:
+- Improved destructor of Listener to allow proper cleanup of thread
   

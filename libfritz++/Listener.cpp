@@ -43,8 +43,11 @@ Listener::Listener(EventHandler *event)
 
 Listener::~Listener()
 {
+	this->Cancel(-1);
 	delete tcpclient;
-	this->Cancel();
+	// don't delete the object, while the thread is still active
+	while (Active())
+		pthread::CondWait::SleepMs(100);
 }
 
 void Listener::CreateListener(EventHandler *event) {
@@ -191,6 +194,8 @@ void Listener::Action() {
 			}
 			//tcpclient->Disconnect();
 		}
+		if (!Running())
+			return;
 		*esyslog << __FILE__ << ": waiting " << retry_delay << " seconds before retrying" << std::endl;
 		sleep(retry_delay); // delay the retry
 	}
