@@ -63,7 +63,7 @@ KFritzBoxWindow::KFritzBoxWindow()
 			wallet->setFolder(appName);
 			if (wallet->hasEntry(KSettings::hostname())) {
 				if (wallet->readPassword(KSettings::hostname(), fbPassword) == 0) {
-					DBG("Got password data from KWallet.")
+					DBG("Got password data from KWallet.");
 						requestPassword = false;
 				}
 			} else {
@@ -83,9 +83,8 @@ KFritzBoxWindow::KFritzBoxWindow()
 
 	connect(libFritzInit, SIGNAL(invalidPassword()), this, SLOT(reenterPassword()));
 
-	if (wallet && savetoWallet) {
+	if (wallet && savetoWallet)
 		saveToWallet(wallet);
-	}
 
 	modelFonbook  = new KFonbookModel();
 	connect(libFritzInit, SIGNAL(ready(bool)), modelFonbook, SLOT(libReady(bool)));

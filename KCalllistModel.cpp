@@ -157,7 +157,7 @@ void KCalllistModel::libReady(bool isReady) {
 	KFritzModel::libReady(isReady);
 	if(isReady){
 		// get the calllist resource
-		calllist = fritz::CallList::getCallList();
+		calllist = fritz::CallList::getCallList(false);
 	}
 	else
 		calllist = NULL;
