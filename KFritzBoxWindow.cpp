@@ -29,6 +29,7 @@
 #include <KAction>
 #include <KLocale>
 #include <KActionCollection>
+#include <KAboutData>
 #include <KStandardAction>
 #include <KConfigSkeleton>
 #include <KConfigDialog>
@@ -38,16 +39,22 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <Config.h>
 
+#include <Config.h>
+#include <Tools.h>
 
 #include "KSettings.h"
 #include "ui_KSettingsFritzBox.h"
 #include "Log.h"
 
-
 KFritzBoxWindow::KFritzBoxWindow()
 {
+	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
+
+	connect(this, SIGNAL(signalNotification(QString, QString, bool)), this, SLOT(slotNotification(QString, QString, bool)));
+
+	initIndicator();
+
 	KTextEdit *logArea = new KTextEdit(this);
 	fritz::Config::SetupLogging(LogStream::getLogStream(LogBuf::DEBUG)->setLogWidget(logArea),
 							    LogStream::getLogStream(LogBuf::INFO)->setLogWidget(logArea),
@@ -79,7 +86,7 @@ KFritzBoxWindow::KFritzBoxWindow()
 	if (requestPassword)
 		savetoWallet = showPasswordDialog(fbPassword, wallet != NULL);
 
-	libFritzInit = new LibFritzInit(fbPassword);
+	libFritzInit = new LibFritzInit(fbPassword, this);
 
 	connect(libFritzInit, SIGNAL(invalidPassword()), this, SLOT(reenterPassword()));
 
@@ -131,6 +138,45 @@ KFritzBoxWindow::~KFritzBoxWindow()
 	fritz::CallList::DeleteCallList();
 
 	delete libFritzInit;
+}
+
+void KFritzBoxWindow::HandleCall(bool outgoing, int connId __attribute__((unused)), std::string remoteNumber, std::string remoteName, std::string remoteType, std::string localParty __attribute__((unused)), std::string medium __attribute__((unused)), std::string mediumName)
+{
+	QString qRemoteName = inputCodec->toUnicode(remoteName.c_str());
+	if (remoteType.size() > 0){
+		qRemoteName += " ";
+		qRemoteName += remoteType.c_str();
+	}
+	//QString qLocalParty = inputCodec->toUnicode(localParty.c_str());
+	QString qMediumName     = inputCodec->toUnicode(mediumName.c_str());
+	QString qMessage;
+	if (outgoing)
+		qMessage=i18n("Outgoing call to %1 using %2",   qRemoteName.size() ? qRemoteName : remoteNumber.c_str(),                                    qMediumName);
+	else
+		qMessage=i18n("Incoming call from %1 using %2", qRemoteName.size() ? qRemoteName : remoteNumber.size() ? remoteNumber.c_str() : "unknown",  qMediumName);
+
+	emit signalNotification(outgoing ? "outgoingCall" : "incomingCall", qMessage, true);
+}
+
+void KFritzBoxWindow::HandleConnect(int connId __attribute__((unused)))
+{
+	if (notification)
+		notification->close();
+	emit signalNotification("callConnected", "Call connected.", false);
+}
+
+void KFritzBoxWindow::HandleDisconnect(int connId __attribute__((unused)), std::string duration)
+{
+	if (notification)
+		notification->close();
+	QString qMessage = i18n("Call disconnected (%1).", duration.c_str());
+	emit signalNotification("callDisconnected", qMessage, false);
+}
+
+void KFritzBoxWindow::slotNotification(QString event, QString qMessage, bool persistent) {
+	notification = new KNotification (event, this, persistent ? KNotification::Persistent : KNotification::CloseOnTimeout);
+	notification->setText(qMessage);
+	notification->sendEvent();
 }
 
 void KFritzBoxWindow::showSettings(bool b __attribute__((unused))) {
@@ -205,4 +251,13 @@ void KFritzBoxWindow::setupActions() {
 	connect(aShowNotifySettings, SIGNAL(triggered(bool)), this, SLOT(showNotificationSettings(bool)));
 
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
+}
+
+void KFritzBoxWindow::initIndicator()
+{
+	indicator = NULL;
+#ifdef INDICATEQT_FOUND
+//	indicator = new QIndicate::Indicator(this);
+//	indicator->show();
+#endif
 }

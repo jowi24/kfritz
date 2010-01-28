@@ -23,18 +23,19 @@
 #define LIBFRITZINIT_H_
 
 #include <QThread>
-#include "KEventHandler.h"
+
+#include <Listener.h>
 
 class LibFritzInit : public QThread {
 	Q_OBJECT;
 public:
-	LibFritzInit(QString password);
+	LibFritzInit(QString password, fritz::EventHandler *eventHandler);
 	virtual ~LibFritzInit();
 	void run();
 	void setPassword(QString password);
 private:
 	QString password;
-	KEventHandler *eventHandler;
+	fritz::EventHandler *eventHandler;
 Q_SIGNALS:
 	void ready(bool isReady);
 	void invalidPassword();

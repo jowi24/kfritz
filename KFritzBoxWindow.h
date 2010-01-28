@@ -25,14 +25,26 @@
 #include <KXmlGuiWindow>
 #include <KTextEdit>
 #include <KTabWidget>
+#include <KNotification>
 #include <KWallet/Wallet>
 #include <QTreeView>
+#include <QTextCodec>
+
+#include <Listener.h>
 #include "KFonbookModel.h"
 #include "KCalllistModel.h"
 #include "LibFritzInit.h"
 #include "QAdaptTreeView.h"
 
-class KFritzBoxWindow : public KXmlGuiWindow
+#include "pkg-config.h"
+#ifdef INDICATEQT_FOUND
+#include <qindicateindicator.h>
+#else
+namespace QIndicate { class Indicator; }
+#endif
+
+
+class KFritzBoxWindow : public KXmlGuiWindow, public fritz::EventHandler
 {
 	Q_OBJECT
 private:
@@ -42,12 +54,23 @@ private:
 	KTabWidget *tabWidget;
 	LibFritzInit *libFritzInit;
 	QString fbPassword;
+	QTextCodec *inputCodec;
+	KNotification *notification;
+	QIndicate::Indicator *indicator;
 	void saveToWallet(KWallet::Wallet *wallet);
 	bool showPasswordDialog(QString &password, bool offerSaving = false);
 	void setupActions();
+    void initIndicator();
+Q_SIGNALS:
+	void signalNotification(QString event, QString qMessage, bool persistent);
+private Q_SLOTS:
+	void slotNotification(QString event, QString qMessage, bool persistent);
 public:
-	KFritzBoxWindow();
-	virtual ~KFritzBoxWindow();
+    KFritzBoxWindow();
+    virtual ~KFritzBoxWindow();
+	virtual void HandleCall(bool outgoing, int connId, std::string remoteNumber, std::string remoteName, std::string remoteType, std::string localParty, std::string medium, std::string mediumName);
+	virtual void HandleConnect(int connId);
+	virtual void HandleDisconnect(int connId, std::string duration);
 public Q_SLOTS:
 	void showSettings(bool b);
 	void showNotificationSettings(bool b);

@@ -54,3 +54,10 @@
 - Modified LogStream to support logging from libfritz++ and main program.
   Introduced logging macros DBG, INF, ERR
 - Added support for password saving using KWallet
+
+2010-01-28:
+- Added a ':' in logging messages for better readability
+- Added support for libindicate-qt in CMakeLists.txt, introduced define INDICATEQT_FOUND
+- Added "outgoingCall", "callConnected" and "callDisconnected" to KNotify
+- Integrated KEventHandler into KFritzBoxWindow
+

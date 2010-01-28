@@ -4,6 +4,22 @@ Comment=KFritz!Box
 
 [Event/incomingCall]
 Name=Incoming Call
-Action=Sound
+Action=Popup|Sound
 Sound=KDE-Im-New-Mail.ogg
+X-Ubuntu-Gettext-Domain=desktop_kfritzbox
+
+[Event/outgoingCall]
+Name=Outgoing Call
+Action=Popup|Sound
+Sound=KDE-Im-New-Mail.ogg
+X-Ubuntu-Gettext-Domain=desktop_kfritzbox
+
+[Event/callConnected]
+Name=Call got connected
+Action=Popup
+X-Ubuntu-Gettext-Domain=desktop_kfritzbox
+
+[Event/callDisconnected]
+Name=Call got disconnected
+Action=Popup
 X-Ubuntu-Gettext-Domain=desktop_kfritzbox

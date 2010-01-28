@@ -30,17 +30,14 @@
 
 #include "KSettings.h"
 
-LibFritzInit::LibFritzInit(QString password) {
-	eventHandler = NULL;
+LibFritzInit::LibFritzInit(QString password, fritz::EventHandler *eventHandler) {
+	this->eventHandler = eventHandler;
 	setPassword(password);
 	start();
 }
 
 LibFritzInit::~LibFritzInit() {
 	fritz::Listener::DeleteListener();
-
-	if (eventHandler)
-		delete eventHandler;
 }
 
 void LibFritzInit::run() {
@@ -70,7 +67,6 @@ void LibFritzInit::run() {
 	vMsn.push_back("3020431"); //TODO: solve some other way?
 	fritz::Config::SetupMsnFilter(vMsn);
 
-	eventHandler = new KEventHandler();
 	fritz::Listener::CreateListener(eventHandler);
 
 	std::vector<std::string> vFonbook;

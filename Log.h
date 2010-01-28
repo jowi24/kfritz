@@ -25,9 +25,9 @@
 #ifndef LOG_H_
 #define LOG_H_
 
-#define DBG(x) *LogStream::getLogStream(LogBuf::DEBUG) << __FILE__ << ":" << __LINE__ << " " << (x) << std::endl;
-#define INF(x) *LogStream::getLogStream(LogBuf::INFO)  << __FILE__ << ":" << __LINE__ << " " << (x) << std::endl;
-#define ERR(x) *LogStream::getLogStream(LogBuf::ERROR) << __FILE__ << ":" << __LINE__ << " " << (x) << std::endl;
+#define DBG(x) *LogStream::getLogStream(LogBuf::DEBUG) << __FILE__ << ":" << __LINE__ << ": " << (x) << std::endl;
+#define INF(x) *LogStream::getLogStream(LogBuf::INFO)  << __FILE__ << ":" << __LINE__ << ": " << (x) << std::endl;
+#define ERR(x) *LogStream::getLogStream(LogBuf::ERROR) << __FILE__ << ":" << __LINE__ << ": " << (x) << std::endl;
 
 
 class LogBuf : public QObject, public std::streambuf {

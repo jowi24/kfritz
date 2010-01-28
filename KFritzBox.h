@@ -26,7 +26,6 @@
 #include <KSystemTrayIcon>
 #include <KAboutData>
 #include <Listener.h>
-#include "KEventHandler.h"
 
 class KFritzBox : public KSystemTrayIcon
 {
