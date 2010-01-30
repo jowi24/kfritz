@@ -113,6 +113,7 @@ void CallList::Action() {
 	callListIn.clear();
 	callListOut.clear();
 	callListMissed.clear();
+	lastCall = 0;
 	lastMissedCall = 0;
 	size_t pos = 0;
 	// skip HTTP header data
@@ -167,6 +168,8 @@ void CallList::Action() {
 			continue;
 
 		callListAll.push_back(ce);
+		if (lastCall < ce.timestamp)
+			lastCall = ce.timestamp;
 		switch (ce.type) {
 		case CallEntry::INCOMING:
 			callListIn.push_back(ce);

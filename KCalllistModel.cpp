@@ -22,6 +22,7 @@
 #include "KCalllistModel.h"
 
 #include <KIcon>
+#include <KLocalizedString>
 
 KCalllistModel::KCalllistModel() {
 	calllist = NULL;
@@ -34,28 +35,20 @@ KCalllistModel::~KCalllistModel() {
 QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
 	if (!calllist)
 		return QVariant();
+	fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL,index.row());
 	if (role == Qt::DecorationRole && index.column() == 0)
-		return QVariant(KIcon("document-new"));
+		return QVariant(KIcon(ce->type == fritz::CallEntry::INCOMING ? "incoming-call" :
+				              ce->type == fritz::CallEntry::OUTGOING ? "outgoing-call" :
+				              ce->type == fritz::CallEntry::MISSED   ? "missed-call"   : ""));
+	if (role == Qt::ToolTipRole && index.column() == 0)
+		return QVariant(i18n(ce->type == fritz::CallEntry::INCOMING ? "Incoming call" :
+				             ce->type == fritz::CallEntry::OUTGOING ? "Outgoing call" :
+				             ce->type == fritz::CallEntry::MISSED   ? "Missed call"   : ""));
 	if (role != Qt::DisplayRole)
 		return QVariant();
 
-	fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL,index.row());
+
 	switch (index.column()) {
-	case 0:
-		switch (ce->type){
-		case fritz::CallEntry::INCOMING:
-			return QVariant("<--");
-			break;
-		case fritz::CallEntry::MISSED:
-			return QVariant("?<--");
-			break;
-		case fritz::CallEntry::OUTGOING:
-			return QVariant("-->");
-			break;
-		case fritz::CallEntry::ALL:
-			// this type is not part of the call list (it's just a "meta" type)
-			break;
-		}
 		case 1:
 			return QVariant(toLocalEncoding((ce->date+" "+ce->time)));
 			break;
@@ -161,4 +154,12 @@ void KCalllistModel::libReady(bool isReady) {
 	}
 	else
 		calllist = NULL;
+}
+
+void KCalllistModel::check() {
+	if (lastCall != calllist->LastCall()) {
+		reset();
+		emit updated();
+		lastCall = calllist->LastCall();
+	}
 }

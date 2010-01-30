@@ -22,6 +22,7 @@
 #include "KFonbookModel.h"
 
 #include <KIcon>
+#include <KLocalizedString>
 
 KFonbookModel::KFonbookModel() {
 	fonbook = NULL;
@@ -75,8 +76,6 @@ QVariant KFonbookModel::headerData(int section, Qt::Orientation orientation, int
 QVariant KFonbookModel::data(const QModelIndex & index, int role) const{
 	if (!fonbook)
 		return QVariant();
-	if (role == Qt::DecorationRole && index.column() == 0)
-		return QVariant(KIcon("document-new"));
 	if (role != Qt::DisplayRole)
 		return QVariant();
 
@@ -86,7 +85,9 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const{
 		return QVariant(toLocalEncoding(fe->getName()));
 		break;
 	case 1:
-		return QVariant(toLocalEncoding(fe->getTypeName()));
+		return QVariant(i18n(fe->getType() == fritz::FonbookEntry::TYPE_HOME   ? "home"      :
+				             fe->getType() == fritz::FonbookEntry::TYPE_MOBILE ? "mobile"    :
+				             fe->getType() == fritz::FonbookEntry::TYPE_WORK   ? "workplace" : "unknown"));
 		break;
 	case 2:
 		return QVariant(toLocalEncoding(fe->getNumber()));

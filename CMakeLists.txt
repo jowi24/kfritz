@@ -31,6 +31,8 @@ subdirs(libpthread++)
 subdirs(libfritz++)
 INCLUDE_DIRECTORIES(libfritz++ libtcpclient++ libpthread++)
 
+# --- include icons -----------------------------------------------------------
+subdirs(icons)
 
 # --- compile and link --------------------------------------------------------
 
@@ -57,3 +59,5 @@ install(TARGETS kfritzbox ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES kfritzbox.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kfritzbox)
 install(FILES kfritzboxui.rc DESTINATION ${DATA_INSTALL_DIR}/kfritzbox)
 install(FILES kfritzbox.kcfg DESTINATION ${KCFG_INSTALL_DIR})
+install(FILES kfritzbox.desktop DESTINATION "/usr/share/applications/kde4")
+

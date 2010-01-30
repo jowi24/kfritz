@@ -40,5 +40,10 @@
       <label>Phone books</label>
       <tooltip>List of active phone books.</tooltip>
     </entry>
-  </group>   
+  </group>  
+  <group name="GUI">
+  	<entry name="LastKnownMissedCall" type="LongLong">
+  		<label>Last missed call known to gui</label>
+  	</entry>
+  </group> 
 </kcfg>

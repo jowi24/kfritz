@@ -53,6 +53,7 @@ QString KFritzModel::toLocalEncoding(const std::string str) const {
 void KFritzModel::check() {
 	if (lastRows != rowCount(QModelIndex())) {
 		reset();
+		emit updated();
 		lastRows = rowCount(QModelIndex());
 	}
 }

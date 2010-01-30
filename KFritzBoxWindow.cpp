@@ -31,6 +31,7 @@
 #include <KActionCollection>
 #include <KAboutData>
 #include <KStandardAction>
+#include <KService>
 #include <KConfigSkeleton>
 #include <KConfigDialog>
 #include <KNotifyConfigWidget>
@@ -42,6 +43,7 @@
 
 #include <Config.h>
 #include <Tools.h>
+#include <CallList.h>
 
 #include "KSettings.h"
 #include "ui_KSettingsFritzBox.h"
@@ -50,10 +52,13 @@
 KFritzBoxWindow::KFritzBoxWindow()
 {
 	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
+	appName     = KGlobal::mainComponent().aboutData()->appName();
+	programName = KGlobal::mainComponent().aboutData()->programName();
 
 	connect(this, SIGNAL(signalNotification(QString, QString, bool)), this, SLOT(slotNotification(QString, QString, bool)));
 
 	initIndicator();
+	updateMissedCallsIndicator();
 
 	KTextEdit *logArea = new KTextEdit(this);
 	fritz::Config::SetupLogging(LogStream::getLogStream(LogBuf::DEBUG)->setLogWidget(logArea),
@@ -62,7 +67,6 @@ KFritzBoxWindow::KFritzBoxWindow()
 
 	bool savetoWallet = false;
 	bool requestPassword = true;
-	QString appName = KGlobal::mainComponent().aboutData()->appName();
 
 	KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
 	if (wallet) {
@@ -97,6 +101,7 @@ KFritzBoxWindow::KFritzBoxWindow()
 	connect(libFritzInit, SIGNAL(ready(bool)), modelFonbook, SLOT(libReady(bool)));
 	modelCalllist = new KCalllistModel();
 	connect(libFritzInit, SIGNAL(ready(bool)), modelCalllist, SLOT(libReady(bool)));
+	connect(modelCalllist, SIGNAL(updated()), this, SLOT(updateMissedCallsIndicator()));
 
 	setupActions();
 
@@ -151,9 +156,9 @@ void KFritzBoxWindow::HandleCall(bool outgoing, int connId __attribute__((unused
 	QString qMediumName     = inputCodec->toUnicode(mediumName.c_str());
 	QString qMessage;
 	if (outgoing)
-		qMessage=i18n("Outgoing call to %1 using %2",   qRemoteName.size() ? qRemoteName : remoteNumber.c_str(),                                    qMediumName);
+		qMessage=i18n("Outgoing call to <b>%1</b><br/>using %2",   qRemoteName.size() ? qRemoteName : remoteNumber.c_str(),                                    qMediumName);
 	else
-		qMessage=i18n("Incoming call from %1 using %2", qRemoteName.size() ? qRemoteName : remoteNumber.size() ? remoteNumber.c_str() : "unknown",  qMediumName);
+		qMessage=i18n("Incoming call from <b>%1</b><br/>using %2", qRemoteName.size() ? qRemoteName : remoteNumber.size() ? remoteNumber.c_str() : "unknown",  qMediumName);
 
 	emit signalNotification(outgoing ? "outgoingCall" : "incomingCall", qMessage, true);
 }
@@ -169,14 +174,28 @@ void KFritzBoxWindow::HandleDisconnect(int connId __attribute__((unused)), std::
 {
 	if (notification)
 		notification->close();
-	QString qMessage = i18n("Call disconnected (%1).", duration.c_str());
+	std::stringstream ss(duration);
+	int seconds;
+	ss >> seconds;
+
+	QString qMessage = i18n("Call disconnected (%1:%2).", seconds/60, seconds%60);
 	emit signalNotification("callDisconnected", qMessage, false);
 }
 
 void KFritzBoxWindow::slotNotification(QString event, QString qMessage, bool persistent) {
 	notification = new KNotification (event, this, persistent ? KNotification::Persistent : KNotification::CloseOnTimeout);
+	KIcon ico(event == "incomingCall" ? "incoming-call" :
+			  event == "outgoingCall" ? "outgoing-call" :
+					                    "internet-telephony");
+	notification->setTitle(programName);
+	notification->setPixmap(ico.pixmap(64, 64));
 	notification->setText(qMessage);
 	notification->sendEvent();
+	connect(notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
+}
+
+void KFritzBoxWindow::notificationClosed() {
+	notification = NULL;
 }
 
 void KFritzBoxWindow::showSettings(bool b __attribute__((unused))) {
@@ -216,8 +235,6 @@ void KFritzBoxWindow::reenterPassword() {
 }
 
 void KFritzBoxWindow::saveToWallet(KWallet::Wallet *wallet) {
-	QString appName = KGlobal::mainComponent().aboutData()->appName();
-
 	DBG("Trying to save password...");
 	if (wallet->hasFolder(appName) || wallet->createFolder(appName)) {
 		wallet->setFolder(appName);
@@ -253,11 +270,55 @@ void KFritzBoxWindow::setupActions() {
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 }
 
-void KFritzBoxWindow::initIndicator()
-{
-	indicator = NULL;
+void KFritzBoxWindow::initIndicator() {
+	iServer = NULL;
+	missedCallsIndicator = NULL;
 #ifdef INDICATEQT_FOUND
-//	indicator = new QIndicate::Indicator(this);
-//	indicator->show();
+	iServer = QIndicate::Server::defaultInstance();
+	iServer->setType("message.irc");
+	KService::Ptr service = KService::serviceByDesktopName(appName);
+	if (service)
+		iServer->setDesktopFile(service->entryPath());
+	iServer->show();
+
+	missedCallsIndicator = new QIndicate::Indicator(iServer);
+	missedCallsIndicator->setNameProperty("Missed calls");
+	missedCallsIndicator->setDrawAttentionProperty(true);
+
+	connect(iServer, SIGNAL(serverDisplay()), this, SLOT(showMainWindow()));
+	connect(missedCallsIndicator, SIGNAL(display(QIndicate::Indicator*)), this, SLOT(showMissedCalls(QIndicate::Indicator*)));
 #endif
+}
+
+void KFritzBoxWindow::updateMissedCallsIndicator() {
+	fritz::CallList *callList = fritz::CallList::getCallList(false);
+	size_t missedCallCount = 0;
+	if (callList) {
+		for (size_t pos = 0; pos < callList->GetSize(fritz::CallEntry::MISSED); pos++)
+			if (KSettings::lastKnownMissedCall() < callList->RetrieveEntry(fritz::CallEntry::MISSED, pos)->timestamp)
+				missedCallCount++;
+	}
+#ifdef INDICATEQT_FOUND
+	missedCallsIndicator->setCountProperty(missedCallCount);
+	if (missedCallCount == 0)
+		missedCallsIndicator->hide();
+	else
+		missedCallsIndicator->show();
+#endif
+}
+
+void KFritzBoxWindow::showMainWindow() {
+	this->show();
+}
+
+void KFritzBoxWindow::showMissedCalls(QIndicate::Indicator* indicator __attribute__((unused))) {
+	tabWidget->setCurrentIndex(1);
+	this->show();
+	if (missedCallsIndicator)
+		missedCallsIndicator->hide();
+
+	fritz::CallList *callList = fritz::CallList::getCallList(false);
+	KSettings::setLastKnownMissedCall(callList->LastMissedCall());
+	KSettings::self()->writeConfig();
+	updateMissedCallsIndicator();
 }

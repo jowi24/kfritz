@@ -39,8 +39,9 @@
 #include "pkg-config.h"
 #ifdef INDICATEQT_FOUND
 #include <qindicateindicator.h>
+#include <qindicateserver.h>
 #else
-namespace QIndicate { class Indicator; }
+namespace QIndicate { class Indicator; class Server; }
 #endif
 
 
@@ -54,9 +55,12 @@ private:
 	KTabWidget *tabWidget;
 	LibFritzInit *libFritzInit;
 	QString fbPassword;
+	QString appName;
+	QString programName;
 	QTextCodec *inputCodec;
 	KNotification *notification;
-	QIndicate::Indicator *indicator;
+	QIndicate::Indicator *missedCallsIndicator;
+	QIndicate::Server *iServer;
 	void saveToWallet(KWallet::Wallet *wallet);
 	bool showPasswordDialog(QString &password, bool offerSaving = false);
 	void setupActions();
@@ -65,6 +69,9 @@ Q_SIGNALS:
 	void signalNotification(QString event, QString qMessage, bool persistent);
 private Q_SLOTS:
 	void slotNotification(QString event, QString qMessage, bool persistent);
+	void notificationClosed();
+public  Q_SLOTS:
+    void updateMissedCallsIndicator();
 public:
     KFritzBoxWindow();
     virtual ~KFritzBoxWindow();
@@ -76,7 +83,8 @@ public Q_SLOTS:
 	void showNotificationSettings(bool b);
 	void updateConfiguration(const QString &dialogName = QString());
 	void reenterPassword();
-
+	void showMainWindow();
+	void showMissedCalls(QIndicate::Indicator* indicator);
 };
 
 #endif /*KFRITZBOXWINDOW_H_*/

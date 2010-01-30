@@ -61,3 +61,11 @@
 - Added "outgoingCall", "callConnected" and "callDisconnected" to KNotify
 - Integrated KEventHandler into KFritzBoxWindow
 
+2010-01-29:
+- Implemented support for libindicate-qt, "missed calls" are notified via that way
+- Added .desktop file
+
+2010-01-30:
+- Added application specific icons "incoming-call", "outgoing-call", "missed-call" and "new-call" 
+
+

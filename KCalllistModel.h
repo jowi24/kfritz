@@ -40,8 +40,10 @@ public:
 
 private:
 	fritz::CallList *calllist;
-private slots:
+	time_t lastCall;
+private Q_SLOTS:
 	void libReady(bool isReady);
+	void check();
 };
 
 #endif /* KCALLLISTMODEL_H_ */

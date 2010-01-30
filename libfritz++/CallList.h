@@ -67,6 +67,7 @@ private:
 	std::vector<CallEntry> callListMissed;
 	std::vector<CallEntry> callListOut;
 	std::vector<CallEntry> callListAll;
+	time_t lastCall;
 	time_t lastMissedCall;
 	static CallList *me;
     CallList();
@@ -87,6 +88,7 @@ public:
 	CallEntry *RetrieveEntry(CallEntry::eCallType type, size_t id);
 	size_t GetSize(CallEntry::eCallType type);
 	size_t MissedCalls(time_t since);
+	time_t LastCall() { return lastCall; }
 	time_t LastMissedCall() { return lastMissedCall; }
 	/**
 	 * Sorts the calllist's entries by the given element and in given order.

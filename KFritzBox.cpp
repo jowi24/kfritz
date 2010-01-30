@@ -34,7 +34,7 @@
 //TODO: use KUniqueApplication ?
 
 KFritzBox::KFritzBox(QWidget *mainWindow, KAboutData *aboutData)
-:KSystemTrayIcon("internet-telephony", mainWindow)
+:KSystemTrayIcon("modem", mainWindow)
 {
 	this->aboutData = aboutData;
 
@@ -59,7 +59,7 @@ int main (int argc, char *argv[])
 			// The program version string.
 			"1.0",
 			// Short description of what the app does.
-			ki18n("Notifies about phone activity and browses calllists and telephonebook on your Fritz!Box"),
+			ki18n("Notifies about phone activity and browses call lists and telephone book on your Fritz!Box"),
 			// The license this code is released under
 			KAboutData::License_GPL,
 			// Copyright Statement
@@ -72,7 +72,7 @@ int main (int argc, char *argv[])
 			// The bug report email address
 			"kfritzbox@joachim-wilke.de");
 
-	aboutData.setProgramIconName("internet-telephony");
+	aboutData.setProgramIconName("modem");
 
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KApplication app;
