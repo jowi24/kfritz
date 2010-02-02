@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
-                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile/>
   <group name="FritzBox">
     <entry name="Hostname" type="String">
@@ -22,28 +21,28 @@
       <tooltip>The area code the Fritz!Box is located in.</tooltip>
       <whatsthis>This is the area code your Fritz!Box is located in. Normally this is read automatically from your Fritz!Box so you do not need to specify it here.</whatsthis>
     </entry>
-  </group>
-  <group name="Events">
-    <entry name="ShowIncomingCalls" type="Bool">
-     <label>Notify on incoming calls</label>
-     <tooltip>Notify on incoming calls</tooltip>   
-     <default>true</default>
+    <entry name="MSNFilter" type="StringList">
+    	<label>MSN filter list</label>
+    	<tooltip></tooltip>
+    	<whatsthis></whatsthis>
     </entry>
-    <entry name="ShowOutgoingCalls" type="Bool">
-     <label>Notify on outgoing calls</label>
-     <tooltip>Notify on outgoing calls</tooltip>   
-     <default>false</default>
-    </entry>    
-  </group>  
+  </group>
   <group name="Phonebooks">
     <entry name="PhonebookList" type="StringList">
       <label>Phone books</label>
       <tooltip>List of active phone books.</tooltip>
+      <default>LOCL,FRITZ,OERT</default>
     </entry>
   </group>  
   <group name="GUI">
   	<entry name="LastKnownMissedCall" type="LongLong">
   		<label>Last missed call known to gui</label>
+  		<whatsthis>Used internally.</whatsthis>
+  	</entry>
+  	<entry name="ShowLog" type="Bool">
+  		<label>Show log window</label>
+  		<tooltip>Displays a tab with logging messages</tooltip>
+  		<default>false</default>
   	</entry>
   </group> 
 </kcfg>

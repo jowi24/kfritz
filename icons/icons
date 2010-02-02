@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="/usr/share/" >
+    <file>ox16-status-incoming-call.png</file>
+  </qresource>
+</RCC>

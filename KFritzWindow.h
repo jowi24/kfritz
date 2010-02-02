@@ -1,5 +1,5 @@
 /*
- * KFritzBox
+ * KFritz
  *
  * Copyright (C) 2008 Joachim Wilke <vdr@joachim-wilke.de>
  *
@@ -45,7 +45,7 @@ namespace QIndicate { class Indicator; class Server; }
 #endif
 
 
-class KFritzBoxWindow : public KXmlGuiWindow, public fritz::EventHandler
+class KFritzWindow : public KXmlGuiWindow, public fritz::EventHandler
 {
 	Q_OBJECT
 private:
@@ -53,6 +53,7 @@ private:
 	KCalllistModel *modelCalllist;
 	QAdaptTreeView *treeFonbook, *treeCallList;
 	KTabWidget *tabWidget;
+	KTextEdit *logArea;
 	LibFritzInit *libFritzInit;
 	QString fbPassword;
 	QString appName;
@@ -73,18 +74,19 @@ private Q_SLOTS:
 public  Q_SLOTS:
     void updateMissedCallsIndicator();
 public:
-    KFritzBoxWindow();
-    virtual ~KFritzBoxWindow();
-	virtual void HandleCall(bool outgoing, int connId, std::string remoteNumber, std::string remoteName, std::string remoteType, std::string localParty, std::string medium, std::string mediumName);
+    KFritzWindow();
+    virtual ~KFritzWindow();
+	virtual void HandleCall(bool outgoing, int connId, std::string remoteNumber, std::string remoteName, fritz::FonbookEntry::eType, std::string localParty, std::string medium, std::string mediumName);
 	virtual void HandleConnect(int connId);
 	virtual void HandleDisconnect(int connId, std::string duration);
 public Q_SLOTS:
-	void showSettings(bool b);
-	void showNotificationSettings(bool b);
+	void showSettings();
+	void showNotificationSettings();
 	void updateConfiguration(const QString &dialogName = QString());
 	void reenterPassword();
 	void showMainWindow();
 	void showMissedCalls(QIndicate::Indicator* indicator);
+	void showLog(bool b);
 };
 
 #endif /*KFRITZBOXWINDOW_H_*/

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=KFritz
+Type=Application
+Icon=modem
+Exec=kfritz
+GenericName=Call notificator
+Comment=Access call history and phone book of your Fritz!Box and get notifications on incoming and outgoing calls.
+Terminal=false
+Categories=Qt;KDE;Utility;TelephonyTools
+X-KDE-StartupNotify=true

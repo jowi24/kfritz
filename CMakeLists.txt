@@ -1,6 +1,6 @@
 # --- general setup -----------------------------------------------------------
 cmake_minimum_required(VERSION 2.6)
-project (kfritzbox)
+project (kfritz)
 
 set(CMAKE_VERBOSE_MAKEFILE false)
 set(CMAKE_BUILD_TYPE "Debug")
@@ -34,30 +34,53 @@ INCLUDE_DIRECTORIES(libfritz++ libtcpclient++ libpthread++)
 # --- include icons -----------------------------------------------------------
 subdirs(icons)
 
+# --- i18n --------------------------------------------------------------------
+find_program(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
+if(GETTEXT_MSGFMT_EXECUTABLE)
+  set(catalogname kfritz)
+  add_custom_target(translations ALL)
+  file(GLOB PO_FILES po/*.po)
+  foreach(_poFile ${PO_FILES})
+    get_filename_component(_poFileName ${_poFile} NAME)
+    string(REGEX REPLACE "^${catalogname}_?" "" _langCode ${_poFileName} )
+    string(REGEX REPLACE "\\.po$" "" _langCode ${_langCode} )
+ 
+    if( _langCode )
+      get_filename_component(_lang ${_poFile} NAME_WE)
+      set(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.gmo)
+ 
+      add_custom_command(TARGET translations
+                         COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -o ${_gmoFile} ${_poFile}
+                         DEPENDS ${_poFile})
+      install(FILES ${_gmoFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_langCode}/LC_MESSAGES/ RENAME ${catalogname}.mo)
+    endif( _langCode )
+  endforeach(_poFile ${PO_FILES}) 
+endif(GETTEXT_MSGFMT_EXECUTABLE)
+
 # --- compile and link --------------------------------------------------------
 
-set(kfritzbox_SRCS KFritzBox.cpp KFritzBoxWindow.cpp KFonbookModel.cpp 
-                   KFritzModel.cpp KCalllistModel.cpp LibFritzInit.cpp Log.cpp 
-                   QAdaptTreeView.cpp)
+set(kfritzbox_SRCS KFritz.cpp KFritzWindow.cpp KFonbookModel.cpp KSettingsFonbooks.cpp
+                   KSettingsFritzBox.cpp KFritzModel.cpp KCalllistModel.cpp LibFritzInit.cpp 
+                   Log.cpp QAdaptTreeView.cpp)
 set(CMAKE_CXX_FLAGS_DEBUG "-fexceptions -g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG" ) 
 
 kde4_add_kcfg_files(kfritzbox_SRCS GENERATE_MOC KSettings.kcfgc)
-kde4_add_ui_files(kfritzbox_SRCS KSettingsFritzBox.ui)
+kde4_add_ui_files(kfritzbox_SRCS KSettingsFritzBox.ui KSettingsFonbooks.ui)
 
 configure_file(pkg-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/pkg-config.h)
-kde4_add_executable(kfritzbox ${kfritzbox_SRCS})
-target_link_libraries(kfritzbox ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
+kde4_add_executable(kfritz ${kfritzbox_SRCS})
+target_link_libraries(kfritz ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
                                 fritz++ tcpclient++ pthread++ 
                                 ssl)
 if (INDICATEQT_FOUND)
-	target_link_libraries(kfritzbox ${INDICATEQT_LIBRARIES})
+	target_link_libraries(kfritz ${INDICATEQT_LIBRARIES})
 endif (INDICATEQT_FOUND)
 
 
 # --- installs ----------------------------------------------------------------                                
-install(TARGETS kfritzbox ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES kfritzbox.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kfritzbox)
-install(FILES kfritzboxui.rc DESTINATION ${DATA_INSTALL_DIR}/kfritzbox)
-install(FILES kfritzbox.kcfg DESTINATION ${KCFG_INSTALL_DIR})
-install(FILES kfritzbox.desktop DESTINATION "/usr/share/applications/kde4")
+install(TARGETS kfritz ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES kfritz.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kfritz)
+install(FILES kfritzui.rc DESTINATION ${DATA_INSTALL_DIR}/kfritz)
+install(FILES kfritz.kcfg DESTINATION ${KCFG_INSTALL_DIR})
+install(FILES kfritz.desktop DESTINATION "/usr/share/applications/kde4")
 

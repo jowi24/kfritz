@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gui name="kfritzbox" version="4"
+<gui name="kfritz" version="4"
 	xmlns="http://www.kde.org/standards/kxmlgui/1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0
-	http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
+	xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0 http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
   <ToolBar name="mainToolBar" >
   </ToolBar>
   <MenuBar>
     <Menu name="settings" >
+ 	  <Action name="showLog" append="show_merge"/>
       <Action name="showNotifySettings" append="configure_merge"/>
       <Action name="showSettings" append="configure_merge"/>
     </Menu>

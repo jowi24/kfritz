@@ -65,7 +65,20 @@
 - Implemented support for libindicate-qt, "missed calls" are notified via that way
 - Added .desktop file
 
-2010-01-30:
+2010-01-30:	 
 - Added application specific icons "incoming-call", "outgoing-call", "missed-call" and "new-call" 
+- Renamed relevant occurences of kfritzbox to kfritz
 
+2010-02-01:
+- Some improvements to debian subdir
+- Added configuration page "Phone books"
+- Added configuration tab "MSN filter" on page "Fritz!Box"
+- Added configuration option "Show log"
+- First steps to integrate i18n support
+- Fixed crash when reloading call history and phone book after configuration changes
+- Replace the term "calllist" with "call history" on user interface
+- Translated UI texts to german
 
+Todo:
+- add status messages to status bar
+- show all FBs

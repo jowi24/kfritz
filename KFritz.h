@@ -1,5 +1,5 @@
 /*
- * KFritzBox
+ * KFritz
  *
  * Copyright (C) 2008 Joachim Wilke <vdr@joachim-wilke.de>
  *
@@ -27,13 +27,13 @@
 #include <KAboutData>
 #include <Listener.h>
 
-class KFritzBox : public KSystemTrayIcon
+class KFritz : public KSystemTrayIcon
 {
 	Q_OBJECT
 
 public:
-	KFritzBox(QWidget *mainWindow, KAboutData *aboutData);
-	virtual ~KFritzBox();
+	KFritz(QWidget *mainWindow, KAboutData *aboutData);
+	virtual ~KFritz();
 private:
 	KAboutData *aboutData;
 };

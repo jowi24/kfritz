@@ -1,5 +1,5 @@
 /*
- * KFritzBox
+ * KFritz
  *
  * Copyright (C) 2008 Joachim Wilke <vdr@joachim-wilke.de>
  *
@@ -19,7 +19,7 @@
  *
  */
 
-#include "KFritzBox.h"
+#include "KFritz.h"
 
 #include <KApplication>
 #include <KAboutData>
@@ -29,18 +29,19 @@
 
 #include <Config.h>
 #include <FonbookManager.h>
-#include "KFritzBoxWindow.h"
+#include "KFritzWindow.h"
 
+static const char *VERSION        = "0.1";
 //TODO: use KUniqueApplication ?
 
-KFritzBox::KFritzBox(QWidget *mainWindow, KAboutData *aboutData)
+KFritz::KFritz(QWidget *mainWindow, KAboutData *aboutData)
 :KSystemTrayIcon("modem", mainWindow)
 {
 	this->aboutData = aboutData;
 
 }
 
-KFritzBox::~KFritzBox()
+KFritz::~KFritz()
 {
 }
 
@@ -50,16 +51,16 @@ int main (int argc, char *argv[])
 	// init KDE-stuff
 	KAboutData aboutData(
 			// The program name used internally.
-			"kfritzbox",
+			"kfritz",
 			// The message catalog name
 			// If null, program name is used instead.
 			0,
 			// A displayable program name string.
 			ki18n("KFritz"),
 			// The program version string.
-			"1.0",
+			VERSION,
 			// Short description of what the app does.
-			ki18n("Notifies about phone activity and browses call lists and telephone book on your Fritz!Box"),
+			ki18n("Notifies about phone activity and browses call history and telephone book on your Fritz!Box"),
 			// The license this code is released under
 			KAboutData::License_GPL,
 			// Copyright Statement
@@ -78,8 +79,8 @@ int main (int argc, char *argv[])
 	KApplication app;
 
 	// create GUI elements, hand-over logArea to mainWindow
-	KFritzBoxWindow *mainWindow = new KFritzBoxWindow();
-	KFritzBox *trayIcon 	    = new KFritzBox(mainWindow, &aboutData);
+	KFritzWindow *mainWindow = new KFritzWindow();
+	KFritz *trayIcon 	    = new KFritz(mainWindow, &aboutData);
 	trayIcon->show();
 //	mainWindow->show();
 	return app.exec();

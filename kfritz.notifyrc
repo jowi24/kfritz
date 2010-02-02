@@ -18,4 +18,3 @@ Action=Popup
 [Event/callDisconnected]
 Name=Call got disconnected
 Action=Popup
-X-Ubuntu-Gettext-Domain=desktop_kfritzbox

@@ -1,5 +1,5 @@
 /*
- * KFritzBox
+ * KFritz
  *
  * Copyright (C) 2010 Joachim Wilke <vdr@joachim-wilke.de>
  *
@@ -64,14 +64,17 @@ void LibFritzInit::run() {
 	}
 
 	std::vector<std::string> vMsn;
-	vMsn.push_back("3020431"); //TODO: solve some other way?
+	QStringList msnList = KSettings::mSNFilter();
+	while (msnList.count())
+		vMsn.push_back(msnList.takeFirst().toStdString());
 	fritz::Config::SetupMsnFilter(vMsn);
 
 	fritz::Listener::CreateListener(eventHandler);
 
 	std::vector<std::string> vFonbook;
-	vFonbook.push_back("FRITZ");
-	vFonbook.push_back("OERT");
+	QStringList phonebookList = KSettings::phonebookList();
+	while (phonebookList.count())
+		vFonbook.push_back(phonebookList.takeFirst().toStdString());
 	fritz::FonbookManager::CreateFonbookManager(vFonbook, "FRITZ");
 
 	fritz::CallList::CreateCallList();

@@ -1,13 +1,16 @@
-Source: kfritzbox
-Section: unknown
+Source: kfritz
+Section: kde
 Priority: extra
-Maintainer: Joachim Wilke <jo@tuxx>
-Build-Depends: cdbs, debhelper (>= 7), quilt
-Standards-Version: 3.7.3
-Homepage: <insert the upstream URL, if relevant>
+Maintainer: Joachim Wilke <launchpad.net@joachim-wilke.de>
+Build-Depends: cdbs, debhelper (>= 7), cmake, kde-devel (>= 4.0), libssl-dev, libindicate-qt-dev (>= 0.2.2)
+Standards-Version: 3.8.3
+Homepage: http://www.joachim-wilke.de/kfritzbox
 
-Package: kfritzbox
+Package: kfritz
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Description: Notifies about phone activity and browses call history and telephone book on your Fritz!Box
+ This application for KDE users owning a AVM Fritz!Box has the following features:
+ - Notification on new incoming or outgoing calls, connects and disconnects using KNotify
+ - Tracking missed calls and announcing via libindicate / Plasma indicator applet
+ - Browsing the box' phone book and call history

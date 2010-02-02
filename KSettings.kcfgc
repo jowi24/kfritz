@@ -1,4 +1,4 @@
-File=kfritzbox.kcfg
+File=kfritz.kcfg
 ClassName=KSettings
 ItemAccessors=true
 Mutators=true

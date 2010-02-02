@@ -1,5 +1,5 @@
 /*
- * KFritzBox
+ * KFritz
  *
  * Copyright (C) 2008 Joachim Wilke <vdr@joachim-wilke.de>
  *
@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
-
-#include "KFritzBoxWindow.h"
+#include "KFritzWindow.h"
 
 #include <KApplication>
 #include <KAction>
@@ -32,6 +31,7 @@
 #include <KAboutData>
 #include <KStandardAction>
 #include <KService>
+#include <KStatusBar>
 #include <KConfigSkeleton>
 #include <KConfigDialog>
 #include <KNotifyConfigWidget>
@@ -40,16 +40,18 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QStackedLayout>
 
 #include <Config.h>
 #include <Tools.h>
 #include <CallList.h>
 
 #include "KSettings.h"
-#include "ui_KSettingsFritzBox.h"
+#include "KSettingsFonbooks.h"
+#include "KSettingsFritzBox.h"
 #include "Log.h"
 
-KFritzBoxWindow::KFritzBoxWindow()
+KFritzWindow::KFritzWindow()
 {
 	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
 	appName     = KGlobal::mainComponent().aboutData()->appName();
@@ -60,7 +62,9 @@ KFritzBoxWindow::KFritzBoxWindow()
 	initIndicator();
 	updateMissedCallsIndicator();
 
-	KTextEdit *logArea = new KTextEdit(this);
+	logArea = new KTextEdit(this);
+	logArea->setReadOnly(true);
+
 	fritz::Config::SetupLogging(LogStream::getLogStream(LogBuf::DEBUG)->setLogWidget(logArea),
 							    LogStream::getLogStream(LogBuf::INFO)->setLogWidget(logArea),
 					            LogStream::getLogStream(LogBuf::ERROR)->setLogWidget(logArea));
@@ -121,23 +125,20 @@ KFritzBoxWindow::KFritzBoxWindow()
 	treeCallList->setModel(modelCalllist);
 	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
 
-	logArea->setReadOnly(true);
-
 	tabWidget = new KTabWidget();
-	tabWidget->addTab(treeFonbook,  KIcon("x-office-address-book"), 	i18n("Fonbook"));
-	tabWidget->addTab(treeCallList, KIcon("application-x-gnumeric"), 	i18n("Calllist"));
-	// this tab has to be removed in the destructor, because of ...?
-	tabWidget->addTab(logArea, 		KIcon("text-rtf"), 					i18n("Log"));
+	tabWidget->addTab(treeFonbook,  KIcon("x-office-address-book"), 	i18n("Phone book"));
+	tabWidget->addTab(treeCallList, KIcon("application-x-gnumeric"), 	i18n("Call history"));
+	showLog(KSettings::showLog());
+
 	setCentralWidget(tabWidget);
 
 	setupGUI();
 }
 
-KFritzBoxWindow::~KFritzBoxWindow()
+KFritzWindow::~KFritzWindow()
 {
 	// move logging to console
 	fritz::Config::SetupLogging(&std::clog, &std::cout, &std::cerr);
-	tabWidget->removeTab(2);
 
 	fritz::FonbookManager::DeleteFonbookManager();
 	fritz::CallList::DeleteCallList();
@@ -145,13 +146,14 @@ KFritzBoxWindow::~KFritzBoxWindow()
 	delete libFritzInit;
 }
 
-void KFritzBoxWindow::HandleCall(bool outgoing, int connId __attribute__((unused)), std::string remoteNumber, std::string remoteName, std::string remoteType, std::string localParty __attribute__((unused)), std::string medium __attribute__((unused)), std::string mediumName)
+void KFritzWindow::HandleCall(bool outgoing, int connId __attribute__((unused)), std::string remoteNumber, std::string remoteName, fritz::FonbookEntry::eType type, std::string localParty __attribute__((unused)), std::string medium __attribute__((unused)), std::string mediumName)
 {
 	QString qRemoteName = inputCodec->toUnicode(remoteName.c_str());
-	if (remoteType.size() > 0){
-		qRemoteName += " ";
-		qRemoteName += remoteType.c_str();
-	}
+	QString qTypeName = KFonbookModel::getTypeName(type);
+
+	if (qTypeName.size() > 0)
+		qRemoteName += " (" + qTypeName + ")";
+
 	//QString qLocalParty = inputCodec->toUnicode(localParty.c_str());
 	QString qMediumName     = inputCodec->toUnicode(mediumName.c_str());
 	QString qMessage;
@@ -163,14 +165,14 @@ void KFritzBoxWindow::HandleCall(bool outgoing, int connId __attribute__((unused
 	emit signalNotification(outgoing ? "outgoingCall" : "incomingCall", qMessage, true);
 }
 
-void KFritzBoxWindow::HandleConnect(int connId __attribute__((unused)))
+void KFritzWindow::HandleConnect(int connId __attribute__((unused)))
 {
 	if (notification)
 		notification->close();
 	emit signalNotification("callConnected", "Call connected.", false);
 }
 
-void KFritzBoxWindow::HandleDisconnect(int connId __attribute__((unused)), std::string duration)
+void KFritzWindow::HandleDisconnect(int connId __attribute__((unused)), std::string duration)
 {
 	if (notification)
 		notification->close();
@@ -182,7 +184,7 @@ void KFritzBoxWindow::HandleDisconnect(int connId __attribute__((unused)), std::
 	emit signalNotification("callDisconnected", qMessage, false);
 }
 
-void KFritzBoxWindow::slotNotification(QString event, QString qMessage, bool persistent) {
+void KFritzWindow::slotNotification(QString event, QString qMessage, bool persistent) {
 	notification = new KNotification (event, this, persistent ? KNotification::Persistent : KNotification::CloseOnTimeout);
 	KIcon ico(event == "incomingCall" ? "incoming-call" :
 			  event == "outgoingCall" ? "outgoing-call" :
@@ -194,37 +196,34 @@ void KFritzBoxWindow::slotNotification(QString event, QString qMessage, bool per
 	connect(notification, SIGNAL(closed()), this, SLOT(notificationClosed()));
 }
 
-void KFritzBoxWindow::notificationClosed() {
+void KFritzWindow::notificationClosed() {
 	notification = NULL;
 }
 
-void KFritzBoxWindow::showSettings(bool b __attribute__((unused))) {
+void KFritzWindow::showSettings() {
 	KConfigDialog *confDialog = new KConfigDialog(this, "settings", KSettings::self());
 
-	QWidget *frameFritzBox = new QWidget( this );
-    Ui_KSettingsFritzBox uiFritzBox;
-    uiFritzBox.setupUi(frameFritzBox);
-    uiFritzBox.kcfg_Password->setText(fbPassword);
-    connect(uiFritzBox.kcfg_Password, SIGNAL(textChanged(const QString &)), confDialog, SLOT(updateButtons()));
-	confDialog->addPage(frameFritzBox, "Fritz!Box", "modem", "Configure connection to Fritz!Box");
+	QWidget *frameFritzBox = new KSettingsFritzBox(this);
+    confDialog->addPage(frameFritzBox, i18n("Fritz!Box"), "modem", i18n("Configure connection to Fritz!Box"));
 
-	confDialog->addPage(new QWidget(this), "Phone books", "x-office-address-book", "Select phone books to use" );
+    QWidget *frameFonbooks = new KSettingsFonbooks(this);
+	confDialog->addPage(frameFonbooks, i18n("Phone books"), "x-office-address-book", i18n("Select phone books to use"));
 
 	connect(confDialog, SIGNAL(settingsChanged(const QString &)), this, SLOT(updateConfiguration(const QString &)));
 
 	confDialog->show();
 }
 
-void KFritzBoxWindow::showNotificationSettings(bool b __attribute__((unused))) {
+void KFritzWindow::showNotificationSettings() {
     KNotifyConfigWidget::configure(this);
 }
 
-void KFritzBoxWindow::updateConfiguration(const QString &dialogName __attribute__((unused))) {
+void KFritzWindow::updateConfiguration(const QString &dialogName __attribute__((unused))) {
 	libFritzInit->setPassword(fbPassword);
 	libFritzInit->start();
 }
 
-void KFritzBoxWindow::reenterPassword() {
+void KFritzWindow::reenterPassword() {
 	KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
 
 	bool keepPassword = showPasswordDialog(fbPassword, wallet != NULL);
@@ -234,7 +233,7 @@ void KFritzBoxWindow::reenterPassword() {
 	updateConfiguration();
 }
 
-void KFritzBoxWindow::saveToWallet(KWallet::Wallet *wallet) {
+void KFritzWindow::saveToWallet(KWallet::Wallet *wallet) {
 	DBG("Trying to save password...");
 	if (wallet->hasFolder(appName) || wallet->createFolder(appName)) {
 		wallet->setFolder(appName);
@@ -246,31 +245,39 @@ void KFritzBoxWindow::saveToWallet(KWallet::Wallet *wallet) {
 	}
 }
 
-bool KFritzBoxWindow::showPasswordDialog(QString &password, bool offerSaving) {
-	KPasswordDialog pwd(NULL, offerSaving ? KPasswordDialog::ShowKeepPassword : KPasswordDialog::NoFlags); //TODO parent
+bool KFritzWindow::showPasswordDialog(QString &password, bool offerSaving) {
+	KPasswordDialog pwd(this, offerSaving ? KPasswordDialog::ShowKeepPassword : KPasswordDialog::NoFlags);
 	pwd.setPrompt(i18n("Enter your Fritz!Box password"));
 	pwd.exec();
 	password = pwd.password();
 	return pwd.keepPassword();
 }
 
-void KFritzBoxWindow::setupActions() {
+void KFritzWindow::setupActions() {
 	KAction* aShowSettings = new KAction(this);
 	aShowSettings->setText(i18n("Configure KFritz..."));
 	aShowSettings->setIcon(KIcon("preferences-other"));
 	actionCollection()->addAction("showSettings", aShowSettings);
-	connect(aShowSettings, SIGNAL(triggered(bool)), this, SLOT(showSettings(bool)));
+	connect(aShowSettings, SIGNAL(triggered(bool)), this, SLOT(showSettings()));
 
 	KAction* aShowNotifySettings = new KAction(this);
 	aShowNotifySettings->setText(i18n("Configure Notifications..."));
 	aShowNotifySettings->setIcon(KIcon("preferences-desktop-notification"));
 	actionCollection()->addAction("showNotifySettings", aShowNotifySettings);
-	connect(aShowNotifySettings, SIGNAL(triggered(bool)), this, SLOT(showNotificationSettings(bool)));
+	connect(aShowNotifySettings, SIGNAL(triggered(bool)), this, SLOT(showNotificationSettings()));
+
+	KAction *aShowLog = new KAction(this);
+	aShowLog->setText(i18n("Show log"));
+	aShowLog->setIcon(KIcon("text-x-log"));
+	aShowLog->setCheckable(true);
+	aShowLog->setChecked(KSettings::showLog());
+	actionCollection()->addAction("showLog", aShowLog);
+	connect(aShowLog, SIGNAL(triggered(bool)), this, SLOT(showLog(bool)));
 
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 }
 
-void KFritzBoxWindow::initIndicator() {
+void KFritzWindow::initIndicator() {
 	iServer = NULL;
 	missedCallsIndicator = NULL;
 #ifdef INDICATEQT_FOUND
@@ -290,7 +297,7 @@ void KFritzBoxWindow::initIndicator() {
 #endif
 }
 
-void KFritzBoxWindow::updateMissedCallsIndicator() {
+void KFritzWindow::updateMissedCallsIndicator() {
 	fritz::CallList *callList = fritz::CallList::getCallList(false);
 	size_t missedCallCount = 0;
 	if (callList) {
@@ -307,11 +314,11 @@ void KFritzBoxWindow::updateMissedCallsIndicator() {
 #endif
 }
 
-void KFritzBoxWindow::showMainWindow() {
+void KFritzWindow::showMainWindow() {
 	this->show();
 }
 
-void KFritzBoxWindow::showMissedCalls(QIndicate::Indicator* indicator __attribute__((unused))) {
+void KFritzWindow::showMissedCalls(QIndicate::Indicator* indicator __attribute__((unused))) {
 	tabWidget->setCurrentIndex(1);
 	this->show();
 	if (missedCallsIndicator)
@@ -321,4 +328,16 @@ void KFritzBoxWindow::showMissedCalls(QIndicate::Indicator* indicator __attribut
 	KSettings::setLastKnownMissedCall(callList->LastMissedCall());
 	KSettings::self()->writeConfig();
 	updateMissedCallsIndicator();
+}
+
+void KFritzWindow::showLog(bool b) {
+	if (b) {
+		tabWidget->addTab(logArea, KIcon("text-x-log"), i18n("Log"));
+		logArea->show();
+	} else {
+		tabWidget->removePage(logArea);
+		logArea->hide();
+	}
+	KSettings::setShowLog(b);
+	KSettings::self()->writeConfig();
 }

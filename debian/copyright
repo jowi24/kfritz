@@ -1,24 +1,20 @@
-This package was debianized by Joachim Wilke <jo@tuxx> on
-Sat, 29 Nov 2008 19:56:59 +0100.
-
-It was downloaded from <url://example.com>
+This package was debianized by Joachim Wilke <launchpad.net@joachim-wilke.de> on
+Sat, 01 Jan 2010 10:00:00 +0100.
 
 Upstream Author(s):
 
-    <put author's name and email here>
-    <likewise for another author>
+    Matthias Becker <becker.matthias@web.de>
+    Joachim Wilke <kfritz@joachim-wilke.de>
 
 Copyright:
 
-    <Copyright (C) YYYY Name OfAuthor>
-    <likewise for another author>
+    Copyright (C) 2010 Matthias Becker & Joachim Wilke
 
 License:
 
-    <Put the license of the package here indented by 4 spaces>
+    This package is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as
+    published by the Free Software Foundation.
 
-The Debian packaging is (C) 2008, Joachim Wilke <jo@tuxx> and
+The Debian packaging is (C) 2010, Joachim Wilke <launchpad.net@joachim-wilke.de> and
 is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
-
-# Please also look if there are files or directories which have a
-# different copyright/license attached and list them here.

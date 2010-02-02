@@ -1,5 +1,5 @@
 /*
- * KFritzBox
+ * KFritz
  *
  * Copyright (C) 2010 Joachim Wilke <vdr@joachim-wilke.de>
  *
@@ -37,6 +37,7 @@ public:
                                 int role = Qt::DisplayRole) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+    static QString getTypeName(const fritz::FonbookEntry::eType type);
 
 private:
 	fritz::Fonbook *fonbook;

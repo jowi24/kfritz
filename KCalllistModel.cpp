@@ -1,5 +1,5 @@
 /*
- * KFritzBox
+ * KFritz
  *
  * Copyright (C) 2010 Joachim Wilke <vdr@joachim-wilke.de>
  *
@@ -26,6 +26,7 @@
 
 KCalllistModel::KCalllistModel() {
 	calllist = NULL;
+	lastCall = 0;
 }
 
 KCalllistModel::~KCalllistModel() {
@@ -41,9 +42,9 @@ QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
 				              ce->type == fritz::CallEntry::OUTGOING ? "outgoing-call" :
 				              ce->type == fritz::CallEntry::MISSED   ? "missed-call"   : ""));
 	if (role == Qt::ToolTipRole && index.column() == 0)
-		return QVariant(i18n(ce->type == fritz::CallEntry::INCOMING ? "Incoming call" :
-				             ce->type == fritz::CallEntry::OUTGOING ? "Outgoing call" :
-				             ce->type == fritz::CallEntry::MISSED   ? "Missed call"   : ""));
+		return QVariant(ce->type == fritz::CallEntry::INCOMING ? i18n("Incoming call") :
+				        ce->type == fritz::CallEntry::OUTGOING ? i18n("Outgoing call") :
+				        ce->type == fritz::CallEntry::MISSED   ? i18n("Missed call")   : "");
 	if (role != Qt::DisplayRole)
 		return QVariant();
 
@@ -79,19 +80,19 @@ QVariant KCalllistModel::headerData(int section, Qt::Orientation orientation, in
 	if (orientation == Qt::Horizontal){
 		switch (section) {
 		case 0:
-			return "Type";
+			return i18n("Type");
 			break;
 		case 1:
-			return "Date";
+			return i18n("Date");
 			break;
 		case 2:
-			return "Name / Number";
+			return i18n("Name / Number");
 			break;
 		case 3:
-			return "Local Device";
+			return i18n("Local Device");
 			break;
 		case 4:
-			return "Duration";
+			return i18n("Duration");
 			break;
 		default:
 			return QVariant();
@@ -148,12 +149,12 @@ void KCalllistModel::sort(int column, Qt::SortOrder order) {
 
 void KCalllistModel::libReady(bool isReady) {
 	KFritzModel::libReady(isReady);
-	if(isReady){
+	if(isReady)
 		// get the calllist resource
 		calllist = fritz::CallList::getCallList(false);
-	}
 	else
 		calllist = NULL;
+	reset();
 }
 
 void KCalllistModel::check() {

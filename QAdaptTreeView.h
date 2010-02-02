@@ -1,5 +1,5 @@
 /*
- * KFritzBox
+ * KFritz
  *
  * Copyright (C) 2010 Joachim Wilke <vdr@joachim-wilke.de>
  *

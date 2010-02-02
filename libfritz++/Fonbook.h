@@ -57,7 +57,6 @@ public:
 	std::string getNumber() const { return number; }
 	eType getType() const { return type; }
 	void setType(eType type) { this->type = type; }
-	std::string getTypeName();
 	bool operator<(const FonbookEntry & fe) const;
 };
 

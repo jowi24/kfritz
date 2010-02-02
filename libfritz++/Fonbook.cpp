@@ -39,22 +39,6 @@ bool FonbookEntry::operator<(const FonbookEntry &fe) const {
 	return (cresult < 0);
 }
 
-std::string FonbookEntry::getTypeName() {
-	switch (getType()) {
-	case FonbookEntry::TYPE_HOME:
-		return "H";
-		break;
-	case FonbookEntry::TYPE_MOBILE:
-		return "M";
-		break;
-	case FonbookEntry::TYPE_WORK:
-		return "W";
-		break;
-	default:
-		return " ";
-	}
-}
-
 class FonbookEntrySort {
 private:
 	bool ascending;
@@ -70,7 +54,7 @@ public:
 			return (ascending ? (fe1.getName() < fe2.getName()) : (fe1.getName() > fe2.getName()));
 			break;
 		case FonbookEntry::ELEM_TYPE:
-			return (ascending ? (fe1.getTypeName() < fe2.getTypeName()) : (fe1.getTypeName() > fe2.getTypeName()));
+			return (ascending ? (fe1.getType() < fe2.getType()) : (fe1.getType() > fe2.getType()));
 			break;
 		case FonbookEntry::ELEM_NUMBER:
 			return (ascending ? (fe1.getNumber() < fe2.getNumber()) : (fe1.getNumber() > fe2.getNumber()));

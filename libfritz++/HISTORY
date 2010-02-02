@@ -126,3 +126,6 @@
   
 2010-01-29:
 - Added CallList::LastCall()
+
+2010-01-31:
+- removed FonbookEntry::getTypeName() as this is something the consumer has to take care about

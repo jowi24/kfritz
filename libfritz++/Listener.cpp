@@ -120,7 +120,7 @@ void Listener::Action() {
 						else
 							mediumName = partD;
 						// notify application
-						if (event) event->HandleCall(true, connId, partC, fe.getName(), fe.getTypeName(), partB, partD, mediumName);
+						if (event) event->HandleCall(true, connId, partC, fe.getName(), fe.getType(), partB, partD, mediumName);
 						activeConnections.push_back(connId);
 					}
 
@@ -142,7 +142,7 @@ void Listener::Action() {
 						else
 							mediumName = partC;
 						// notify application
-						if (event) event->HandleCall(false, connId, partA, fe.getName(), fe.getTypeName(), partB, partC, mediumName);
+						if (event) event->HandleCall(false, connId, partA, fe.getName(), fe.getType(), partB, partC, mediumName);
 						activeConnections.push_back(connId);
 					}
 				} else if (type.compare("CONNECT") == 0) {
