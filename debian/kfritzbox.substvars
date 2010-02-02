@@ -1,2 +1,0 @@
-shlibs:Depends=kdebase-runtime (>= 4:4.3.2), kdelibs5 (>= 4:4.3.2), libc6 (>= 2.4), libgcc1 (>= 1:4.1.1), libindicate-qt0, libqt4-dbus (>= 4.5.1), libqt4-svg (>= 4.5.1), libqtcore4 (>= 4.5.1), libqtgui4 (>= 4.5.1), libssl0.9.8 (>= 0.9.8f-5), libstdc++6 (>= 4.3)
-misc:Depends=
