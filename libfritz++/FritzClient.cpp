@@ -206,7 +206,7 @@ bool FritzClient::Login() throw(tcpclient::TcpException) {
 		*dsyslog << __FILE__ << ": logging into fritz box using old scheme without SIDs." << std::endl;
 		// no password, no login
 		if ( gConfig->getPassword().length() == 0)
-			return true; //TODO?
+			return true; //TODO: check if box really doesn't need a password
 
 		std::string sMsg;
 

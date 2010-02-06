@@ -196,7 +196,7 @@ bool Tools::MatchesMsnFilter(const std::string &number){
 }
 
 std::string Tools::NormalizeNumber(std::string number) {
-	// Remove Fritz!Box control codes *xxx# if used
+	// Remove Fritz!Box control codes *xyz# if used
 	if (number[0] == '*') {
 		size_t hashPos = number.find('#');
 		if (hashPos != std::string::npos)

@@ -29,6 +29,8 @@
 #include <PThread++.h>
 #include "Listener.h"
 
+#define I18N_NOOP(x) x
+
 namespace fritz{
 
 typedef unsigned char uchar;

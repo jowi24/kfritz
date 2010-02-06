@@ -151,7 +151,7 @@ std::string &convertEntities(std::string &s) {
 FritzFonbook::FritzFonbook()
 :PThread("FritzFonbook")
 {
-	title = "Fritz!Box phone book";
+	title = I18N_NOOP("Fritz!Box phone book");
 	techId = "FRITZ";
 	displayable = true;
 	setInitialized(false);

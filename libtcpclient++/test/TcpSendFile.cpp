@@ -25,7 +25,6 @@ TcpSendFile::TcpSendFile(std::string filename, int port) {
 }
 
 TcpSendFile::~TcpSendFile() {
-	// TODO Auto-generated destructor stub
 }
 
 int TcpSendFile::SystemExec(const char *Command, bool Detached)

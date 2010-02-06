@@ -29,7 +29,7 @@
 class KFonbookModel : public KFritzModel  {
 	Q_OBJECT
 public:
-	KFonbookModel();
+	KFonbookModel(QString techID);
 	virtual ~KFonbookModel();
 	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -41,6 +41,7 @@ public:
 
 private:
 	fritz::Fonbook *fonbook;
+	QString techID;
 private slots:
 	void libReady(bool isReady);
 };

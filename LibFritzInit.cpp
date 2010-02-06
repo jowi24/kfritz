@@ -80,6 +80,8 @@ void LibFritzInit::run() {
 	fritz::CallList::CreateCallList();
 
 	emit ready(true);
+
+	//while (fritz::CallList::Active() || (*fritz::FonbookManager::Fonboo())["FRITZ"]->)
 }
 
 void LibFritzInit::setPassword(QString password) {

@@ -29,7 +29,7 @@ KFritzModel::KFritzModel() {
 }
 
 KFritzModel::~KFritzModel() {
-	// TODO Auto-generated destructor stub
+	delete timer;
 }
 
 QModelIndex KFritzModel::index(int row, int column, const QModelIndex & parent) const

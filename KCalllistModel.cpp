@@ -30,7 +30,6 @@ KCalllistModel::KCalllistModel() {
 }
 
 KCalllistModel::~KCalllistModel() {
-	// TODO: somthing to do here?
 }
 
 QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
@@ -56,7 +55,7 @@ QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
 		case 2:
 			if (ce->remoteName.size() == 0)
 				if (ce->remoteNumber.size() == 0)
-					return QVariant("unknown");
+					return QVariant(i18n("unknown"));
 				else
 					return QVariant(toLocalEncoding(ce->remoteNumber));
 			else
@@ -129,10 +128,10 @@ void KCalllistModel::sort(int column, Qt::SortOrder order) {
 		element = fritz::CallEntry::ELEM_DATE;
 		break;
 	case 2:
-		element = fritz::CallEntry::ELEM_REMOTENAME; //TODO: not 100% correct
+		element = fritz::CallEntry::ELEM_REMOTENAME;
 		break;
 	case 3:
-		element = fritz::CallEntry::ELEM_LOCALNAME; //TODO: not 100% correct
+		element = fritz::CallEntry::ELEM_LOCALNAME;
 		break;
 	case 4:
 		element = fritz::CallEntry::ELEM_DURATION;

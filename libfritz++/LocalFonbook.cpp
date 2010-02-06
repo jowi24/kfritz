@@ -71,7 +71,7 @@ char *ReadLine::Read(FILE *f)
 
 
 LocalFonbook::LocalFonbook() {
-	title = "Local phone book";
+	title = I18N_NOOP("Local phone book");
 	techId = "LOCL";
 	displayable = true;
 	writeable   = true;

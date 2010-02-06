@@ -189,7 +189,7 @@ void TcpClientBuf::Connect() {
 		}
 
 	}
-	freeaddrinfo(ainfo); //TODO: memleak in case of exception
+	freeaddrinfo(ainfo);
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	connected = true;
 }

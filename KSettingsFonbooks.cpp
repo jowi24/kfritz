@@ -59,7 +59,7 @@ KFonbooksWidget::KFonbooksWidget(QWidget *parent, KActionSelector *actionSelecto
     connect(actionSelector, SIGNAL(movedDown(QListWidgetItem *)), this, SLOT(listChangedSlot()));
     fonbooks = fritz::FonbookManager::GetFonbookManager()->GetFonbooks();
     for (size_t pos=0; pos < fonbooks->size(); pos++)
-    	new KFonbooksWidgetListItem((*fonbooks)[pos]->GetTitle().c_str(),
+    	new KFonbooksWidgetListItem(i18n((*fonbooks)[pos]->GetTitle().c_str()),
     			                    (*fonbooks)[pos]->GetTechId().c_str(),
     			                    actionSelector->availableListWidget());
 }

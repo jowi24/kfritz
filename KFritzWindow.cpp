@@ -29,9 +29,10 @@
 #include <KLocale>
 #include <KActionCollection>
 #include <KAboutData>
+#include <KFindDialog>
 #include <KStandardAction>
 #include <KService>
-#include <KStatusBar>
+#include <KStatusBar> //TODO: add status messages to status bar
 #include <KConfigSkeleton>
 #include <KConfigDialog>
 #include <KNotifyConfigWidget>
@@ -53,7 +54,6 @@
 
 KFritzWindow::KFritzWindow()
 {
-	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
 	appName     = KGlobal::mainComponent().aboutData()->appName();
 	programName = KGlobal::mainComponent().aboutData()->programName();
 
@@ -72,7 +72,7 @@ KFritzWindow::KFritzWindow()
 	bool savetoWallet = false;
 	bool requestPassword = true;
 
-	KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
+	KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), winId());
 	if (wallet) {
 		if (wallet->hasFolder(appName)) {
 			wallet->setFolder(appName);
@@ -101,23 +101,41 @@ KFritzWindow::KFritzWindow()
 	if (wallet && savetoWallet)
 		saveToWallet(wallet);
 
-	modelFonbook  = new KFonbookModel();
-	connect(libFritzInit, SIGNAL(ready(bool)), modelFonbook, SLOT(libReady(bool)));
+	setupActions();
+
+	tabWidget = new KTabWidget();
+
+	// init fonbooks, add to tabWidget
+
+	fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
+	fritz::Fonbooks *books = fm->GetFonbooks();
+	for (size_t pos=0; pos<books->size(); pos++) {
+		if (!(*books)[pos]->isDisplayable())
+			continue;
+
+		KFonbookModel *modelFonbook = new KFonbookModel((*books)[pos]->GetTechId().c_str());
+		connect(libFritzInit, SIGNAL(ready(bool)), modelFonbook, SLOT(libReady(bool)));
+
+		QAdaptTreeView *treeFonbook = new QAdaptTreeView(this);
+		treeFonbook->setAlternatingRowColors(true);
+		treeFonbook->setItemsExpandable(false);
+		treeFonbook->setSortingEnabled(true);
+		treeFonbook->setModel(modelFonbook);
+		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
+
+		treeFonbooks.push_back(treeFonbook);
+		//TODO: show only configured ones
+		tabWidget->addTab(treeFonbook,  KIcon("x-office-address-book"), 	i18n((*books)[pos]->GetTitle().c_str()));
+}
+
+	// init call list, add to tabWidget
+
+	KCalllistModel *modelCalllist;
 	modelCalllist = new KCalllistModel();
 	connect(libFritzInit, SIGNAL(ready(bool)), modelCalllist, SLOT(libReady(bool)));
 	connect(modelCalllist, SIGNAL(updated()), this, SLOT(updateMissedCallsIndicator()));
 
-	setupActions();
-
-	treeFonbook = new QAdaptTreeView(this);
-	treeFonbook->setAlternatingRowColors(true);
-	treeFonbook->setItemsExpandable(false);
-	treeFonbook->setSortingEnabled(true);
-
-	treeFonbook->setModel(modelFonbook);
-	treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
-
-	treeCallList = new QAdaptTreeView(this);
+	QAdaptTreeView *treeCallList = new QAdaptTreeView(this);
 	treeCallList->setAlternatingRowColors(true);
 	treeCallList->setItemsExpandable(false);
 	treeCallList->setSortingEnabled(true);
@@ -125,9 +143,10 @@ KFritzWindow::KFritzWindow()
 	treeCallList->setModel(modelCalllist);
 	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
 
-	tabWidget = new KTabWidget();
-	tabWidget->addTab(treeFonbook,  KIcon("x-office-address-book"), 	i18n("Phone book"));
 	tabWidget->addTab(treeCallList, KIcon("application-x-gnumeric"), 	i18n("Call history"));
+
+	// add log to tabWidget, if configured
+
 	showLog(KSettings::showLog());
 
 	setCentralWidget(tabWidget);
@@ -148,19 +167,20 @@ KFritzWindow::~KFritzWindow()
 
 void KFritzWindow::HandleCall(bool outgoing, int connId __attribute__((unused)), std::string remoteNumber, std::string remoteName, fritz::FonbookEntry::eType type, std::string localParty __attribute__((unused)), std::string medium __attribute__((unused)), std::string mediumName)
 {
-	QString qRemoteName = inputCodec->toUnicode(remoteName.c_str());
-	QString qTypeName = KFonbookModel::getTypeName(type);
+	QTextCodec *inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
+	QString qRemoteName    = inputCodec->toUnicode(remoteName.c_str());
+	QString qTypeName      = KFonbookModel::getTypeName(type);
 
 	if (qTypeName.size() > 0)
 		qRemoteName += " (" + qTypeName + ")";
 
 	//QString qLocalParty = inputCodec->toUnicode(localParty.c_str());
-	QString qMediumName     = inputCodec->toUnicode(mediumName.c_str());
+	QString qMediumName    = inputCodec->toUnicode(mediumName.c_str());
 	QString qMessage;
 	if (outgoing)
 		qMessage=i18n("Outgoing call to <b>%1</b><br/>using %2",   qRemoteName.size() ? qRemoteName : remoteNumber.c_str(),                                    qMediumName);
 	else
-		qMessage=i18n("Incoming call from <b>%1</b><br/>using %2", qRemoteName.size() ? qRemoteName : remoteNumber.size() ? remoteNumber.c_str() : "unknown",  qMediumName);
+		qMessage=i18n("Incoming call from <b>%1</b><br/>using %2", qRemoteName.size() ? qRemoteName : remoteNumber.size() ? remoteNumber.c_str() : i18n("unknown"),  qMediumName);
 
 	emit signalNotification(outgoing ? "outgoingCall" : "incomingCall", qMessage, true);
 }
@@ -275,10 +295,14 @@ void KFritzWindow::setupActions() {
 	connect(aShowLog, SIGNAL(triggered(bool)), this, SLOT(showLog(bool)));
 
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
+
+//	KStandardAction::find(this, SLOT(find()), actionCollection());
+//	KStandardAction::findNext(this, SLOT(findNext()), actionCollection());
+//	KStandardAction::findPrev(this, SLOT(findPrev()), actionCollection());
 }
 
 void KFritzWindow::initIndicator() {
-	iServer = NULL;
+	QIndicate::Server *iServer = NULL;
 	missedCallsIndicator = NULL;
 #ifdef INDICATEQT_FOUND
 	iServer = QIndicate::Server::defaultInstance();
@@ -297,6 +321,13 @@ void KFritzWindow::initIndicator() {
 #endif
 }
 
+bool KFritzWindow::queryClose() {
+	// don't quit, just minimize to systray
+	hide();
+	return false;
+}
+
+
 void KFritzWindow::updateMissedCallsIndicator() {
 	fritz::CallList *callList = fritz::CallList::getCallList(false);
 	size_t missedCallCount = 0;
@@ -312,6 +343,22 @@ void KFritzWindow::updateMissedCallsIndicator() {
 	else
 		missedCallsIndicator->show();
 #endif
+}
+
+void KFritzWindow::find() {
+	QStringList findStrings;
+	KFindDialog dlg(this, 0, findStrings, true, false);
+	if (dlg.exec() != QDialog::Accepted)
+		return;
+
+}
+
+void KFritzWindow::findNext() {
+
+}
+
+void KFritzWindow::findPrev() {
+
 }
 
 void KFritzWindow::showMainWindow() {

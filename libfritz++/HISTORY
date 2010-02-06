@@ -120,6 +120,7 @@
 - FritzClient::hasValidPassword() can now be used to determine the result of the last Login()
 - Tools::GetLocationSettings() now returns a bool wether the password used 
   to access the FB was valid
+- Fixed two bugs in sorting call lists by date / time
 
 2010-01-27:
 - Improved destructor of Listener to allow proper cleanup of thread
@@ -129,3 +130,11 @@
 
 2010-01-31:
 - removed FonbookEntry::getTypeName() as this is something the consumer has to take care about
+
+2010-02-05:
+- introduced I18N_NOOP macro, this allows application that use libfritz++ to identify strings 
+  delivered by the library (e.g., using xgettext) they should localize
+  
+2010-02-06:
+- fixed sorting issue in calllist by putting remoteNumber / "unknown" into the remoteName field
+- "unknown" call list entries are now always sorted to beginning of the list

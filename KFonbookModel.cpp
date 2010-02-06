@@ -24,12 +24,12 @@
 #include <KIcon>
 #include <KLocalizedString>
 
-KFonbookModel::KFonbookModel() {
+KFonbookModel::KFonbookModel(QString techID) {
 	fonbook = NULL;
+	this->techID = techID;
 }
 
 KFonbookModel::~KFonbookModel() {
-	// TODO: somthing to do here?
 }
 
 int KFonbookModel::rowCount(const QModelIndex & parent) const
@@ -121,7 +121,8 @@ void KFonbookModel::libReady(bool isReady) {
 	KFritzModel::libReady(isReady);
 	if (isReady){
 		// get the fonbook resource
-		fonbook = fritz::FonbookManager::GetFonbook();
+		fritz::Fonbooks *books = fritz::FonbookManager::GetFonbookManager()->GetFonbooks();
+		fonbook = (*books)[techID.toStdString()];
 	}
 	else
 		fonbook = NULL;

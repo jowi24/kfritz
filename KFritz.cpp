@@ -38,7 +38,6 @@ KFritz::KFritz(QWidget *mainWindow, KAboutData *aboutData)
 :KSystemTrayIcon("modem", mainWindow)
 {
 	this->aboutData = aboutData;
-
 }
 
 KFritz::~KFritz()

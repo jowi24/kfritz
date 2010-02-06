@@ -44,7 +44,7 @@ public:
 			return (ascending ? (ce1.timestamp < ce2.timestamp) : (ce1.timestamp > ce2.timestamp));
 			break;
 		case CallEntry::ELEM_DURATION:
-			return (ascending ? (ce1.duration < ce2.duration) : (ce1.duration > ce2.duration)); //TODO: sort int?
+			return (ascending ? (ce1.duration < ce2.duration) : (ce1.duration > ce2.duration)); //TODO: this wrong as e.g. 10 hours would be smaller as 7 hours
 			break;
 		case CallEntry::ELEM_LOCALNAME:
 			return (ascending ? (ce1.localName < ce2.localName) : (ce1.localName > ce2.localName));
@@ -53,6 +53,12 @@ public:
 			return (ascending ? (ce1.localNumber < ce2.localNumber) : (ce1.localNumber > ce2.localNumber));
 			break;
 		case CallEntry::ELEM_REMOTENAME:
+			if (ce1.remoteName == "unknown" && ce2.remoteName == "unknown")
+				return false;
+			if (ce1.remoteName == "unknown")
+				return (ascending ? true : false);
+			if (ce2.remoteName == "unknown")
+				return (ascending ? false : true);
 			return (ascending ? (ce1.remoteName < ce2.remoteName) : (ce1.remoteName > ce2.remoteName));
 			break;
 		case CallEntry::ELEM_REMOTENUMBER:
@@ -151,6 +157,13 @@ void CallList::Action() {
 		ce.localNumber    = msg.substr(lNumberStart,  durationStart - lNumberStart  -1);
 		ce.duration       = msg.substr(durationStart, durationStop -  durationStart +1);
 
+		// put the number into the name field if name is not available
+		if (ce.remoteName.size() == 0)
+			ce.remoteName = ce.remoteNumber;
+		// if also no number is available, put "unknown" into the name field
+		if (ce.remoteName.size() == 0)
+			ce.remoteName = I18N_NOOP("unknown");
+
 		//       01234567        01234
 		// date: dd.mm.yy, time: hh:mm
 		tm tmCallTime;
@@ -158,12 +171,13 @@ void CallList::Action() {
 		tmCallTime.tm_mon  = atoi(ce.date.substr(3, 2).c_str()) - 1;
 		tmCallTime.tm_year = atoi(ce.date.substr(6, 2).c_str()) + 100;
 		tmCallTime.tm_hour = atoi(ce.time.substr(0, 2).c_str());
-		tmCallTime.tm_min  = atoi(ce.time.substr(2, 2).c_str());
+		tmCallTime.tm_min  = atoi(ce.time.substr(3, 2).c_str());
 		tmCallTime.tm_sec  = 0;
+		tmCallTime.tm_isdst = 0;
 
 		ce.timestamp = mktime(&tmCallTime);
 
-				// workaround for AVM debugging entries in CVS list
+		// workaround for AVM debugging entries in CVS list
 		if (ce.remoteNumber.compare("1234567") == 0 && ce.date.compare("12.03.2005") == 0)
 			continue;
 

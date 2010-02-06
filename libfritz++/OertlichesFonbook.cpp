@@ -30,7 +30,7 @@ namespace fritz{
 
 OertlichesFonbook::OertlichesFonbook()
 {
-	title = "das-oertliche.de";
+	title = I18N_NOOP("das-oertliche.de");
 	techId = "OERT";
 	displayable = false;
 }

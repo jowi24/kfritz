@@ -79,6 +79,7 @@
 - Replace the term "calllist" with "call history" on user interface
 - Translated UI texts to german
 
-Todo:
-- add status messages to status bar
-- show all FBs
+2010-02-05:
+- Closing kfritz main window now minimizes to systray 
+- Passing window id to KWallet to remove warning
+- Translated texts coming from libfritz++ to german

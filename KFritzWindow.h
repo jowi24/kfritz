@@ -30,7 +30,6 @@
 #include <QTreeView>
 #include <QTextCodec>
 
-#include <Listener.h>
 #include "KFonbookModel.h"
 #include "KCalllistModel.h"
 #include "LibFritzInit.h"
@@ -49,23 +48,20 @@ class KFritzWindow : public KXmlGuiWindow, public fritz::EventHandler
 {
 	Q_OBJECT
 private:
-	KFonbookModel *modelFonbook;
-	KCalllistModel *modelCalllist;
-	QAdaptTreeView *treeFonbook, *treeCallList;
+	QVector<QAdaptTreeView*> treeFonbooks;
 	KTabWidget *tabWidget;
 	KTextEdit *logArea;
 	LibFritzInit *libFritzInit;
 	QString fbPassword;
 	QString appName;
 	QString programName;
-	QTextCodec *inputCodec;
 	KNotification *notification;
 	QIndicate::Indicator *missedCallsIndicator;
-	QIndicate::Server *iServer;
 	void saveToWallet(KWallet::Wallet *wallet);
 	bool showPasswordDialog(QString &password, bool offerSaving = false);
 	void setupActions();
     void initIndicator();
+    virtual bool queryClose();
 Q_SIGNALS:
 	void signalNotification(QString event, QString qMessage, bool persistent);
 private Q_SLOTS:
@@ -73,6 +69,9 @@ private Q_SLOTS:
 	void notificationClosed();
 public  Q_SLOTS:
     void updateMissedCallsIndicator();
+    void find();
+    void findNext();
+    void findPrev();
 public:
     KFritzWindow();
     virtual ~KFritzWindow();

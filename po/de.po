@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-02-02 21:08+0100\n"
+"POT-Creation-Date: 2010-02-06 18:52+0100\n"
 "PO-Revision-Date: 2010-02-02 21:04+0100\n"
 "Last-Translator: Joachim Wilke <kfritz@joachim-wilke.de>\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -15,35 +15,39 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: KCalllistModel.cpp:45
+#: KCalllistModel.cpp:44
 msgid "Incoming call"
 msgstr "Eingehender Anruf"
 
-#: KCalllistModel.cpp:46
+#: KCalllistModel.cpp:45
 msgid "Outgoing call"
 msgstr "Ausgehender Anruf"
 
-#: KCalllistModel.cpp:47
+#: KCalllistModel.cpp:46
 msgid "Missed call"
 msgstr "Verpasster Anruf"
 
-#: KCalllistModel.cpp:83 KFonbookModel.cpp:62
+#: KCalllistModel.cpp:58 KFritzWindow.cpp:183
+msgid "unknown"
+msgstr "unbekannt"
+
+#: KCalllistModel.cpp:82 KFonbookModel.cpp:62
 msgid "Type"
 msgstr "Typ"
 
-#: KCalllistModel.cpp:86
+#: KCalllistModel.cpp:85
 msgid "Date"
 msgstr "Datum"
 
-#: KCalllistModel.cpp:89
+#: KCalllistModel.cpp:88
 msgid "Name / Number"
 msgstr "Name / Nummer"
 
-#: KCalllistModel.cpp:92
+#: KCalllistModel.cpp:91
 msgid "Local Device"
 msgstr "Endgerät"
 
-#: KCalllistModel.cpp:95
+#: KCalllistModel.cpp:94
 msgid "Duration"
 msgstr "Dauer"
 
@@ -67,75 +71,71 @@ msgstr "Handy"
 msgid "Work"
 msgstr "Büro"
 
-#: KFritz.cpp:59
+#: KFritz.cpp:58
 msgid "KFritz"
 msgstr "KFritz"
 
-#: KFritz.cpp:63
+#: KFritz.cpp:62
 msgid "Notifies about phone activity and browses call history and telephone book on your Fritz!Box"
 msgstr "Signalisiert ein- und ausgehende Telefonanrufe, zeigt Telefonbuch und Anrufliste der Fritz!Box an"
 
-#: KFritz.cpp:67
+#: KFritz.cpp:66
 msgid "(c) 2008-2010"
 msgstr "(c) 2008-2010"
 
-#: KFritz.cpp:70
+#: KFritz.cpp:69
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Entwickelt von Matthias Becker und Joachim Wilke."
 
-#: KFritzWindow.cpp:129
-msgid "Phone book"
-msgstr "Telefonbuch"
-
-#: KFritzWindow.cpp:130
+#: KFritzWindow.cpp:146
 msgid "Call history"
 msgstr "Anrufliste"
 
-#: KFritzWindow.cpp:161
+#: KFritzWindow.cpp:181
 msgid "Outgoing call to <b>%1</b><br/>using %2"
 msgstr "Ausgehender Anruf zu <b>%1</b><br/>%2"
 
-#: KFritzWindow.cpp:163
+#: KFritzWindow.cpp:183
 msgid "Incoming call from <b>%1</b><br/>using %2"
 msgstr "Eingehender Anruf von <b>%1</b><br/>%2"
 
-#: KFritzWindow.cpp:183
+#: KFritzWindow.cpp:203
 msgid "Call disconnected (%1:%2)."
 msgstr "Anruf beendet (%1:%2)."
 
-#: KFritzWindow.cpp:207
+#: KFritzWindow.cpp:227
 msgid "Configure connection to Fritz!Box"
 msgstr "Verbindung zur Fritz!Box einrichten"
 
-#: KFritzWindow.cpp:207
+#: KFritzWindow.cpp:227
 msgid "Fritz!Box"
 msgstr "Fritz!Box"
 
-#: KFritzWindow.cpp:210
+#: KFritzWindow.cpp:230
 msgid "Phone books"
 msgstr "Telefonbücher"
 
-#: KFritzWindow.cpp:210
+#: KFritzWindow.cpp:230
 msgid "Select phone books to use"
 msgstr "Zu nutzende Telefonbücher auswählen"
 
-#: KFritzWindow.cpp:250
+#: KFritzWindow.cpp:270
 msgid "Enter your Fritz!Box password"
 msgstr "Geben Sie Ihr Fritz!Box Passwort ein"
 
-#: KFritzWindow.cpp:258
+#: KFritzWindow.cpp:278
 msgid "Configure KFritz..."
 msgstr "KFritz einrichten..."
 
-#: KFritzWindow.cpp:264
+#: KFritzWindow.cpp:284
 msgid "Configure Notifications..."
 msgstr "Benachrichtigungen einrichten..."
 
-#: KFritzWindow.cpp:270
+#: KFritzWindow.cpp:290
 msgid "Show log"
 msgstr "Protokoll anzeigen"
 
-#: KFritzWindow.cpp:335
+#: KFritzWindow.cpp:382
 msgid "Log"
 msgstr "Protokoll"
 
@@ -166,3 +166,19 @@ msgstr "Anrufliste und Benachrichtigungen auf bestimmte MSN einschränken"
 #: build/ui_KSettingsFritzBox.h:131
 msgid "MSN filter"
 msgstr "MSN Filter"
+
+#: libfritz++/FritzFonbook.cpp:154
+msgid "Fritz!Box phone book"
+msgstr "Fritz!Box Telefonbuch"
+
+#: libfritz++/LocalFonbook.cpp:74
+msgid "Local phone book"
+msgstr "Lokales Telefonbuch"
+
+#: libfritz++/Nummerzoeker.cpp:33
+msgid "nummerzoeker.com"
+msgstr "nummerzoeker.com"
+
+#: libfritz++/OertlichesFonbook.cpp:33
+msgid "das-oertliche.de"
+msgstr "das-oertliche.de"

@@ -30,7 +30,7 @@ namespace fritz{
 
 NummerzoekerFonbook::NummerzoekerFonbook()
 {
-	title = "nummerzoeker.com";
+	title = I18N_NOOP("nummerzoeker.com");
 	techId = "ZOEK";
 	displayable = false;
 }
@@ -97,7 +97,7 @@ FonbookEntry &NummerzoekerFonbook::ResolveToName(FonbookEntry &fe) {
 	  }
 	}
 	// convert the string from latin1 to current system character table
-	// TODO: is this really ISO-8859-1, the webservers' response is unclear (html pages are UTF8)
+	// Q: is this really ISO-8859-1, the webservers' response is unclear (html pages are UTF8)
 	CharSetConv *conv = new CharSetConv("ISO-8859-1", CharSetConv::SystemCharacterTable());
 	const char *s_converted = conv->Convert(name.c_str());
 	name = s_converted;

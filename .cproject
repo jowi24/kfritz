@@ -65,9 +65,10 @@
 				<buildTargets>
 					<target name="all" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 						<buildCommand>make</buildCommand>
+						<buildArguments>-s</buildArguments>
 						<buildTarget>all</buildTarget>
 						<stopOnError>false</stopOnError>
-						<useDefaultCommand>true</useDefaultCommand>
+						<useDefaultCommand>false</useDefaultCommand>
 						<runAllBuilders>true</runAllBuilders>
 					</target>
 					<target name="clean" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
@@ -86,8 +87,24 @@
 					</target>
 					<target name="deb-src" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 						<buildCommand>make</buildCommand>
-						<buildArguments/>
+						<buildArguments>-s</buildArguments>
 						<buildTarget>deb-src</buildTarget>
+						<stopOnError>false</stopOnError>
+						<useDefaultCommand>true</useDefaultCommand>
+						<runAllBuilders>true</runAllBuilders>
+					</target>
+					<target name="install" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>make</buildCommand>
+						<buildArguments>-s</buildArguments>
+						<buildTarget>install</buildTarget>
+						<stopOnError>false</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+						<runAllBuilders>true</runAllBuilders>
+					</target>
+					<target name="i18n" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>make</buildCommand>
+						<buildArguments>-s</buildArguments>
+						<buildTarget>i18n</buildTarget>
 						<stopOnError>false</stopOnError>
 						<useDefaultCommand>true</useDefaultCommand>
 						<runAllBuilders>true</runAllBuilders>
