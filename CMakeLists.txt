@@ -61,7 +61,7 @@ endif(GETTEXT_MSGFMT_EXECUTABLE)
 
 set(kfritzbox_SRCS KFritz.cpp KFritzWindow.cpp KFonbookModel.cpp KSettingsFonbooks.cpp
                    KSettingsFritzBox.cpp KFritzModel.cpp KCalllistModel.cpp LibFritzInit.cpp 
-                   Log.cpp QAdaptTreeView.cpp)
+                   Log.cpp LogDialog.cpp QAdaptTreeView.cpp)
 set(CMAKE_CXX_FLAGS_DEBUG "-fexceptions -g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG" ) 
 
 kde4_add_kcfg_files(kfritzbox_SRCS GENERATE_MOC KSettings.kcfgc)

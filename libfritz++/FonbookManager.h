@@ -129,6 +129,12 @@ public:
 	 */
 	std::string GetTitle();
 	/**
+	 * Returns the technical id of this phonebook. This id has to be unique among all phonebooks and is used when storing
+	 * the plugin's setup.
+	 * @return the technical id
+	 */
+	virtual std::string GetTechId();
+	/**
 	 *
 	 */
 	Fonbooks *GetFonbooks();

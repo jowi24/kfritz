@@ -83,3 +83,12 @@
 - Closing kfritz main window now minimizes to systray 
 - Passing window id to KWallet to remove warning
 - Translated texts coming from libfritz++ to german
+
+2010-02-07:
+- Added message to status bar while reading data from Fritz!Box
+
+2010-02-11:
+- Moved log to a separate dialog, moved menu entry to help menu
+- Fixed formatting of time at disconnect-notification
+- Added call to libfritz to set up config dir (in most cases ~/.kde/share/apps/kfritz)
+

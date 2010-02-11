@@ -39,7 +39,6 @@ Q_SIGNALS:
 	void updated();
 protected Q_SLOTS:
 	void check();
-	void libReady(bool isReady);
 private:
 	QTextCodec *inputCodec;
 	int lastRows;

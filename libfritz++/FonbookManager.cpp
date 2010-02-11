@@ -150,7 +150,7 @@ FonbookEntry &FonbookManager::ResolveToName(FonbookEntry &fe) {
 
 Fonbook *FonbookManager::GetActiveFonbook() {
 	if (activeFonbookPos == std::string::npos) {
-		NextFonbook();
+		NextFonbook(); //todo: what if no fonebook is configured at all?
 	}
 	return fonbooks[gConfig->getFonbookIDs()[activeFonbookPos]];
 }
@@ -191,6 +191,10 @@ size_t FonbookManager::GetFonbookSize() {
 
 std::string FonbookManager::GetTitle() {
 	return GetActiveFonbook() ? GetActiveFonbook()->GetTitle() : "";
+}
+
+std::string FonbookManager::GetTechId() {
+	return GetActiveFonbook() ? GetActiveFonbook()->GetTechId() : "";
 }
 
 void FonbookManager::Reload() {

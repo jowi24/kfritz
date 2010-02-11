@@ -6,10 +6,12 @@
   <ToolBar name="mainToolBar" >
   </ToolBar>
   <MenuBar>
-    <Menu name="settings" >
- 	  <Action name="showLog" append="show_merge"/>
+    <Menu name="settings">
       <Action name="showNotifySettings" append="configure_merge"/>
       <Action name="showSettings" append="configure_merge"/>
+    </Menu>
+    <Menu name="help">
+ 	  <Action name="showLog" append="help_whats_this_merge"/>
     </Menu>
   </MenuBar>
 </gui>

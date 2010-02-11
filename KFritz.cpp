@@ -32,21 +32,17 @@
 #include "KFritzWindow.h"
 
 static const char *VERSION        = "0.1";
-//TODO: use KUniqueApplication ?
 
 KFritz::KFritz(QWidget *mainWindow, KAboutData *aboutData)
-:KSystemTrayIcon("modem", mainWindow)
-{
+:KSystemTrayIcon("modem", mainWindow) {
 	this->aboutData = aboutData;
 }
 
-KFritz::~KFritz()
-{
+KFritz::~KFritz() {
 }
 
 
-int main (int argc, char *argv[])
-{
+int main (int argc, char *argv[]) {
 	// init KDE-stuff
 	KAboutData aboutData(
 			// The program name used internally.

@@ -138,3 +138,6 @@
 2010-02-06:
 - fixed sorting issue in calllist by putting remoteNumber / "unknown" into the remoteName field
 - "unknown" call list entries are now always sorted to beginning of the list
+
+2010-02-97:
+- addes a missing redefinition of GetTechId() in class FonbookManager

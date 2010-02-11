@@ -32,7 +32,7 @@
 #include <KFindDialog>
 #include <KStandardAction>
 #include <KService>
-#include <KStatusBar> //TODO: add status messages to status bar
+#include <KStatusBar>
 #include <KConfigSkeleton>
 #include <KConfigDialog>
 #include <KNotifyConfigWidget>
@@ -56,15 +56,15 @@ KFritzWindow::KFritzWindow()
 {
 	appName     = KGlobal::mainComponent().aboutData()->appName();
 	programName = KGlobal::mainComponent().aboutData()->programName();
+	notification = NULL;
 
 	connect(this, SIGNAL(signalNotification(QString, QString, bool)), this, SLOT(slotNotification(QString, QString, bool)));
 
 	initIndicator();
 	updateMissedCallsIndicator();
 
-	logArea = new KTextEdit(this);
-	logArea->setReadOnly(true);
-
+	logDialog = new LogDialog(this);
+	KTextEdit *logArea = logDialog->getLogArea();
 	fritz::Config::SetupLogging(LogStream::getLogStream(LogBuf::DEBUG)->setLogWidget(logArea),
 							    LogStream::getLogStream(LogBuf::INFO)->setLogWidget(logArea),
 					            LogStream::getLogStream(LogBuf::ERROR)->setLogWidget(logArea));
@@ -94,62 +94,18 @@ KFritzWindow::KFritzWindow()
 	if (requestPassword)
 		savetoWallet = showPasswordDialog(fbPassword, wallet != NULL);
 
-	libFritzInit = new LibFritzInit(fbPassword, this);
+	tabWidget = NULL;
 
+	libFritzInit = new LibFritzInit(fbPassword, this);
+	connect(libFritzInit, SIGNAL(ready(bool)),       this, SLOT(updateStatusbar(bool)));
 	connect(libFritzInit, SIGNAL(invalidPassword()), this, SLOT(reenterPassword()));
+	connect(libFritzInit, SIGNAL(ready(bool)),       this, SLOT(updateMainWidgets(bool)));
+	libFritzInit->start();
 
 	if (wallet && savetoWallet)
 		saveToWallet(wallet);
 
 	setupActions();
-
-	tabWidget = new KTabWidget();
-
-	// init fonbooks, add to tabWidget
-
-	fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
-	fritz::Fonbooks *books = fm->GetFonbooks();
-	for (size_t pos=0; pos<books->size(); pos++) {
-		if (!(*books)[pos]->isDisplayable())
-			continue;
-
-		KFonbookModel *modelFonbook = new KFonbookModel((*books)[pos]->GetTechId().c_str());
-		connect(libFritzInit, SIGNAL(ready(bool)), modelFonbook, SLOT(libReady(bool)));
-
-		QAdaptTreeView *treeFonbook = new QAdaptTreeView(this);
-		treeFonbook->setAlternatingRowColors(true);
-		treeFonbook->setItemsExpandable(false);
-		treeFonbook->setSortingEnabled(true);
-		treeFonbook->setModel(modelFonbook);
-		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
-
-		treeFonbooks.push_back(treeFonbook);
-		//TODO: show only configured ones
-		tabWidget->addTab(treeFonbook,  KIcon("x-office-address-book"), 	i18n((*books)[pos]->GetTitle().c_str()));
-}
-
-	// init call list, add to tabWidget
-
-	KCalllistModel *modelCalllist;
-	modelCalllist = new KCalllistModel();
-	connect(libFritzInit, SIGNAL(ready(bool)), modelCalllist, SLOT(libReady(bool)));
-	connect(modelCalllist, SIGNAL(updated()), this, SLOT(updateMissedCallsIndicator()));
-
-	QAdaptTreeView *treeCallList = new QAdaptTreeView(this);
-	treeCallList->setAlternatingRowColors(true);
-	treeCallList->setItemsExpandable(false);
-	treeCallList->setSortingEnabled(true);
-
-	treeCallList->setModel(modelCalllist);
-	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
-
-	tabWidget->addTab(treeCallList, KIcon("application-x-gnumeric"), 	i18n("Call history"));
-
-	// add log to tabWidget, if configured
-
-	showLog(KSettings::showLog());
-
-	setCentralWidget(tabWidget);
 
 	setupGUI();
 }
@@ -200,7 +156,8 @@ void KFritzWindow::HandleDisconnect(int connId __attribute__((unused)), std::str
 	int seconds;
 	ss >> seconds;
 
-	QString qMessage = i18n("Call disconnected (%1:%2).", seconds/60, seconds%60);
+	QTime time(seconds/3600,seconds%3600/60,seconds%60);
+	QString qMessage = i18n("Call disconnected (%1).", time.toString("H:mm:ss"));
 	emit signalNotification("callDisconnected", qMessage, false);
 }
 
@@ -289,10 +246,8 @@ void KFritzWindow::setupActions() {
 	KAction *aShowLog = new KAction(this);
 	aShowLog->setText(i18n("Show log"));
 	aShowLog->setIcon(KIcon("text-x-log"));
-	aShowLog->setCheckable(true);
-	aShowLog->setChecked(KSettings::showLog());
 	actionCollection()->addAction("showLog", aShowLog);
-	connect(aShowLog, SIGNAL(triggered(bool)), this, SLOT(showLog(bool)));
+	connect(aShowLog, SIGNAL(triggered(bool)), this, SLOT(showLog()));
 
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
@@ -345,6 +300,62 @@ void KFritzWindow::updateMissedCallsIndicator() {
 #endif
 }
 
+void KFritzWindow::updateStatusbar(bool b) {
+	if (b)
+		statusBar()->showMessage(i18n("Done"), 5000);
+	else
+		statusBar()->showMessage(i18n("Retrieving data from Fritz!Box..."));
+}
+
+void KFritzWindow::updateMainWidgets(bool b)
+{
+	if (!b) {
+		if (tabWidget) {
+			delete tabWidget;
+		}
+		tabWidget = new KTabWidget();
+		tabWidget->setMovable(true);
+		setCentralWidget(tabWidget);
+		return;
+	}
+
+	// init call list, add to tabWidget
+	KCalllistModel *modelCalllist;
+	modelCalllist = new KCalllistModel();
+
+	connect(modelCalllist, SIGNAL(updated()), this, SLOT(updateMissedCallsIndicator()));
+
+	QAdaptTreeView *treeCallList = new QAdaptTreeView(this);
+	treeCallList->setAlternatingRowColors(true);
+	treeCallList->setItemsExpandable(false);
+	treeCallList->setSortingEnabled(true);
+
+	treeCallList->setModel(modelCalllist);
+	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
+
+	tabWidget->insertTab(0, treeCallList, KIcon("application-x-gnumeric"), 	i18n("Call history"));
+
+	// init fonbooks, add to tabWidget
+    fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
+    std::string first = fm->GetTechId(); //todo: no fb configured
+    do {
+
+		KFonbookModel *modelFonbook = new KFonbookModel(fm->GetTechId());
+
+		QAdaptTreeView *treeFonbook = new QAdaptTreeView(this);
+		treeFonbook->setAlternatingRowColors(true);
+		treeFonbook->setItemsExpandable(false);
+		treeFonbook->setSortingEnabled(true);
+		treeFonbook->setModel(modelFonbook);
+		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
+
+		tabWidget->insertTab(0, treeFonbook,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
+
+		fm->NextFonbook();
+	} while( first != fm->GetTechId() );
+
+}
+
 void KFritzWindow::find() {
 	QStringList findStrings;
 	KFindDialog dlg(this, 0, findStrings, true, false);
@@ -377,14 +388,6 @@ void KFritzWindow::showMissedCalls(QIndicate::Indicator* indicator __attribute__
 	updateMissedCallsIndicator();
 }
 
-void KFritzWindow::showLog(bool b) {
-	if (b) {
-		tabWidget->addTab(logArea, KIcon("text-x-log"), i18n("Log"));
-		logArea->show();
-	} else {
-		tabWidget->removePage(logArea);
-		logArea->hide();
-	}
-	KSettings::setShowLog(b);
-	KSettings::self()->writeConfig();
+void KFritzWindow::showLog() {
+	logDialog->show();
 }

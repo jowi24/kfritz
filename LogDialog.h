@@ -19,30 +19,23 @@
  *
  */
 
-#ifndef KCALLLISTMODEL_H_
-#define KCALLLISTMODEL_H_
 
-#include <CallList.h>
+#ifndef LOGDIALOG_H_
+#define LOGDIALOG_H_
 
-#include "KFritzModel.h"
+#include <KDialog>
+#include <KTextEdit>
 
-class KCalllistModel : public KFritzModel {
+class LogDialog: public KDialog {
 	Q_OBJECT
-public:
-	KCalllistModel();
-	virtual ~KCalllistModel();
-	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual void sort(int column, Qt::SortOrder order);
-
 private:
-	fritz::CallList *calllist;
-	time_t lastCall;
-private Q_SLOTS:
-	void check();
+	KTextEdit *logArea;
+public:
+	LogDialog(QWidget *parent);
+	virtual ~LogDialog();
+	KTextEdit *getLogArea() { return logArea; }
+public Q_SLOTS:
+	void resetLog();
 };
 
-#endif /* KCALLLISTMODEL_H_ */
+#endif /* LOGDIALOG_H_ */

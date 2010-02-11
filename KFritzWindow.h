@@ -29,11 +29,13 @@
 #include <KWallet/Wallet>
 #include <QTreeView>
 #include <QTextCodec>
+#include <vector>
 
 #include "KFonbookModel.h"
 #include "KCalllistModel.h"
 #include "LibFritzInit.h"
 #include "QAdaptTreeView.h"
+#include "LogDialog.h"
 
 #include "pkg-config.h"
 #ifdef INDICATEQT_FOUND
@@ -48,9 +50,8 @@ class KFritzWindow : public KXmlGuiWindow, public fritz::EventHandler
 {
 	Q_OBJECT
 private:
-	QVector<QAdaptTreeView*> treeFonbooks;
 	KTabWidget *tabWidget;
-	KTextEdit *logArea;
+	LogDialog *logDialog;
 	LibFritzInit *libFritzInit;
 	QString fbPassword;
 	QString appName;
@@ -69,6 +70,8 @@ private Q_SLOTS:
 	void notificationClosed();
 public  Q_SLOTS:
     void updateMissedCallsIndicator();
+    void updateStatusbar(bool b);
+    void updateMainWidgets(bool b);
     void find();
     void findNext();
     void findPrev();
@@ -85,7 +88,7 @@ public Q_SLOTS:
 	void reenterPassword();
 	void showMainWindow();
 	void showMissedCalls(QIndicate::Indicator* indicator);
-	void showLog(bool b);
+	void showLog();
 };
 
 #endif /*KFRITZBOXWINDOW_H_*/

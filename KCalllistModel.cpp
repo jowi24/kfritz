@@ -25,7 +25,7 @@
 #include <KLocalizedString>
 
 KCalllistModel::KCalllistModel() {
-	calllist = NULL;
+	calllist = fritz::CallList::getCallList(false);
 	lastCall = 0;
 }
 
@@ -33,8 +33,6 @@ KCalllistModel::~KCalllistModel() {
 }
 
 QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
-	if (!calllist)
-		return QVariant();
 	fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL,index.row());
 	if (role == Qt::DecorationRole && index.column() == 0)
 		return QVariant(KIcon(ce->type == fritz::CallEntry::INCOMING ? "incoming-call" :
@@ -107,8 +105,6 @@ int KCalllistModel::columnCount(const QModelIndex & parent __attribute__((unused
 }
 
 int KCalllistModel::rowCount(const QModelIndex & parent) const {
-	if (!calllist)
-		return 0;
 	if (parent.isValid())
 		// the model does not have any hierarchy
 		return 0;
@@ -117,8 +113,6 @@ int KCalllistModel::rowCount(const QModelIndex & parent) const {
 }
 
 void KCalllistModel::sort(int column, Qt::SortOrder order) {
-	if (!calllist)
-		return;
 	fritz::CallEntry::eElements element;
 	switch (column) {
 	case 0:
@@ -144,16 +138,6 @@ void KCalllistModel::sort(int column, Qt::SortOrder order) {
 	calllist->Sort(element, order == Qt::AscendingOrder);
 	emit dataChanged(index(0,                       0,                          QModelIndex()),
 			index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
-}
-
-void KCalllistModel::libReady(bool isReady) {
-	KFritzModel::libReady(isReady);
-	if(isReady)
-		// get the calllist resource
-		calllist = fritz::CallList::getCallList(false);
-	else
-		calllist = NULL;
-	reset();
 }
 
 void KCalllistModel::check() {

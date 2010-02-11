@@ -163,7 +163,7 @@ public:
 	 * the plugin's setup.
 	 * @return the technical id
 	 */
-	virtual std::string &GetTechId() { return techId; }
+	virtual std::string GetTechId() { return techId; }
 	/**
 	 * Sorts the phonebook's entries by the given element and in given order.
 	 * @param the element used for sorting

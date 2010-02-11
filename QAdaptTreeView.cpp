@@ -27,7 +27,7 @@ QAdaptTreeView::QAdaptTreeView(QWidget *parent)
 }
 
 QAdaptTreeView::~QAdaptTreeView() {
-
+	delete model();
 }
 
 void QAdaptTreeView::reset() {

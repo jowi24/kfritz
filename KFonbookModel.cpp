@@ -24,9 +24,10 @@
 #include <KIcon>
 #include <KLocalizedString>
 
-KFonbookModel::KFonbookModel(QString techID) {
-	fonbook = NULL;
-	this->techID = techID;
+KFonbookModel::KFonbookModel(std::string techID) {
+	// get the fonbook resource
+	fritz::Fonbooks *books = fritz::FonbookManager::GetFonbookManager()->GetFonbooks();
+	fonbook = (*books)[techID];
 }
 
 KFonbookModel::~KFonbookModel() {
@@ -34,8 +35,6 @@ KFonbookModel::~KFonbookModel() {
 
 int KFonbookModel::rowCount(const QModelIndex & parent) const
 {
-	if (!fonbook)
-		return 0;
 	if (parent.isValid())
 		// the model does not have any hierarchy
 		return 0;
@@ -67,15 +66,13 @@ QVariant KFonbookModel::headerData(int section, Qt::Orientation orientation, int
 		default:
 			return QVariant();
 		}
-	}else {
+	} else {
 		return QVariant();
 	}
 
 }
 
 QVariant KFonbookModel::data(const QModelIndex & index, int role) const{
-	if (!fonbook)
-		return QVariant();
 	if (role != Qt::DisplayRole)
 		return QVariant();
 
@@ -110,21 +107,7 @@ QString KFonbookModel::getTypeName(const fritz::FonbookEntry::eType type) {
 }
 
 void KFonbookModel::sort(int column, Qt::SortOrder order) {
-	if (!fonbook)
-		return;
 	fonbook->Sort((fritz::FonbookEntry::eElements) column, order == Qt::AscendingOrder);
 	emit dataChanged(index(0,                       0,                          QModelIndex()),
 			index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
-}
-
-void KFonbookModel::libReady(bool isReady) {
-	KFritzModel::libReady(isReady);
-	if (isReady){
-		// get the fonbook resource
-		fritz::Fonbooks *books = fritz::FonbookManager::GetFonbookManager()->GetFonbooks();
-		fonbook = (*books)[techID.toStdString()];
-	}
-	else
-		fonbook = NULL;
-	reset();
 }

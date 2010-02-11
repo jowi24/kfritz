@@ -19,30 +19,24 @@
  *
  */
 
-#ifndef KCALLLISTMODEL_H_
-#define KCALLLISTMODEL_H_
 
-#include <CallList.h>
+#include "LogDialog.h"
+#include <KLocale>
 
-#include "KFritzModel.h"
+LogDialog::LogDialog(QWidget *parent)
+:KDialog(parent) {
+	setButtons(Close | Reset);
+	logArea = new KTextEdit(this);
+	logArea->setReadOnly(true);
+	setMainWidget(logArea);
+	connect(this, SIGNAL(resetClicked()), this, SLOT(resetLog()));
+	setCaption(i18n("Log"));
+	hide();
+}
 
-class KCalllistModel : public KFritzModel {
-	Q_OBJECT
-public:
-	KCalllistModel();
-	virtual ~KCalllistModel();
-	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual void sort(int column, Qt::SortOrder order);
+LogDialog::~LogDialog() {
+}
 
-private:
-	fritz::CallList *calllist;
-	time_t lastCall;
-private Q_SLOTS:
-	void check();
-};
-
-#endif /* KCALLLISTMODEL_H_ */
+void LogDialog::resetLog() {
+	logArea->clear();
+}

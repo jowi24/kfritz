@@ -27,13 +27,16 @@
 #include <KGlobal>
 #include <KConfig>
 #include <KConfigGroup>
+#include <KComponentData>
+#include <KAboutData>
+#include <KStandardDirs>
 
 #include "KSettings.h"
+#include "Log.h"
 
 LibFritzInit::LibFritzInit(QString password, fritz::EventHandler *eventHandler) {
 	this->eventHandler = eventHandler;
 	setPassword(password);
-	start();
 }
 
 LibFritzInit::~LibFritzInit() {
@@ -47,7 +50,6 @@ void LibFritzInit::run() {
 	bool locationSettingsDetected;
 	std::string countryCode = KSettings::countryCode().toStdString();
 	std::string areaCode = KSettings::areaCode().toStdString();
-
 	// start libfritz++
 	bool validPassword = fritz::Config::Setup(KSettings::hostname().toStdString(),
 			                                  password.toStdString(),
@@ -62,6 +64,8 @@ void LibFritzInit::run() {
 		KSettings::setAreaCode(QString(areaCode.c_str()));
 		KSettings::self()->writeConfig();
 	}
+
+	fritz::Config::SetupConfigDir(KStandardDirs::locateLocal("data", KGlobal::mainComponent().aboutData()->appName()+"/").toStdString());
 
 	std::vector<std::string> vMsn;
 	QStringList msnList = KSettings::mSNFilter();
@@ -79,9 +83,14 @@ void LibFritzInit::run() {
 
 	fritz::CallList::CreateCallList();
 
-	emit ready(true);
+	// delay end of thread until calllist and the Fritz!Box fonbook are read
+	fritz::FonbookManager *fbm = fritz::FonbookManager::GetFonbookManager();
+	fritz::Fonbook *ffb =  (*(fbm->GetFonbooks()))["FRITZ"];
+	fritz::CallList *list = fritz::CallList::getCallList(false);
+	while (list->isValid() == false || ffb->isInitialized() == false)
+		sleep(1);
 
-	//while (fritz::CallList::Active() || (*fritz::FonbookManager::Fonboo())["FRITZ"]->)
+	emit ready(true);
 }
 
 void LibFritzInit::setPassword(QString password) {

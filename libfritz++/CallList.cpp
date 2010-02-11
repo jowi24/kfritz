@@ -44,7 +44,11 @@ public:
 			return (ascending ? (ce1.timestamp < ce2.timestamp) : (ce1.timestamp > ce2.timestamp));
 			break;
 		case CallEntry::ELEM_DURATION:
-			return (ascending ? (ce1.duration < ce2.duration) : (ce1.duration > ce2.duration)); //TODO: this wrong as e.g. 10 hours would be smaller as 7 hours
+			if (ce1.duration.size() < ce2.duration.size())
+				return (ascending ? true : false);
+			if (ce1.duration.size() > ce2.duration.size())
+				return (ascending ? false : true);
+			return (ascending ? (ce1.duration < ce2.duration) : (ce1.duration > ce2.duration));
 			break;
 		case CallEntry::ELEM_LOCALNAME:
 			return (ascending ? (ce1.localName < ce2.localName) : (ce1.localName > ce2.localName));
@@ -182,6 +186,7 @@ void CallList::Action() {
 			continue;
 
 		callListAll.push_back(ce);
+
 		if (lastCall < ce.timestamp)
 			lastCall = ce.timestamp;
 		switch (ce.type) {

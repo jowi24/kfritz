@@ -25,7 +25,11 @@
 
 KFritzModel::KFritzModel() {
 	lastRows = 0;
+	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
+
 	timer = new QTimer();
+	connect(timer, SIGNAL(timeout()), SLOT(check()));
+	timer->start(1000);
 }
 
 KFritzModel::~KFritzModel() {
@@ -58,17 +62,6 @@ void KFritzModel::check() {
 	}
 }
 
-void KFritzModel::libReady(bool isReady) {
-	if (isReady){
-		inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
-
-		connect(timer, SIGNAL(timeout()), SLOT(check()));
-		timer->start(1000);
-	}
-	else {
-		timer->stop();
-	}
-}
 
 
 
