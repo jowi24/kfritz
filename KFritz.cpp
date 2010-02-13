@@ -31,7 +31,7 @@
 #include <FonbookManager.h>
 #include "KFritzWindow.h"
 
-static const char *VERSION        = "0.1";
+static const char *VERSION        = "0.0.1";
 
 KFritz::KFritz(QWidget *mainWindow, KAboutData *aboutData)
 :KSystemTrayIcon("modem", mainWindow) {

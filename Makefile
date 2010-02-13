@@ -17,6 +17,12 @@ all: cmake
 clean:
 	@-rm ../kfritz-${VERSION}.orig.tar.gz
 	@-rm -rf build
+	
+dist: clean
+	tar cvz --dereference \
+	        --exclude-vcs --exclude="debian" --exclude=".settings" --exclude=".project" \
+	        --exclude=".cproject" --exclude=".cdtproject" \
+	        -f ../kfritz_${VERSION}.orig.tar.gz ../kfritz
 
 install: all
 	cd build; kdesudo make install
@@ -24,11 +30,7 @@ install: all
 deb:
 	debuild -i"(\.svn|\.settings|\.(c|cdt|)project)"
 
-deb-src: clean
-	tar cvz --dereference \
-	        --exclude-vcs --exclude="debian" --exclude=".settings" --exclude=".project" \
-	        --exclude=".cproject" --exclude=".cdtproject" \
-	        -f ../kfritz_${VERSION}.orig.tar.gz ../kfritz
+deb-src: dist
 	debuild -S -i"(\.svn|\.settings|\.(c|cdt|)project)"
 	
 i18n: $(POFILES)
