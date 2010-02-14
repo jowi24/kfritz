@@ -97,6 +97,8 @@
 2010-02-14:
 - Fixed translation of "Missed calls" wrt. desktop indicator
 - Fixed translation of "POTS" and "ISDN", which are strings sent from the FB
-- Fixed translation of KNotify events
-- Fixed a complier failure on systems without libindicate-qt-dev
+- Added german translation to kfritz.notifyrc
+- Fixed a complier failure on systems without libindicate-qt-dev and 
+  detection of ssl-package in cmake (reported by rbos at kde-apps.org)
+- Added german translation to kfritz.desktop file.
 

@@ -11,6 +11,10 @@ find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 include_directories(${KDE4_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 
+# --- ssl includes ------------------------------------------------------------
+find_package(OpenSSL REQUIRED)
+include_directories(${OPENSSL_INCLUDE_DIR})
+
 # --- support for libindicate -------------------------------------------------
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(INDICATEQT indicate-qt>=0.2.2)
@@ -71,7 +75,7 @@ configure_file(pkg-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/pkg-config.h)
 kde4_add_executable(kfritz ${kfritzbox_SRCS})
 target_link_libraries(kfritz ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
                                 fritz++ tcpclient++ pthread++ 
-                                ssl)
+                                ${OPENSSL_LIBRARIES})
 if (INDICATEQT_FOUND)
 	target_link_libraries(kfritz ${INDICATEQT_LIBRARIES})
 endif (INDICATEQT_FOUND)
