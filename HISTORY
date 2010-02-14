@@ -92,3 +92,10 @@
 - Fixed formatting of time at disconnect-notification
 - Added call to libfritz to set up config dir (in most cases ~/.kde/share/apps/kfritz)
 
+--> Release 0.0.1
+
+2010-02-14:
+- Fixed translation of "Missed calls" wrt. desktop indicator
+- Fixed translation of "POTS" and "ISDN", which are strings sent from the FB
+- Fixed translation of KNotify events
+

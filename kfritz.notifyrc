@@ -3,18 +3,22 @@ IconName=modem
 
 [Event/incomingCall]
 Name=Incoming Call
+Name[de]=Eingehender Anruf
 Action=Popup|Sound
 Sound=KDE-Im-New-Mail.ogg
 
 [Event/outgoingCall]
 Name=Outgoing Call
+Name[de]=Ausgehender Anruf
 Action=Popup|Sound
 Sound=KDE-Im-New-Mail.ogg
 
 [Event/callConnected]
 Name=Call got connected
+Name[de]=Anruf angenommen
 Action=Popup
 
 [Event/callDisconnected]
 Name=Call got disconnected
+Name[de]=Anruf beendet
 Action=Popup

@@ -103,6 +103,11 @@ void Listener::Action() {
 					// partC => called Id (remote)
 					// partD => medium (POTS, SIP[1-9], ISDN, ...)
 
+#if 0 // some strings sent from the FB, made available to xgettext
+					I18N_NOOP("POTS");
+					I18N_NOOP("ISDN");
+#endif
+
 					// an '#' can be appended to outgoing calls by the phone, so delete it
 					if (partC[partC.length()-1] == '#')
 						partC = partC.substr(0, partC.length()-1);

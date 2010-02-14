@@ -268,7 +268,7 @@ void KFritzWindow::initIndicator() {
 	iServer->show();
 
 	missedCallsIndicator = new QIndicate::Indicator(iServer);
-	missedCallsIndicator->setNameProperty("Missed calls");
+	missedCallsIndicator->setNameProperty(i18n("Missed calls"));
 	missedCallsIndicator->setDrawAttentionProperty(true);
 
 	connect(iServer, SIGNAL(serverDisplay()), this, SLOT(showMainWindow()));
