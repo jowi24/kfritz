@@ -379,9 +379,10 @@ void KFritzWindow::showMainWindow() {
 void KFritzWindow::showMissedCalls(QIndicate::Indicator* indicator __attribute__((unused))) {
 	tabWidget->setCurrentIndex(1);
 	this->show();
+#ifdef INDICATEQT_FOUND
 	if (missedCallsIndicator)
 		missedCallsIndicator->hide();
-
+#endif
 	fritz::CallList *callList = fritz::CallList::getCallList(false);
 	KSettings::setLastKnownMissedCall(callList->LastMissedCall());
 	KSettings::self()->writeConfig();
