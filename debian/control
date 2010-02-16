@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Joachim Wilke <launchpad.net@joachim-wilke.de>
 Build-Depends: cdbs, debhelper (>= 7), cmake, kde-devel (>= 4.0), libssl-dev, libindicate-qt-dev (>= 0.2.2)
 Standards-Version: 3.8.3
-Homepage: http://www.joachim-wilke.de/kfritzbox
+Homepage: http://www.joachim-wilke.de/kfritz.htm
 
 Package: kfritz
 Architecture: any

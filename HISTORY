@@ -108,4 +108,5 @@
 - Adapted to new logging system of libfritz++
 - Added missing COPYING and AUTHORS file (reported by Christian Mangold)
 
+--> Release 0.0.2
 
