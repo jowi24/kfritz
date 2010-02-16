@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-02-14 18:21+0100\n"
+"POT-Creation-Date: 2010-02-16 22:31+0100\n"
 "PO-Revision-Date: 2010-02-02 21:04+0100\n"
 "Last-Translator: Joachim Wilke <kfritz@joachim-wilke.de>\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -151,34 +151,6 @@ msgstr "Anrufliste"
 msgid "Log"
 msgstr "Protokoll"
 
-#: build/ui_KSettingsFonbooks.h:53 build/ui_KSettingsFritzBox.h:125
-msgid "Form"
-msgstr ""
-
-#: build/ui_KSettingsFritzBox.h:126
-msgid "Hostname"
-msgstr "Adresse"
-
-#: build/ui_KSettingsFritzBox.h:127
-msgid "Country code"
-msgstr "Ländervorwahl"
-
-#: build/ui_KSettingsFritzBox.h:128
-msgid "Area code"
-msgstr "Ortsvorwahl"
-
-#: build/ui_KSettingsFritzBox.h:129
-msgid "General"
-msgstr "Allgemein"
-
-#: build/ui_KSettingsFritzBox.h:130
-msgid "Restrict call history and notifications to certain MSNs"
-msgstr "Anrufliste und Benachrichtigungen auf bestimmte MSN einschränken"
-
-#: build/ui_KSettingsFritzBox.h:131
-msgid "MSN filter"
-msgstr "MSN Filter"
-
 #: libfritz++/FritzFonbook.cpp:154
 msgid "Fritz!Box phone book"
 msgstr "Fritz!Box Telefonbuch"
@@ -202,3 +174,21 @@ msgstr "nummerzoeker.com"
 #: libfritz++/OertlichesFonbook.cpp:33
 msgid "das-oertliche.de"
 msgstr "das-oertliche.de"
+
+#~ msgid "MSN filter"
+#~ msgstr "MSN Filter"
+
+#~ msgid "Restrict call history and notifications to certain MSNs"
+#~ msgstr "Anrufliste und Benachrichtigungen auf bestimmte MSN einschränken"
+
+#~ msgid "General"
+#~ msgstr "Allgemein"
+
+#~ msgid "Area code"
+#~ msgstr "Ortsvorwahl"
+
+#~ msgid "Country code"
+#~ msgstr "Ländervorwahl"
+
+#~ msgid "Hostname"
+#~ msgstr "Adresse"

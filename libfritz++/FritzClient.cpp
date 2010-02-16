@@ -19,12 +19,14 @@
  *
  */
 
-#include <openssl/md5.h>
 #include <iomanip>
 #include <cstring>
 
 #include "Config.h"
 #include "FritzClient.h"
+extern "C" {
+#include "md5.h"
+}
 
 #define RETRY_BEGIN                                  \
     	unsigned int retry_delay = RETRY_DELAY / 2;  \
@@ -70,7 +72,7 @@ std::string FritzClient::CalculateLoginResponse(std::string challenge) {
 			challengePwdConv[pos-1] = 0x2e;
 		}
 	unsigned char hash[16];
-	MD5((unsigned char*)challengePwdConv, challengePwd.length()*2, hash);
+	md5_buffer((const char*)challengePwdConv, challengePwd.length()*2, hash);
 	std::stringstream response;
 	response << challenge << '-';
 	for (size_t pos=0; pos < 16; pos++)

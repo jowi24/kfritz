@@ -145,4 +145,6 @@
 2010-02-16:
 - modified logging to handle full path filenames cause by cmake in __FILE__.
   Provided new logging macros DBG, INF, ERR
+- Removed dependency to OpenSSL due to licensing issues, 
+  using copy of MD5 implementation from GNU coreutils 5.93
   

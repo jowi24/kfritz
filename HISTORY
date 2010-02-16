@@ -105,8 +105,17 @@
 2010-02-15:
 - Set default build type in cmake, cleaned up makefiles of static libs
 - Added missing KDE4_ENABLE_EXCEPTIONS to CXX_FLAGS
+
+2010-02-16:
 - Adapted to new logging system of libfritz++
 - Added missing COPYING and AUTHORS file (reported by Christian Mangold)
 
 --> Release 0.0.2
+
+- Adapted to changes in libfritz++
+  * Removed dependency to OpenSSL due to licensing issues, 
+    using copy of MD5 implementation from GNU coreutils 5.93
+- Dropped linking to libssl
+
+--> Release 0.0.3
 
