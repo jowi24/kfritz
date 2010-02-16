@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
 include_directories(../libtcpclient++ ../libpthread++)
 project (libfritz++)
-set(CMAKE_BUILD_TYPE "Debug")
-set(CMAKE_CXX_FLAGS_DEBUG "-fexceptions -g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG" ) 
 set(SRCS CallList.cpp Config.cpp Fonbooks.cpp Fonbook.cpp FonbookManager.cpp FritzClient.cpp FritzFonbook.cpp Listener.cpp Tools.cpp LocalFonbook.cpp Nummerzoeker.cpp OertlichesFonbook.cpp)
 add_library(fritz++ STATIC ${SRCS})

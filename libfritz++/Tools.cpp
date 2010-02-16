@@ -97,7 +97,7 @@ void CharSetConv::DetectCharset() {
 		}
 	}
 	if (CodeSet) {
-		*isyslog << __FILE__ << ": detected codeset is '" << CodeSet << "'" << std::endl;
+		INF("detected codeset is '" << CodeSet << "'");
 		SetSystemCharacterTable(CodeSet);
 	}
 }
@@ -238,16 +238,16 @@ bool Tools::GetLocationSettings() {
 
 	size_t lkzStart = msg.find("telcfg:settings/Location/LKZ");
 	if (lkzStart == std::string::npos) {
-		*esyslog << __FILE__ << ": Parser error in GetLocationSettings(). Could not find LKZ." << std::endl;
-		*esyslog << __FILE__ << ": LKZ/OKZ not set! Resolving phone numbers may not always work." << std::endl;
+		ERR("Parser error in GetLocationSettings(). Could not find LKZ.");
+		ERR("LKZ/OKZ not set! Resolving phone numbers may not always work.");
 		return fc.hasValidPassword();
 	}
 	lkzStart += 37;
 	size_t lkzStop  = msg.find("\"", lkzStart);
 	size_t okzStart = msg.find("telcfg:settings/Location/OKZ");
 	if (okzStart == std::string::npos) {
-		*esyslog << __FILE__ << ": Parser error in GetLocationSettings(). Could not find OKZ." << std::endl;
-		*esyslog << __FILE__ << ": OKZ not set! Resolving phone numbers may not always work." << std::endl;
+		ERR("Parser error in GetLocationSettings(). Could not find OKZ.");
+		ERR("OKZ not set! Resolving phone numbers may not always work.");
 		return fc.hasValidPassword();
 	}
 	okzStart += 37;
@@ -255,14 +255,14 @@ bool Tools::GetLocationSettings() {
 	gConfig->setCountryCode( msg.substr(lkzStart, lkzStop - lkzStart) );
 	gConfig->setRegionCode( msg.substr(okzStart, okzStop - okzStart) );
 	if (gConfig->getCountryCode().size() > 0) {
-		*dsyslog << __FILE__ << ": Found LKZ " << gConfig->getCountryCode() << std::endl;
+		DBG("Found LKZ " << gConfig->getCountryCode());
 	} else {
-		*esyslog << __FILE__ << ": LKZ not set! Resolving phone numbers may not always work." << std::endl;
+		ERR("LKZ not set! Resolving phone numbers may not always work.");
 	}
 	if (gConfig->getRegionCode().size() > 0) {
-		*dsyslog << __FILE__ << ": Found OKZ " << gConfig->getRegionCode() << std::endl;
+		DBG("Found OKZ " << gConfig->getRegionCode());
 	} else {
-		*esyslog << __FILE__ << ": OKZ not set! Resolving phone numbers may not always work." << std::endl;
+		ERR("OKZ not set! Resolving phone numbers may not always work.");
 	}
 	return fc.hasValidPassword();
 }
@@ -279,8 +279,8 @@ void Tools::GetSipSettings() {
 
 	// check if the structure of the HTML page matches our search pattern
 	if (msg.find("function AuswahlDisplay") == std::string::npos){
-		*esyslog << __FILE__ << ": Parser error in GetSipSettings(). Could not find SIP list." << std::endl;
-		*esyslog << __FILE__ << ": SIP provider names not set! Usage of SIP provider names not possible." << std::endl;
+		ERR("Parser error in GetSipSettings(). Could not find SIP list.");
+		ERR("SIP provider names not set! Usage of SIP provider names not possible.");
 		return;
 	}
 
@@ -294,8 +294,8 @@ void Tools::GetSipSettings() {
 		size_t hostStart = msg.rfind("ProviderDisplay(\"",sipStart);
 		if (hostStart == std::string::npos) {
 			// something is wrong with the structure of the HTML page
-			*esyslog << __FILE__ << ": Parser error in GetSipSettings(). Could not find SIP provider name." << std::endl;
-			*esyslog << __FILE__ << ": SIP provider names not set! Usage of SIP provider names not possible." << std::endl;
+			ERR("Parser error in GetSipSettings(). Could not find SIP provider name.");
+			ERR("SIP provider names not set! Usage of SIP provider names not possible.");
 			return;
 		}
 		hostStart += 17;
@@ -310,8 +310,8 @@ void Tools::GetSipSettings() {
 		if (tableStart     == std::string::npos || tableStop     == std::string::npos ||
 			tableHostStart == std::string::npos) {
 				// something is wrong with the structure of the HTML page
-				*esyslog << __FILE__ << ": Parser error in GetSipSettings(). Could not find SIP provider name." << std::endl;
-				*esyslog << __FILE__ << ": SIP provider names not set! Usage of SIP provider names not possible." << std::endl;
+				ERR("Parser error in GetSipSettings(). Could not find SIP provider name.");
+				ERR("SIP provider names not set! Usage of SIP provider names not possible.");
 				return;
 			}
 		while (tableHostStart <= tableStop && tableHostStart != std::string::npos) {
@@ -321,8 +321,8 @@ void Tools::GetSipSettings() {
 			if (tableHostStart == std::string::npos || tableHostStop == std::string::npos ||
 				tableNameStart == std::string::npos || tableNameStop == std::string::npos) {
 				// something is wrong with the structure of the HTML page
-				*esyslog << __FILE__ << ": Parser error in GetSipSettings(). Could not find SIP provider name." << std::endl;
-				*esyslog << __FILE__ << ": SIP provider names not set! Usage of SIP provider names not possible." << std::endl;
+				ERR("Parser error in GetSipSettings(). Could not find SIP provider name.");
+				ERR("SIP provider names not set! Usage of SIP provider names not possible.");
 				return;
 			}
 			tableHostStart += 6;
@@ -339,7 +339,7 @@ void Tools::GetSipSettings() {
 		}
 
 		sipNames.push_back(sipName);
-		*dsyslog << __FILE__ << ": Found SIP" << i << " (" << hostName << ") provider name " << sipName << std::endl;
+		DBG("Found SIP" << i << " (" << hostName << ") provider name " << sipName);
 	}
 	gConfig->setSipNames(sipNames);
 

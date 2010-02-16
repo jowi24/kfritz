@@ -60,7 +60,7 @@ public:
 			return (ascending ? (fe1.getNumber() < fe2.getNumber()) : (fe1.getNumber() > fe2.getNumber()));
 			break;
 		default:
-			*esyslog << __FILE__ << ": invalid element given for sorting." << std::endl;
+			ERR("invalid element given for sorting.");
 			return false;
 		}
 	}

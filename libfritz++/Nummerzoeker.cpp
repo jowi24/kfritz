@@ -57,7 +57,7 @@ FonbookEntry &NummerzoekerFonbook::ResolveToName(FonbookEntry &fe) {
 
 	std::string msg;
 	try {
-		*dsyslog << __FILE__ << ": sending reverse lookup request for " << Tools::NormalizeNumber(fe.getNumber()) << " to www.nummerzoeker.com" << std::endl;
+		DBG("sending reverse lookup request for " << Tools::NormalizeNumber(fe.getNumber()) << " to www.nummerzoeker.com");
 		std::string host = "www.nummerzoeker.com";
 		tcpclient::HttpClient tc(host);
 		tc << tcpclient::get
@@ -68,14 +68,14 @@ FonbookEntry &NummerzoekerFonbook::ResolveToName(FonbookEntry &fe) {
 		   << std::flush;
 		tc >> msg;
 	} catch (tcpclient::TcpException te) {
-		*esyslog << __FILE__ << ": Exception - " << te.what() << std::endl;
+		ERR("Exception - " << te.what());
 		fe.setName(fe.getNumber());
 		fe.setType(FonbookEntry::TYPE_NONE);
 		return fe;
 	}
 
 	if (msg.find("Content-Type: text/html") != std::string::npos) {
-		*isyslog << __FILE__ << ": no entry found." << std::endl;
+		INF("no entry found.");
 		fe.setName(fe.getNumber());
 		fe.setType(FonbookEntry::TYPE_NONE);
 		return fe;
@@ -102,7 +102,7 @@ FonbookEntry &NummerzoekerFonbook::ResolveToName(FonbookEntry &fe) {
 	const char *s_converted = conv->Convert(name.c_str());
 	name = s_converted;
 	delete (conv);
-	*isyslog << __FILE__ << ": resolves to " << name.c_str() << std::endl;
+	INF("resolves to " << name.c_str());
 	fe.setName(name);
 	fe.setType(FonbookEntry::TYPE_NONE);
 	return fe;

@@ -102,3 +102,8 @@
   detection of ssl-package in cmake (reported by rbos at kde-apps.org)
 - Added german translation to kfritz.desktop file.
 
+2010-02-15:
+- Set default build type in cmake, cleaned up makefiles of static libs
+- Added missing KDE4_ENABLE_EXCEPTIONS to CXX_FLAGS
+- Adapted to new logging system of libfritz++
+

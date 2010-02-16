@@ -93,7 +93,7 @@ bool LocalFonbook::Initialize() {
 			return false;
 		if (access(filePath, F_OK) == 0) {
 			if (pos > 0)
-				*isyslog << __FILE__ << ": warning, using deprecated file " << filePath << ", please rename to " << fileNames[0] << "." << std::endl;
+				INF("warning, using deprecated file " << filePath << ", please rename to " << fileNames[0] << ".");
 			break;
 		}
 		// try deprecated filenames
@@ -102,7 +102,7 @@ bool LocalFonbook::Initialize() {
 	}
 	if (!filePath) {
 		// file not available -> log preferred filename and location
-		*esyslog << __FILE__ << ": file " << gConfig->getConfigDir().c_str() << "/" << fileNames[0] << " not found." << std::endl;
+		ERR("file " << gConfig->getConfigDir().c_str() << "/" << fileNames[0] << " not found.");
 		// if no file exists, put the preferred name into filepath (for later usage)
 		int res = asprintf(&filePath, "%s/%s", gConfig->getConfigDir().c_str(), fileNames[0]);
 		if (res == 0)
@@ -127,11 +127,11 @@ bool LocalFonbook::Initialize() {
 				AddFonbookEntry(fe);
 			}
 			else {
-				*esyslog << __FILE__ << ": parse error at " << s << std::endl;
+				ERR("parse error at " << s);
 			}
 		}
 		setInitialized(true);
-		*isyslog << __FILE__ << ": read " << fonbookList.size() << " entries." << std::endl;
+		INF("read " << fonbookList.size() << " entries.");
 		std::sort(fonbookList.begin(), fonbookList.end());
 		return true;
 	}

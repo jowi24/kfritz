@@ -139,5 +139,10 @@
 - fixed sorting issue in calllist by putting remoteNumber / "unknown" into the remoteName field
 - "unknown" call list entries are now always sorted to beginning of the list
 
-2010-02-97:
+2010-02-07:
 - addes a missing redefinition of GetTechId() in class FonbookManager
+
+2010-02-16:
+- modified logging to handle full path filenames cause by cmake in __FILE__.
+  Provided new logging macros DBG, INF, ERR
+  

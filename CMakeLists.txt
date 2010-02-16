@@ -2,8 +2,8 @@
 cmake_minimum_required(VERSION 2.6)
 project (kfritz)
 
-set(CMAKE_VERBOSE_MAKEFILE false)
-set(CMAKE_BUILD_TYPE "Debug")
+#set(CMAKE_VERBOSE_MAKEFILE true)
+#set(CMAKE_BUILD_TYPE "Debug") # <-- enable for debugging 
 
 
 # --- kde includes ------------------------------------------------------------
@@ -66,16 +66,16 @@ endif(GETTEXT_MSGFMT_EXECUTABLE)
 set(kfritzbox_SRCS KFritz.cpp KFritzWindow.cpp KFonbookModel.cpp KSettingsFonbooks.cpp
                    KSettingsFritzBox.cpp KFritzModel.cpp KCalllistModel.cpp LibFritzInit.cpp 
                    Log.cpp LogDialog.cpp QAdaptTreeView.cpp)
-set(CMAKE_CXX_FLAGS_DEBUG "-fexceptions -g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG" ) 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+set(CMAKE_CXX_FLAGS_DEBUG "${KDE4_ENABLE_EXCEPTIONS} -g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG") 
 
 kde4_add_kcfg_files(kfritzbox_SRCS GENERATE_MOC KSettings.kcfgc)
 kde4_add_ui_files(kfritzbox_SRCS KSettingsFritzBox.ui KSettingsFonbooks.ui)
 
 configure_file(pkg-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/pkg-config.h)
 kde4_add_executable(kfritz ${kfritzbox_SRCS})
-target_link_libraries(kfritz ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
-                                fritz++ tcpclient++ pthread++ 
-                                ${OPENSSL_LIBRARIES})
+target_link_libraries(kfritz ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} ${OPENSSL_LIBRARIES}
+                                fritz++ tcpclient++ pthread++ )
 if (INDICATEQT_FOUND)
 	target_link_libraries(kfritz ${INDICATEQT_LIBRARIES})
 endif (INDICATEQT_FOUND)

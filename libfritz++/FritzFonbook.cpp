@@ -183,7 +183,7 @@ void FritzFonbook::Action() {
 		if (pos != std::string::npos)
 			charset = msg.substr(pos+8, msg.find('"', pos)-pos-8);
 	}
-	*dsyslog << __FILE__ << ": using charset " << charset << std::endl;
+	DBG("using charset " << charset);
 
 	CharSetConv *conv = new CharSetConv(charset.c_str(), CharSetConv::SystemCharacterTable());
 	const char *s_converted = conv->Convert(msg.c_str());
@@ -209,7 +209,7 @@ void FritzFonbook::Action() {
 		if (namePart2.length() && numberPart.length()) {
 			FonbookEntry fe(namePart2, numberPart, FonbookEntry::TYPE_NONE);
 			fonbookList.push_back(fe);
-			//*dsyslog << __FILE__ << ": (%s / %s)", fe.number.c_str(), fe.name.c_str() << std::endl;
+			//DBG("(%s / %s)", fe.number.c_str(), fe.name.c_str());
 		}
 		pos = p1+10;
 		count++;
@@ -243,12 +243,12 @@ void FritzFonbook::Action() {
 		if (namePart2.length() && numberPart.length()) {
 			FonbookEntry fe(namePart2, numberPart, type);
 			fonbookList.push_back(fe);
-			//*dsyslog << __FILE__ << ": (%s / %s / %i)", fe.number.c_str(), fe.name.c_str(), fe.type << std::endl;
+			//DBG("(%s / %s / %i)", fe.number.c_str(), fe.name.c_str(), fe.type);
 		}
 		pos = p2+10;
 		count++;
 	}
-	*isyslog << __FILE__ << ": read " << count << " entries." << std::endl;
+	INF("read " << count << " entries.");
 	setInitialized(true);
 
 	std::sort(fonbookList.begin(), fonbookList.end());

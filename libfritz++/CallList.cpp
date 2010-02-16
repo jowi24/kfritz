@@ -72,7 +72,7 @@ public:
 			return (ascending ? (ce1.type < ce2.type) : (ce1.type > ce2.type));
 			break;
 		default:
-			*esyslog << __FILE__ << ": invalid element given for sorting." << std::endl;
+			ERR("invalid element given for sorting.");
 			return false;
 		}
 	}
@@ -101,7 +101,7 @@ void CallList::CreateCallList() {
 
 void CallList::DeleteCallList() {
 	if (me) {
-		*dsyslog << __FILE__ << ": deleting call list" << std::endl;
+		DBG("deleting call list");
 		delete me;
 		me = NULL;
 	}
@@ -112,7 +112,7 @@ CallList::~CallList()
 	// don't delete the object, while the thread is still active
 	while (Active())
 		pthread::CondWait::SleepMs(100);
-	*dsyslog << __FILE__ << ": deleting call list" << std::endl;
+	DBG("deleting call list");
 }
 
 void CallList::Action() {
@@ -137,7 +137,7 @@ void CallList::Action() {
 		pos++;
 		int type          = pos;
 		if (msg[type] < '0' || msg[type] > '9') { // ignore lines not starting with a number (headers, comments, etc.) {
-			*dsyslog << __FILE__ << ": parser skipped line in calllist" << std::endl;
+			DBG("parser skipped line in calllist");
 			continue;
 		}
 		int dateStart     = msg.find(';', type)          +1;
@@ -202,12 +202,12 @@ void CallList::Action() {
 			callListMissed.push_back(ce);
 			break;
 		default:
-			*dsyslog << __FILE__ << ": parser skipped unknown call type" << std::endl;
+			DBG("parser skipped unknown call type");
 			continue;
 		}
 		count++;
 	}
-	*isyslog << __FILE__ << ": CallList -> read " << count << " entries." << std::endl;
+	INF("CallList -> read " << count << " entries.");
 }
 
 CallEntry *CallList::RetrieveEntry(CallEntry::eCallType type, size_t id) {

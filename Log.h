@@ -22,13 +22,17 @@
 #include <iostream>
 #include <KTextEdit>
 
+#include <Config.h> // logging macros DBG, INF, ERR
+#undef NAMESPACE
+#define NAMESPACE "kfritz"
+
 #ifndef LOG_H_
 #define LOG_H_
 
-#define DBG(x) *LogStream::getLogStream(LogBuf::DEBUG) << __FILE__ << ":" << __LINE__ << ": " << (x) << std::endl;
-#define INF(x) *LogStream::getLogStream(LogBuf::INFO)  << __FILE__ << ":" << __LINE__ << ": " << (x) << std::endl;
-#define ERR(x) *LogStream::getLogStream(LogBuf::ERROR) << __FILE__ << ":" << __LINE__ << ": " << (x) << std::endl;
-
+//#define SHORT_FILE std::string(__FILE__).rfind('/')
+//#define DBG(x) *LogStream::getLogStream(LogBuf::DEBUG) << SHORT_FILE << ":" << __LINE__ << ": " << (x) << std::endl;
+//#define INF(x) *LogStream::getLogStream(LogBuf::INFO)  << SHORT_FILE << ":" << __LINE__ << ": " << (x) << std::endl;
+//#define ERR(x) *LogStream::getLogStream(LogBuf::ERROR) << SHORT_FILE << ":" << __LINE__ << ": " << (x) << std::endl;
 
 class LogBuf : public QObject, public std::streambuf {
 	Q_OBJECT

@@ -56,12 +56,12 @@ void Listener::CreateListener(EventHandler *event) {
 	if (event || oldEvent)
 		me = new Listener(event ? event : oldEvent);
 	else
-		*esyslog << __FILE__ << ": Invalid call parameter. First call to CreateListener needs event handler object." << std::endl;
+		ERR("Invalid call parameter. First call to CreateListener needs event handler object.");
 }
 
 void Listener::DeleteListener() {
 	if (me) {
-		*dsyslog << __FILE__ << ": deleting listener" << std::endl;
+		DBG("deleting listener");
 		delete me;
 		me = NULL;
 	}
@@ -76,7 +76,7 @@ void Listener::Action() {
 			if (!tcpclient)
 				tcpclient = new tcpclient::TcpClient(gConfig->getUrl(), gConfig->getListenerPort());
 			while (true) {
-				*dsyslog << __FILE__ << ": Waiting for a message." << std::endl;
+				DBG("Waiting for a message.");
 				//data.erase();
 				if (data.length() == 0) {
 					*tcpclient >> data;
@@ -85,7 +85,7 @@ void Listener::Action() {
 						// wait, then retry by setting up a new connection
 						throw tcpclient::TcpException(tcpclient::TcpException::ERR_INVALID_DATA);
 					}
-					*dsyslog << __FILE__ << ": Got message " << data << std::endl;
+					DBG("Got message " << data);
 				}
 
 				// split line into tokens
@@ -193,15 +193,15 @@ void Listener::Action() {
 				}
 			}
 		} catch (tcpclient::TcpException te) {
-			*esyslog << __FILE__ << ": Exception - " << te.what() << std::endl;
+			ERR("Exception - " << te.what());
 			if (te.errcode == tcpclient::TcpException::ERR_HOST_NOT_REACHABLE || te.errcode == tcpclient::TcpException::ERR_CONNECTION_REFUSED) {
-				*esyslog << __FILE__ << ": Make sure to enable the Fritz!Box call monitor by dialing #96*5* once." << std::endl;
+				ERR("Make sure to enable the Fritz!Box call monitor by dialing #96*5* once.");
 			}
 			//tcpclient->Disconnect();
 		}
 		if (!Running())
 			return;
-		*esyslog << __FILE__ << ": waiting " << retry_delay << " seconds before retrying" << std::endl;
+		ERR("waiting " << retry_delay << " seconds before retrying");
 		sleep(retry_delay); // delay the retry
 	}
 }

@@ -37,8 +37,8 @@
 #define RETRY_END																							\
 			dataRead = true;                                                                                \
 		} catch (tcpclient::TcpException te) {																\
-			*esyslog << __FILE__ << ": Exception - " << te.what() << std::endl;								\
-			*esyslog << __FILE__ << ": waiting " << retry_delay << " seconds before retrying" << std::endl;	\
+			ERR("Exception - " << te.what());								\
+			ERR("waiting " << retry_delay << " seconds before retrying");	\
 			sleep(retry_delay); /* delay a possible retry */												\
 		}																									\
 	} while (!dataRead);
@@ -109,7 +109,7 @@ bool FritzClient::Login() throw(tcpclient::TcpException) {
 	std::string sXml; // sXml is used twice!
 	if (gConfig->getLoginType() == Config::UNKNOWN || gConfig->getLoginType() == Config::SID) {
 		// detect if this Fritz!Box uses SIDs
-		*dsyslog << __FILE__ << ": requesting login_sid.xml from fritz.box." << std::endl;
+		DBG("requesting login_sid.xml from Fritz!Box.");
 		tcpclient::HttpClient tc( gConfig->getUrl(), gConfig->getUiPort());
 		tc 	<< tcpclient::get
 			<< "/cgi-bin/webcm?getpage=../html/login_sid.xml"
@@ -122,10 +122,10 @@ bool FritzClient::Login() throw(tcpclient::TcpException) {
 	}
 
 	if (gConfig->getLoginType() == Config::SID) {
-		*dsyslog << __FILE__ << ": logging into fritz box using SIDs." << std::endl;
+		DBG("logging into fritz box using SIDs.");
 		if (gConfig->getSid().length() > 0) {
 			// logout, drop old SID (if FB has not already dropped this SID because of a timeout)
-			*dsyslog << __FILE__ << ": dropping old SID" << std::endl;
+			DBG("dropping old SID");
 			std::string sDummy;
 			tcpclient::HttpClient tc( gConfig->getUrl(), gConfig->getUiPort());
 			tc 	<< tcpclient::post
@@ -140,7 +140,7 @@ bool FritzClient::Login() throw(tcpclient::TcpException) {
 		// check if no password is needed (SID is directly available)
 		size_t pwdFlag = sXml.find("<iswriteaccess>");
 		if (pwdFlag == std::string::npos) {
-			*esyslog << __FILE__ << ": Error - Expected <iswriteacess> not found in login_sid.xml." << std::endl;
+			ERR("Error - Expected <iswriteacess> not found in login_sid.xml.");
 			return false;
 		}
 		pwdFlag += 15;
@@ -148,7 +148,7 @@ bool FritzClient::Login() throw(tcpclient::TcpException) {
 			// extract SID
 			size_t sidStart = sXml.find("<SID>");
 			if (sidStart == std::string::npos) {
-				*esyslog << __FILE__ << ": Error - Expected <SID> not found in login_sid.xml." << std::endl;
+				ERR("Error - Expected <SID> not found in login_sid.xml.");
 				return false;
 			}
 			sidStart += 5;
@@ -159,7 +159,7 @@ bool FritzClient::Login() throw(tcpclient::TcpException) {
 			// generate response out of challenge and password
 			size_t challengeStart = sXml.find("<Challenge>");
 			if (challengeStart == std::string::npos) {
-				*esyslog << __FILE__ << ": Error - Expected <Challenge> not found in login_sid.xml." << std::endl;
+				ERR("Error - Expected <Challenge> not found in login_sid.xml.");
 				return false;
 			}
 			challengeStart += 11;
@@ -180,7 +180,7 @@ bool FritzClient::Login() throw(tcpclient::TcpException) {
 			// get SID out of sMsg
 			size_t sidStart = sMsg.find("name=\"sid\"");
 			if (sidStart == std::string::npos) {
-				*esyslog << __FILE__ << ": Error - Expected sid field not found." << std::endl;
+				ERR("Error - Expected sid field not found.");
 				return false;
 			}
 			sidStart = sMsg.find("value=\"", sidStart + 10) + 7;
@@ -193,17 +193,17 @@ bool FritzClient::Login() throw(tcpclient::TcpException) {
 				if (gConfig->getSid()[pos] != '0')
 					isValidSid = true;
 			if (isValidSid) {
-				*dsyslog << __FILE__ << ": login successful." << std::endl;
+				DBG("login successful.");
 				gConfig->updateLastRequestTime();
 				return true;
 			} else {
-				*esyslog << __FILE__ << ": login failed!." << std::endl;
+				ERR("login failed!.");
 				return false;
 			}
 		}
 	}
 	if (gConfig->getLoginType() == Config::PASSWORD) {
-		*dsyslog << __FILE__ << ": logging into fritz box using old scheme without SIDs." << std::endl;
+		DBG("logging into fritz box using old scheme without SIDs.");
 		// no password, no login
 		if ( gConfig->getPassword().length() == 0)
 			return true; //TODO: check if box really doesn't need a password
@@ -221,10 +221,10 @@ bool FritzClient::Login() throw(tcpclient::TcpException) {
 
 		// determine if login was successful
 		if (sMsg.find("class=\"errorMessage\"") != std::string::npos) {
-			*esyslog << __FILE__ << ": login failed, check your password settings." << std::endl;
+			ERR("login failed, check your password settings.");
 			return false;
 		}
-		*dsyslog << __FILE__ << ": login successful." << std::endl;
+		DBG("login successful.");
 		return true;
 	}
 	return false;
@@ -248,11 +248,11 @@ std::string FritzClient::GetLang() throw(tcpclient::TcpException) {
 			tc 	>> sMsg;
 			if (sMsg.find("<html>") != std::string::npos) {
 				gConfig->setLang(langs[p]);
-				*dsyslog << __FILE__ << ": interface language is " << gConfig->getLang().c_str() << std::endl;
+				DBG("interface language is " << gConfig->getLang().c_str());
 				return gConfig->getLang();
 			}
 		}
-		*dsyslog << __FILE__ << ": error parsing interface language, assuming 'de'" << std::endl;
+		DBG("error parsing interface language, assuming 'de'");
 		gConfig->setLang("de");
 	}
 	return gConfig->getLang();
@@ -261,7 +261,7 @@ std::string FritzClient::GetLang() throw(tcpclient::TcpException) {
 bool FritzClient::InitCall(std::string &number) {
 	std::string msg;
 	try {
-		*isyslog << __FILE__ << ": sending call init request " << number.c_str() << std::endl;
+		INF("sending call init request " << number.c_str());
 		tcpclient::HttpClient tc( gConfig->getUrl(), gConfig->getUiPort());
 		tc << tcpclient::post
 		   << "/cgi-bin/webcm"
@@ -273,9 +273,9 @@ bool FritzClient::InitCall(std::string &number) {
   	       << (gConfig->getSid().size() ? "&sid=" : "") << gConfig->getSid()
 		   << std::flush;
 		tc >> msg;
-		*isyslog << __FILE__ << ": call initiated." << std::endl;
+		INF("call initiated.");
 	} catch (tcpclient::TcpException te) {
-		*esyslog << __FILE__ << ": Exception - " << te.what() << std::endl;
+		ERR("Exception - " << te.what());
 		return false;
 	}
 	return true;
@@ -284,7 +284,7 @@ bool FritzClient::InitCall(std::string &number) {
 std::string FritzClient::RequestLocationSettings() {
 	std::string msg;
 	RETRY_BEGIN {
-		*dsyslog << __FILE__ << ": Looking up Phone Settings..." << std::endl;
+		DBG("Looking up Phone Settings...");
 		tcpclient::HttpClient hc(gConfig->getUrl(), gConfig->getUiPort());
 		hc 	<< tcpclient::get
 			<< "/cgi-bin/webcm?getpage=../html/"
@@ -302,7 +302,7 @@ std::string FritzClient::RequestLocationSettings() {
 std::string FritzClient::RequestSipSettings() {
 	std::string msg;
 	RETRY_BEGIN {
-		*dsyslog << __FILE__ << ": Looking up SIP Settings..." << std::endl;
+		DBG("Looking up SIP Settings...");
 		tcpclient::HttpClient hc(gConfig->getUrl(), gConfig->getUiPort());
 		hc 	<< tcpclient::get
 			<< "/cgi-bin/webcm?getpage=../html/"
@@ -321,7 +321,7 @@ std::string FritzClient::RequestCallList () {
 	std::string msg;
 	RETRY_BEGIN {
 		// now, process call list
-		*dsyslog << __FILE__ << ": sending callList request." << std::endl;
+		DBG("sending callList request.");
 		// force an update of the fritz!box csv list and wait until all data is received
 		tcpclient::HttpClient hc(gConfig->getUrl(), gConfig->getUiPort());
 		hc 	<< tcpclient::get
@@ -359,7 +359,7 @@ std::string FritzClient::RequestCallList () {
 std::string FritzClient::RequestFonbook () {
 	std::string msg;
 	RETRY_BEGIN {
-		*dsyslog << __FILE__ << ": sending fonbook request." << std::endl;
+		DBG("sending fonbook request.");
 		tcpclient::HttpClient tc(gConfig->getUrl(), gConfig->getUiPort());
 		tc 	<< tcpclient::get
 			<< "/cgi-bin/webcm?getpage=../html/"
