@@ -21,6 +21,12 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#define NAMESPACE "libpthread++"
+#define LOCATOR "[" << NAMESPACE << std::string(__FILE__, std::string(__FILE__).rfind('/'), std::string::npos) \
+                << ":" << __LINE__ << "] "
+#define DBG(x) *dsyslog << LOCATOR << x << std::endl;
+#define INF(x) *isyslog << LOCATOR << x << std::endl;
+#define ERR(x) *esyslog << LOCATOR << x << std::endl;
 
 namespace pthread {
 
@@ -244,9 +250,9 @@ void PThread::SetDescription(std::string Description)
 void *PThread::StartThread(PThread *Thread)
 {
 	Thread->childThreadId = ThreadId();
-	*dsyslog << __FILE__ << ": " << Thread->description << ": thread started (pid=" << getpid() << ", tid=" << Thread->childThreadId << ")" << std::endl;
+	DBG("" << Thread->description << ": thread started (pid=" << getpid() << ", tid=" << Thread->childThreadId << ")");
 	Thread->Action();
-	*dsyslog << __FILE__ << ": " << Thread->description << ": thread ended (pid=" << getpid() << ", tid=" << Thread->childThreadId << ")" << std::endl;
+	DBG("" << Thread->description << ": thread ended (pid=" << getpid() << ", tid=" << Thread->childThreadId << ")");
 	Thread->running = false;
 	Thread->active = false;
 	return NULL;
@@ -512,23 +518,23 @@ uint64_t TimeMs::Now(void)
 			// require a minimum resolution:
 			if (tp.tv_sec == 0 && tp.tv_nsec <= MIN_RESOLUTION * 1000000) {
 				if (clock_gettime(CLOCK_MONOTONIC, &tp) == 0) {
-					*dsyslog << __FILE__ << ": cTimeMs: using monotonic clock (resolution is " << Resolution << " ns)" << std::endl;
+					DBG("cTimeMs: using monotonic clock (resolution is " << Resolution << " ns)");
 					monotonic = true;
 				}
 				else
-					*esyslog << __FILE__ << ": cTimeMs: clock_gettime(CLOCK_MONOTONIC) failed" <<std::endl;
+					ERR("cTimeMs: clock_gettime(CLOCK_MONOTONIC) failed");
 			}
 			else
-				*dsyslog << __FILE__ << ": cTimeMs: not using monotonic clock - resolution is too bad (" << tp.tv_sec << " s " << tp.tv_nsec << "ns)" << std::endl;
+				DBG("cTimeMs: not using monotonic clock - resolution is too bad (" << tp.tv_sec << " s " << tp.tv_nsec << "ns)");
 		}
 		else
-			*esyslog << __FILE__ << ": cTimeMs: clock_getres(CLOCK_MONOTONIC) failed" << std::endl;
+			ERR("cTimeMs: clock_getres(CLOCK_MONOTONIC) failed");
 		initialized = true;
 	}
 	if (monotonic) {
 		if (clock_gettime(CLOCK_MONOTONIC, &tp) == 0)
 			return (uint64_t(tp.tv_sec)) * 1000 + tp.tv_nsec / 1000000;
-		*esyslog << __FILE__ << ": cTimeMs: clock_gettime(CLOCK_MONOTONIC) failed" << std::endl;
+		ERR("cTimeMs: clock_gettime(CLOCK_MONOTONIC) failed");
 		monotonic = false;
 		// fall back to gettimeofday()
 	}

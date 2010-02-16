@@ -1,7 +1,7 @@
 /*
  * KFritz
  *
- * Copyright (C) 2008 Joachim Wilke <vdr@joachim-wilke.de>
+ * Copyright (C) 2010 Joachim Wilke <kfritz@joachim-wilke.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,11 +28,6 @@
 
 #ifndef LOG_H_
 #define LOG_H_
-
-//#define SHORT_FILE std::string(__FILE__).rfind('/')
-//#define DBG(x) *LogStream::getLogStream(LogBuf::DEBUG) << SHORT_FILE << ":" << __LINE__ << ": " << (x) << std::endl;
-//#define INF(x) *LogStream::getLogStream(LogBuf::INFO)  << SHORT_FILE << ":" << __LINE__ << ": " << (x) << std::endl;
-//#define ERR(x) *LogStream::getLogStream(LogBuf::ERROR) << SHORT_FILE << ":" << __LINE__ << ": " << (x) << std::endl;
 
 class LogBuf : public QObject, public std::streambuf {
 	Q_OBJECT
