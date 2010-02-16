@@ -106,4 +106,6 @@
 - Set default build type in cmake, cleaned up makefiles of static libs
 - Added missing KDE4_ENABLE_EXCEPTIONS to CXX_FLAGS
 - Adapted to new logging system of libfritz++
+- Added missing COPYING and AUTHORS file (reported by neversfelde)
+
 

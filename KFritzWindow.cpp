@@ -68,7 +68,7 @@ KFritzWindow::KFritzWindow()
 	fritz::Config::SetupLogging(LogStream::getLogStream(LogBuf::DEBUG)->setLogWidget(logArea),
 							    LogStream::getLogStream(LogBuf::INFO)->setLogWidget(logArea),
 					            LogStream::getLogStream(LogBuf::ERROR)->setLogWidget(logArea));
-
+//TODO: support multiple boxes
 	bool savetoWallet = false;
 	bool requestPassword = true;
 
