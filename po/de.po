@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-02-17 18:09+0100\n"
+"POT-Creation-Date: 2010-02-17 20:02+0100\n"
 "PO-Revision-Date: 2010-02-02 21:04+0100\n"
 "Last-Translator: Joachim Wilke <kfritz@joachim-wilke.de>\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -31,23 +31,23 @@ msgstr "Verpasster Anruf"
 msgid "unknown"
 msgstr "unbekannt"
 
-#: KCalllistModel.cpp:80 KFonbookModel.cpp:61
+#: KCalllistModel.cpp:82 KFonbookModel.cpp:61
 msgid "Type"
 msgstr "Typ"
 
-#: KCalllistModel.cpp:83
+#: KCalllistModel.cpp:85
 msgid "Date"
 msgstr "Datum"
 
-#: KCalllistModel.cpp:86
+#: KCalllistModel.cpp:88
 msgid "Name / Number"
 msgstr "Name / Nummer"
 
-#: KCalllistModel.cpp:89
+#: KCalllistModel.cpp:91
 msgid "Local Device"
 msgstr "Endgerät"
 
-#: KCalllistModel.cpp:92
+#: KCalllistModel.cpp:94
 msgid "Duration"
 msgstr "Dauer"
 
@@ -183,11 +183,11 @@ msgstr "MSN Filter"
 msgid "Fritz!Box phone book"
 msgstr "Fritz!Box Telefonbuch"
 
-#: libfritz++/Listener.cpp:107
+#: libfritz++/Listener.cpp:108
 msgid "POTS"
 msgstr "Festnetz"
 
-#: libfritz++/Listener.cpp:108
+#: libfritz++/Listener.cpp:109
 msgid "ISDN"
 msgstr "ISDN"
 

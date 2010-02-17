@@ -63,6 +63,8 @@ QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
 			return QVariant(toLocalEncoding(ce->localName));
 			break;
 		case 4:
+			if (ce->type == fritz::CallEntry::MISSED)
+				return QVariant();
 			return QVariant(toLocalEncoding(ce->duration));
 			break;
 		default:

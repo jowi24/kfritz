@@ -124,5 +124,5 @@
   (reported by Christian Mangold)
 - Fixed clicking on "missed calls" indicator. A click now shows KFritz's call history.
 - Added a missing ';' to kfritz.desktop
-
+- Call history no longer shows a length (0:00) for missed calls.
 
