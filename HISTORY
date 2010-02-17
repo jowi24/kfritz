@@ -119,3 +119,10 @@
 
 --> Release 0.0.3
 
+2010-02-17:
+- Fixed "missed calls" indicator. Missed calls during runtime were not indicated.
+  (reported by Christian Mangold)
+- Fixed clicking on "missed calls" indicator. A click now shows KFritz's call history.
+- Added a missing ';' to kfritz.desktop
+
+

@@ -57,6 +57,7 @@ private:
 	QString appName;
 	QString programName;
 	KNotification *notification;
+	QAdaptTreeView *treeCallList;
 	QIndicate::Indicator *missedCallsIndicator;
 	void saveToWallet(KWallet::Wallet *wallet);
 	bool showPasswordDialog(QString &password, bool offerSaving = false);

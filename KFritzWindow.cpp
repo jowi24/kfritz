@@ -251,6 +251,10 @@ void KFritzWindow::setupActions() {
 
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
+//TODO: add "click to dial" action (suggested by Richard Bos)
+
+//TODO: add "find" action
+
 //	KStandardAction::find(this, SLOT(find()), actionCollection());
 //	KStandardAction::findNext(this, SLOT(findNext()), actionCollection());
 //	KStandardAction::findPrev(this, SLOT(findPrev()), actionCollection());
@@ -312,6 +316,7 @@ void KFritzWindow::updateMainWidgets(bool b)
 	if (!b) {
 		if (tabWidget) {
 			delete tabWidget;
+			treeCallList = NULL;
 		}
 		tabWidget = new KTabWidget();
 		tabWidget->setMovable(true);
@@ -325,7 +330,7 @@ void KFritzWindow::updateMainWidgets(bool b)
 
 	connect(modelCalllist, SIGNAL(updated()), this, SLOT(updateMissedCallsIndicator()));
 
-	QAdaptTreeView *treeCallList = new QAdaptTreeView(this);
+	treeCallList = new QAdaptTreeView(this);
 	treeCallList->setAlternatingRowColors(true);
 	treeCallList->setItemsExpandable(false);
 	treeCallList->setSortingEnabled(true);
@@ -377,7 +382,7 @@ void KFritzWindow::showMainWindow() {
 }
 
 void KFritzWindow::showMissedCalls(QIndicate::Indicator* indicator __attribute__((unused))) {
-	tabWidget->setCurrentIndex(1);
+	tabWidget->setCurrentWidget(treeCallList);
 	this->show();
 #ifdef INDICATEQT_FOUND
 	if (missedCallsIndicator)

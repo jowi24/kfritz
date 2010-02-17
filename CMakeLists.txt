@@ -2,9 +2,8 @@
 cmake_minimum_required(VERSION 2.6)
 project (kfritz)
 
-set(CMAKE_VERBOSE_MAKEFILE true)
+#set(CMAKE_VERBOSE_MAKEFILE true)
 #set(CMAKE_BUILD_TYPE "Debug") # <-- enable for debugging 
-
 
 # --- kde includes ------------------------------------------------------------
 find_package(KDE4 REQUIRED)

@@ -42,7 +42,7 @@ private:
 	fritz::CallList *calllist;
 	time_t lastCall;
 private Q_SLOTS:
-	void check();
+	virtual void check();
 };
 
 #endif /* KCALLLISTMODEL_H_ */

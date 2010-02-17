@@ -38,7 +38,7 @@ public:
 Q_SIGNALS:
 	void updated();
 protected Q_SLOTS:
-	void check();
+	virtual void check();
 private:
 	QTextCodec *inputCodec;
 	int lastRows;

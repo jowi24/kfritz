@@ -1,3 +1,15 @@
+kfritz (0.0.4-0ubuntu1~ppa1) karmic; urgency=low
+  
+  * Updated to upstream release 0.0.4
+  
+ -- Joachim Wilke <launchpad.net@joachim-wilke.de>  Mon, 18 Feb 2010 11:00:00 +0100
+
+kfritz (0.0.3-0ubuntu1~ppa1) karmic; urgency=low
+  
+  * Updated to upstream release 0.0.3
+  
+ -- Joachim Wilke <launchpad.net@joachim-wilke.de>  Mon, 17 Feb 2010 11:00:00 +0100
+
 kfritz (0.0.2-0ubuntu1~ppa1) karmic; urgency=low
   
   * Updated to upstream release 0.0.2

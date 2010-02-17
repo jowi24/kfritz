@@ -8,5 +8,5 @@ GenericName[de]=Anrufmonitor
 Comment=Access call history and phone book of your Fritz!Box and get notifications on incoming and outgoing calls.
 Comment[de]=Ermöglicht den Zugriff auf Anrufliste und Telefonbuch der Fritz!Box, signalisiert eingehende und ausgehende Anrufe.
 Terminal=false
-Categories=Qt;KDE;Utility;TelephonyTools
+Categories=Qt;KDE;Utility;TelephonyTools;
 X-KDE-StartupNotify=true
