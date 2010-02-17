@@ -7,3 +7,6 @@
 2010-02-16
 - modified logging to handle full path filenames cause by cmake in __FILE__.
   Provided new logging macros DBG, INF, ERR
+  
+2010-02-17
+- Fixed copyright information in all source code files
