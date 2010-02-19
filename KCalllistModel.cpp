@@ -60,6 +60,7 @@ QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
 				return QVariant(toLocalEncoding(ce->remoteName));
 			break;
 		case 3:
+			//TODO: resolve names using available phonebooks and cache result (e.g., in case of dasoertliche etc.) (suggested by Florian Petry / kde-apps.org)
 			return QVariant(toLocalEncoding(ce->localName));
 			break;
 		case 4:

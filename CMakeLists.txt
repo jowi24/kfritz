@@ -4,6 +4,7 @@ project (kfritz)
 
 #set(CMAKE_VERBOSE_MAKEFILE true)
 #set(CMAKE_BUILD_TYPE "Debug") # <-- enable for debugging 
+set(CMAKE_SKIP_RPATH TRUE)
 
 # --- kde includes ------------------------------------------------------------
 find_package(KDE4 REQUIRED)

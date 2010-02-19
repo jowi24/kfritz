@@ -21,7 +21,7 @@ clean:
 dist: clean
 	tar cvz --dereference \
 	        --exclude-vcs --exclude="debian" --exclude=".settings" --exclude=".project" \
-	        --exclude=".cproject" --exclude=".cdtproject" \
+	        --exclude=".cproject" --exclude=".cdtproject" --exclude="test" \
 	        -f ../kfritz_${VERSION}.orig.tar.gz ../kfritz
 
 install: all

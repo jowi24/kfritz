@@ -125,4 +125,11 @@
 - Fixed clicking on "missed calls" indicator. A click now shows KFritz's call history.
 - Added a missing ';' to kfritz.desktop
 - Call history no longer shows a length (0:00) for missed calls.
+- Added dutch translations (provided by Richard Bos)
+
+2010-02-18:
+- Added CMAKE_SKIP_RPATH to avoid setting a rpath in kfritz binary
+
+--> Release 0.0.4
+
 

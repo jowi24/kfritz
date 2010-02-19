@@ -1,15 +1,15 @@
 # Copyright (C) 2010
 # This file is distributed under the same license as the KFritz package.
 #
-# Joachim Wilke <post@joachim-wilke.de>, 2010.
+# Richard Bos <ml@radoeka.nl>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
 "POT-Creation-Date: 2010-02-18 20:53+0100\n"
-"PO-Revision-Date: 2010-02-02 21:04+0100\n"
-"Last-Translator: Joachim Wilke <kfritz@joachim-wilke.de>\n"
-"Language-Team: German <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2010-02-18 14:56+0100\n"
+"Last-Translator: Richard Bos <ml@radoeka.nl>\n"
+"Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,23 +18,23 @@ msgstr ""
 
 #: KCalllistModel.cpp:42
 msgid "Incoming call"
-msgstr "Eingehender Anruf"
+msgstr "Inkomend gesprek"
 
 #: KCalllistModel.cpp:43
 msgid "Outgoing call"
-msgstr "Ausgehender Anruf"
+msgstr "Uitgaand gesprek"
 
 #: KCalllistModel.cpp:44
 msgid "Missed call"
-msgstr "Verpasster Anruf"
+msgstr "Gemist gesprek"
 
 #: KCalllistModel.cpp:56 KFritzWindow.cpp:139 libfritz++/CallList.cpp:169
 msgid "unknown"
-msgstr "unbekannt"
+msgstr "onbekend"
 
 #: KCalllistModel.cpp:83 KFonbookModel.cpp:61
 msgid "Type"
-msgstr "Typ"
+msgstr "Type"
 
 #: KCalllistModel.cpp:86
 msgid "Date"
@@ -42,19 +42,19 @@ msgstr "Datum"
 
 #: KCalllistModel.cpp:89
 msgid "Name / Number"
-msgstr "Name / Nummer"
+msgstr "Naam / nummer"
 
 #: KCalllistModel.cpp:92
 msgid "Local Device"
-msgstr "Endgerät"
+msgstr "Lokaal toestel"
 
 #: KCalllistModel.cpp:95
 msgid "Duration"
-msgstr "Dauer"
+msgstr "Gespreksduur"
 
 #: KFonbookModel.cpp:58
 msgid "Name"
-msgstr "Name"
+msgstr "Naam"
 
 #: KFonbookModel.cpp:64
 msgid "Number"
@@ -62,15 +62,15 @@ msgstr "Nummer"
 
 #: KFonbookModel.cpp:99
 msgid "Home"
-msgstr "Privat"
+msgstr "Thuis"
 
 #: KFonbookModel.cpp:101
 msgid "Mobile"
-msgstr "Handy"
+msgstr "GSM"
 
 #: KFonbookModel.cpp:103
 msgid "Work"
-msgstr "Büro"
+msgstr "Werk"
 
 #: KFritz.cpp:54
 msgid "KFritz"
@@ -78,7 +78,7 @@ msgstr "KFritz"
 
 #: KFritz.cpp:58
 msgid "Notifies about phone activity and browses call history and telephone book on your Fritz!Box"
-msgstr "Signalisiert ein- und ausgehende Telefonanrufe, zeigt Telefonbuch und Anrufliste der Fritz!Box an"
+msgstr "Geeft informatie over telefoon activiteit. gespreksgeschiedenis entelefoonboek op je Fritz!Box"
 
 #: KFritz.cpp:62
 msgid "(c) 2008-2010"
@@ -86,23 +86,23 @@ msgstr "(c) 2008-2010"
 
 #: KFritz.cpp:65
 msgid "Developed by Matthias Becker and Joachim Wilke."
-msgstr "Entwickelt von Matthias Becker und Joachim Wilke."
+msgstr "Ontwikkeld door Matthias Becker en Joachim Wilke."
 
 #: KFritzWindow.cpp:137
 msgid "Outgoing call to <b>%1</b><br/>using %2"
-msgstr "Ausgehender Anruf zu <b>%1</b><br/>%2"
+msgstr "Uitgaand gesprek naar <b>%1</b><br/>met %2"
 
 #: KFritzWindow.cpp:139
 msgid "Incoming call from <b>%1</b><br/>using %2"
-msgstr "Eingehender Anruf von <b>%1</b><br/>%2"
+msgstr "Inkomend gesprek van <b></b><br/>met %2"
 
 #: KFritzWindow.cpp:160
 msgid "Call disconnected (%1)."
-msgstr "Anruf beendet (%1)."
+msgstr "Gesprek afgeschakeld (%1)."
 
 #: KFritzWindow.cpp:184
 msgid "Configure connection to Fritz!Box"
-msgstr "Verbindung zur Fritz!Box einrichten"
+msgstr "Verbinding naar de Fritz!Box instellen"
 
 #: KFritzWindow.cpp:184
 msgid "Fritz!Box"
@@ -110,83 +110,83 @@ msgstr "Fritz!Box"
 
 #: KFritzWindow.cpp:187
 msgid "Phone books"
-msgstr "Telefonbücher"
+msgstr "Telefoonboeken"
 
 #: KFritzWindow.cpp:187
 msgid "Select phone books to use"
-msgstr "Zu nutzende Telefonbücher auswählen"
+msgstr "Telefoonnummerbron instellen"
 
 #: KFritzWindow.cpp:227
 msgid "Enter your Fritz!Box password"
-msgstr "Geben Sie Ihr Fritz!Box Passwort ein"
+msgstr "Geef je Fritz!Box passeerwoord"
 
 #: KFritzWindow.cpp:235
 msgid "Configure KFritz..."
-msgstr "KFritz einrichten..."
+msgstr "KFritz instellen..."
 
 #: KFritzWindow.cpp:241
 msgid "Configure Notifications..."
-msgstr "Benachrichtigungen einrichten..."
+msgstr "Meldingen instellen..."
 
 #: KFritzWindow.cpp:247
 msgid "Show log"
-msgstr "Protokoll anzeigen"
+msgstr "Laat de log zien"
 
 #: KFritzWindow.cpp:275
 msgid "Missed calls"
-msgstr "Verpasste Anrufe"
+msgstr "Gemiste gesprekken"
 
 #: KFritzWindow.cpp:309
 msgid "Done"
-msgstr ""
+msgstr "Gedaan"
 
 #: KFritzWindow.cpp:311
 msgid "Retrieving data from Fritz!Box..."
-msgstr "Rufe Daten von der Fritz!Box ab..."
+msgstr "Informatie ophalen van de Fritz!Box..."
 
 #: KFritzWindow.cpp:341
 msgid "Call history"
-msgstr "Anrufliste"
+msgstr "Gespreksgeschiedenis"
 
 #: LogDialog.cpp:33
 msgid "Log"
-msgstr "Protokoll"
+msgstr "Log"
 
 #: build/ui_KSettingsFonbooks.h:53 build/ui_KSettingsFritzBox.h:125
 msgid "Form"
-msgstr ""
+msgstr "Formulier"
 
 #: build/ui_KSettingsFritzBox.h:126
 msgid "Hostname"
-msgstr "Adresse"
+msgstr "Hostnaam"
 
 #: build/ui_KSettingsFritzBox.h:127
 msgid "Country code"
-msgstr "Ländervorwahl"
+msgstr "Landencode"
 
 #: build/ui_KSettingsFritzBox.h:128
 msgid "Area code"
-msgstr "Ortsvorwahl"
+msgstr "Kengetal"
 
 #: build/ui_KSettingsFritzBox.h:129
 msgid "General"
-msgstr "Allgemein"
+msgstr "Algemeen"
 
 #: build/ui_KSettingsFritzBox.h:130
 msgid "Restrict call history and notifications to certain MSNs"
-msgstr "Anrufliste und Benachrichtigungen auf bestimmte MSN einschränken"
+msgstr "Beperk gespreksgeschiedenis en meldingen tot bepaalde MSN nummers"
 
 #: build/ui_KSettingsFritzBox.h:131
 msgid "MSN filter"
-msgstr "MSN Filter"
+msgstr "MSN filter"
 
 #: libfritz++/FritzFonbook.cpp:154
 msgid "Fritz!Box phone book"
-msgstr "Fritz!Box Telefonbuch"
+msgstr "Fritz!Box telefoonboek"
 
 #: libfritz++/Listener.cpp:108
 msgid "POTS"
-msgstr "Festnetz"
+msgstr "POTS"
 
 #: libfritz++/Listener.cpp:109
 msgid "ISDN"
@@ -194,7 +194,7 @@ msgstr "ISDN"
 
 #: libfritz++/LocalFonbook.cpp:74
 msgid "Local phone book"
-msgstr "Lokales Telefonbuch"
+msgstr "Lokaal telefoonboek"
 
 #: libfritz++/Nummerzoeker.cpp:33
 msgid "nummerzoeker.com"
