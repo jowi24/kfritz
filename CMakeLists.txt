@@ -1,15 +1,20 @@
 # --- general setup -----------------------------------------------------------
 cmake_minimum_required(VERSION 2.6)
-project (kfritz)
+project (KFRITZ)
 
-#set(CMAKE_VERBOSE_MAKEFILE true)
-#set(CMAKE_BUILD_TYPE "Debug") # <-- enable for debugging 
+#set(CMAKE_VERBOSE_MAKEFILE true) # <-- enable for debugging
+#set(CMAKE_BUILD_TYPE "Debug")    # <-- enable for debugging 
 set(CMAKE_SKIP_RPATH TRUE)
+set(CMAKE_MODULE_PATH "${KFRITZ_SOURCE_DIR}/CMakeModules")
 
 # --- kde includes ------------------------------------------------------------
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 include_directories(${KDE4_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
+
+# --- libgcrypt includes ------------------------------------------------------
+include("FindGcryptConfig")
+gcrypt_check(GCRYPT REQUIRED gcrypt)
 
 # --- support for libindicate -------------------------------------------------
 find_package(PkgConfig REQUIRED)
@@ -62,15 +67,15 @@ endif(GETTEXT_MSGFMT_EXECUTABLE)
 set(kfritzbox_SRCS KFritz.cpp KFritzWindow.cpp KFonbookModel.cpp KSettingsFonbooks.cpp
                    KSettingsFritzBox.cpp KFritzModel.cpp KCalllistModel.cpp LibFritzInit.cpp 
                    Log.cpp LogDialog.cpp QAdaptTreeView.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
-set(CMAKE_CXX_FLAGS_DEBUG "${KDE4_ENABLE_EXCEPTIONS} -g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG") 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG") 
 
 kde4_add_kcfg_files(kfritzbox_SRCS GENERATE_MOC KSettings.kcfgc)
 kde4_add_ui_files(kfritzbox_SRCS KSettingsFritzBox.ui KSettingsFonbooks.ui)
 
 configure_file(pkg-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/pkg-config.h)
 kde4_add_executable(kfritz ${kfritzbox_SRCS})
-target_link_libraries(kfritz ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY}
+target_link_libraries(kfritz ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} ${GCRYPT_LIBRARIES}
                                 fritz++ tcpclient++ pthread++ )
 if (INDICATEQT_FOUND)
 	target_link_libraries(kfritz ${INDICATEQT_LIBRARIES})
@@ -82,5 +87,5 @@ install(TARGETS kfritz ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES kfritz.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kfritz)
 install(FILES kfritzui.rc DESTINATION ${DATA_INSTALL_DIR}/kfritz)
 install(FILES kfritz.kcfg DESTINATION ${KCFG_INSTALL_DIR})
-install(FILES kfritz.desktop DESTINATION "/usr/share/applications/kde4")
+install(FILES kfritz.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 

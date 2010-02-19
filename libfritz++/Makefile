@@ -1,5 +1,5 @@
 LIB = libfritz++.a
-OBJS = CallList.o Config.o Fonbooks.o Fonbook.o FonbookManager.o FritzClient.o FritzFonbook.o Listener.o Tools.o LocalFonbook.o Nummerzoeker.o OertlichesFonbook.o md5.o
+OBJS = CallList.o Config.o Fonbooks.o Fonbook.o FonbookManager.o FritzClient.o FritzFonbook.o Listener.o Tools.o LocalFonbook.o Nummerzoeker.o OertlichesFonbook.o
 
 CXXFLAGS ?= -g -O2 -Wall -fPIC
 
@@ -15,9 +15,6 @@ all: $(LIB)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $(DEFINES) $(INCLUDES) $<
-
-md5.o: md5.c
-	$(CC) $(CCFLAGS) -c $(DEFINES) $(INCLUDES) $<
 
 $(LIB): $(OBJS)
 	ar ru $(LIB) $(OBJS)

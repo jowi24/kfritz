@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-02-18 20:53+0100\n"
+"POT-Creation-Date: 2010-02-19 17:44+0100\n"
 "PO-Revision-Date: 2010-02-18 14:56+0100\n"
 "Last-Translator: Richard Bos <ml@radoeka.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
@@ -94,7 +94,7 @@ msgstr "Uitgaand gesprek naar <b>%1</b><br/>met %2"
 
 #: KFritzWindow.cpp:139
 msgid "Incoming call from <b>%1</b><br/>using %2"
-msgstr "Inkomend gesprek van <b></b><br/>met %2"
+msgstr "Inkomend gesprek van <b>%1</b><br/>met %2"
 
 #: KFritzWindow.cpp:160
 msgid "Call disconnected (%1)."

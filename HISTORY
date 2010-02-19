@@ -7,7 +7,8 @@
   * Renamed various methods in fonbook classes from *Fonbuch* to *Fonbook*.
   * Implemented in-library msn filtering and reverse-lookups.
   * Renamed various methods in FonbookManager from *Fonbuch* to *Fonbook*.
-  * Introduced callType::ALL to get one complete call list (containing missed, incoming and outgoing)
+  * Introduced callType::ALL to get one complete call list (containing missed, 
+    incoming and outgoing)
   * Moved callType to CallEntry
 
 2008-12-27:
@@ -15,10 +16,15 @@
 
 2008-12-28:
 - Adapted to changes in libfritz++
-  * A call to Config::SetupFonbookIDs now deletes a previously instantiated FonbookManager to allow multiple calls to SetupFonbookIDs in case of configuration changes.
-  * Introduced new method CallList::DeleteCallList() to explicitly delete the singleton instance.                                                                      
-  * Made Listener a singleton. A call to Listener::CreateListener() is used to activate this feature.                                                                  
-  * Introduced new method CallList::CreateCallList() to explicitly pre-fetch the call list before calling CallList::getCallList().
+  * A call to Config::SetupFonbookIDs now deletes a previously instantiated 
+    FonbookManager to allow multiple calls to SetupFonbookIDs in case of 
+    configuration changes.
+  * Introduced new method CallList::DeleteCallList() to explicitly delete the 
+    singleton instance.                                                                      
+  * Made Listener a singleton. A call to Listener::CreateListener() is used to 
+    activate this feature.                                                                  
+  * Introduced new method CallList::CreateCallList() to explicitly pre-fetch 
+    the call list before calling CallList::getCallList().
   * Moved Config::SetupFonbookIDs to FonbookManager::CreateFonbookManager().
   * Renamed Tools::GetPhoneSettings() to Tools::GetLocationSettings().
   * Added resolving of SIP[0-9] to real provider names.
@@ -36,7 +42,8 @@
 - Adapted to changes in libfritz++
   * Added Config::SetupPorts() to provide non-standard ports
   * Removed useless check in CallList::RetrieveEntry()                                    
-  * Fixed some warnings about ununsed parameters in base-classes and empty implementations
+  * Fixed some warnings about ununsed parameters in base-classes and empty 
+    implementations
 - Fixed some warnings about ununsed parameters
 - Added debug mode to cmake file                     
 - Now logging to both UI and stdout
@@ -46,7 +53,8 @@
 - Implemented configuration dialog. 
   Hostname, area code and country code are now configurable
 - Using KNotify for notification only, now
-- Refactored KFonbookModel and KCalllistModel using a generic base class KFritzModel
+- Refactored KFonbookModel and KCalllistModel using a generic base class 
+  KFritzModel
 - Moved all libfritz initialization to a threaded class LibFritzInit, 
   speeding up application start
   
@@ -57,16 +65,19 @@
 
 2010-01-28:
 - Added a ':' in logging messages for better readability
-- Added support for libindicate-qt in CMakeLists.txt, introduced define INDICATEQT_FOUND
+- Added support for libindicate-qt in CMakeLists.txt, introduced define 
+  INDICATEQT_FOUND
 - Added "outgoingCall", "callConnected" and "callDisconnected" to KNotify
 - Integrated KEventHandler into KFritzBoxWindow
 
 2010-01-29:
-- Implemented support for libindicate-qt, "missed calls" are notified via that way
+- Implemented support for libindicate-qt, "missed calls" are notified via 
+  that way
 - Added .desktop file
 
 2010-01-30:	 
-- Added application specific icons "incoming-call", "outgoing-call", "missed-call" and "new-call" 
+- Added application specific icons "incoming-call", "outgoing-call", 
+  "missed-call" and "new-call" 
 - Renamed relevant occurences of kfritzbox to kfritz
 
 2010-02-01:
@@ -75,7 +86,8 @@
 - Added configuration tab "MSN filter" on page "Fritz!Box"
 - Added configuration option "Show log"
 - First steps to integrate i18n support
-- Fixed crash when reloading call history and phone book after configuration changes
+- Fixed crash when reloading call history and phone book after configuration 
+  changes
 - Replace the term "calllist" with "call history" on user interface
 - Translated UI texts to german
 
@@ -90,7 +102,8 @@
 2010-02-11:
 - Moved log to a separate dialog, moved menu entry to help menu
 - Fixed formatting of time at disconnect-notification
-- Added call to libfritz to set up config dir (in most cases ~/.kde/share/apps/kfritz)
+- Added call to libfritz to set up config dir (in most cases 
+  ~/.kde/share/apps/kfritz)
 
 --> Release 0.0.1
 
@@ -120,9 +133,10 @@
 --> Release 0.0.3
 
 2010-02-17:
-- Fixed "missed calls" indicator. Missed calls during runtime were not indicated.
-  (reported by Christian Mangold)
-- Fixed clicking on "missed calls" indicator. A click now shows KFritz's call history.
+- Fixed "missed calls" indicator. Missed calls during runtime were not 
+  indicated. (reported by Christian Mangold)
+- Fixed clicking on "missed calls" indicator. A click now shows KFritz's call 
+  history.
 - Added a missing ';' to kfritz.desktop
 - Call history no longer shows a length (0:00) for missed calls.
 - Added dutch translations (provided by Richard Bos)
@@ -132,4 +146,16 @@
 
 --> Release 0.0.4
 
-
+2010-02-19:
+- Changes in libfritz++
+  * Removed md5.[h,c] in favor of libgcrypt, libfritz++ now needs libgcrypt's 
+    development header "gcrypt.h" to compile
+- Added CMakeModules/FindGCrypt.cmake from 
+  http://marc.info/?l=gcrypt-devel&m=126252802612599&w=2 for cmake support of 
+  libgcrypt
+- Now linking to libgcrypt
+- Fixed dutch translation string "Incoming call from <b>%1</b><br/>using %2"
+  (reported by Richard Bos)
+- Fixed installation location of kfritz.desktop in CMakeLists.txt
+  (patch provided by Sebastian Trueg)
+  

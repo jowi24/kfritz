@@ -148,3 +148,7 @@
 - Removed dependency to OpenSSL due to licensing issues, 
   using copy of MD5 implementation from GNU coreutils 5.93
   
+2010-02-19:
+- Removed md5.[h,c] in favor of libgcrypt, libfritz++ now needs libgcrypt's 
+  development header "gcrypt.h" to compile
+  
