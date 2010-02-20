@@ -158,4 +158,9 @@
   (reported by Richard Bos)
 - Fixed installation location of kfritz.desktop in CMakeLists.txt
   (patch provided by Sebastian Trueg)
+
+2010-02-20:
+- Added "Dial number" action, which dials the current selection in a phone 
+  book or the call history (suggested by Richard Bos)
+  
   

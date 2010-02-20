@@ -30,6 +30,7 @@ public:
 	QAdaptTreeView(QWidget *parent);
 	virtual ~QAdaptTreeView();
 	void adaptColumns();
+	std::string currentNumber();
 private slots:
 	virtual void reset();
 };

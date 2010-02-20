@@ -111,3 +111,8 @@ void KFonbookModel::sort(int column, Qt::SortOrder order) {
 	emit dataChanged(index(0,                       0,                          QModelIndex()),
 			index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
 }
+
+std::string KFonbookModel::number(const QModelIndex &i) const {
+	fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(i.row());
+	return fe->getNumber();
+}

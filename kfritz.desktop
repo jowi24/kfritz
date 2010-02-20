@@ -10,3 +10,4 @@ Comment[de]=Ermöglicht den Zugriff auf Anrufliste und Telefonbuch der Fritz!Box
 Terminal=false
 Categories=Qt;KDE;Utility;TelephonyTools;
 X-KDE-StartupNotify=true
+X-Ubuntu-Gettext-Domain=desktop_kfritz

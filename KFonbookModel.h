@@ -38,6 +38,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
     static QString getTypeName(const fritz::FonbookEntry::eType type);
+    virtual std::string number(const QModelIndex &index) const;
 
 private:
 	fritz::Fonbook *fonbook;

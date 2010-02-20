@@ -27,11 +27,11 @@ dist: clean
 install: all
 	cd build; kdesudo make install
 
-deb:
-	debuild -i"(\.svn|\.settings|\.(c|cdt|)project)"
+deb: dist
+	debuild -i"(\.svn|\.settings|\.(c|cdt|)project|test)"
 
 deb-src: dist
-	debuild -S -i"(\.svn|\.settings|\.(c|cdt|)project)"
+	debuild -S -i"(\.svn|\.settings|\.(c|cdt|)project|test)"
 	
 $(POTFILE): $(wildcard *.cpp) $(wildcard libfritz++/*.cpp) $(wildcard *.kcfg) $(wildcard *.rc) 
 	xgettext --from-code=UTF-8 -C -kde -ci18n -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3 -ktr2i18n:1\

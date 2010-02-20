@@ -22,3 +22,4 @@ Action=Popup
 Name=Call got disconnected
 Name[de]=Anruf beendet
 Action=Popup
+X-Ubuntu-Gettext-Domain=desktop_kfritz

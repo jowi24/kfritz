@@ -152,3 +152,7 @@
 - Removed md5.[h,c] in favor of libgcrypt, libfritz++ now needs libgcrypt's 
   development header "gcrypt.h" to compile
   
+2010-02-20:
+- Added a missing call to Login() in FritzClient::InitCall()
+- Do not initiate a call if no number is given in FritzClient::InitCall()
+  

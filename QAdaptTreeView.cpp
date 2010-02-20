@@ -20,6 +20,7 @@
  */
 
 #include "QAdaptTreeView.h"
+#include "KFritzModel.h"
 
 QAdaptTreeView::QAdaptTreeView(QWidget *parent)
 :QTreeView(parent) {
@@ -39,4 +40,11 @@ void QAdaptTreeView::adaptColumns() {
     // Resize the column to the size of its contents
     for (int col=0; col < model()->columnCount(QModelIndex()); col++)
            resizeColumnToContents(col);
+}
+
+std::string QAdaptTreeView::currentNumber() {
+	if (currentIndex().isValid())
+		return static_cast<KFritzModel *>(model())->number(currentIndex());
+	else
+		return "";
 }

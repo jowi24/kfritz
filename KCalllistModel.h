@@ -37,6 +37,7 @@ public:
                                 int role = Qt::DisplayRole) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual void sort(int column, Qt::SortOrder order);
+    virtual std::string number(const QModelIndex &index) const;
 
 private:
 	fritz::CallList *calllist;

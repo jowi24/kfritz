@@ -150,3 +150,8 @@ void KCalllistModel::check() {
 		lastCall = calllist->LastCall();
 	}
 }
+
+std::string KCalllistModel::number(const QModelIndex &i) const {
+	fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL,i.row());
+	return ce->remoteNumber;
+}

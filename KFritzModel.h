@@ -35,6 +35,7 @@ public:
     		                  const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &child) const;
     QString toLocalEncoding(const std::string str) const;
+    virtual std::string number(const QModelIndex &index) const = 0;
 Q_SIGNALS:
 	void updated();
 protected Q_SLOTS:

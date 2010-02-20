@@ -260,6 +260,10 @@ std::string FritzClient::GetLang() throw(tcpclient::TcpException) {
 
 bool FritzClient::InitCall(std::string &number) {
 	std::string msg;
+	if (number.length() == 0)
+		return false;
+	if (!Login())
+		return false;
 	try {
 		INF("sending call init request " << number.c_str());
 		tcpclient::HttpClient tc( gConfig->getUrl(), gConfig->getUiPort());

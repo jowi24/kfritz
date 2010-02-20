@@ -35,6 +35,7 @@
 #include <KStatusBar>
 #include <KConfigSkeleton>
 #include <KConfigDialog>
+#include <KMessageBox>
 #include <KNotifyConfigWidget>
 #include <KPasswordDialog>
 #include <QTextCodec>
@@ -46,6 +47,7 @@
 #include <Config.h>
 #include <Tools.h>
 #include <CallList.h>
+#include <FritzClient.h>
 
 #include "KSettings.h"
 #include "KSettingsFonbooks.h"
@@ -249,9 +251,13 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("showLog", aShowLog);
 	connect(aShowLog, SIGNAL(triggered(bool)), this, SLOT(showLog()));
 
-	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
+	KAction *aDialNumber = new KAction(this);
+	aDialNumber->setText(i18n("Dial number"));
+	aDialNumber->setIcon(KIcon("internet-telephony"));
+	actionCollection()->addAction("dialNumber", aDialNumber);
+	connect(aDialNumber, SIGNAL(triggered(bool)), this, SLOT(dialNumber()));
 
-//TODO: add "click to dial" action (suggested by Richard Bos)
+	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
 //TODO: add "find" action
 
@@ -334,6 +340,8 @@ void KFritzWindow::updateMainWidgets(bool b)
 	treeCallList->setAlternatingRowColors(true);
 	treeCallList->setItemsExpandable(false);
 	treeCallList->setSortingEnabled(true);
+	treeCallList->addAction(actionCollection()->action("dialNumber"));
+	treeCallList->setContextMenuPolicy(Qt::ActionsContextMenu);
 
 	treeCallList->setModel(modelCalllist);
 	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
@@ -353,6 +361,9 @@ void KFritzWindow::updateMainWidgets(bool b)
 		treeFonbook->setSortingEnabled(true);
 		treeFonbook->setModel(modelFonbook);
 		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
+		treeFonbook->addAction(actionCollection()->action("dialNumber"));
+		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
+
 
 		tabWidget->insertTab(0, treeFonbook,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
 
@@ -396,4 +407,22 @@ void KFritzWindow::showMissedCalls(QIndicate::Indicator* indicator __attribute__
 
 void KFritzWindow::showLog() {
 	logDialog->show();
+}
+
+void KFritzWindow::dialNumber() {
+	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
+	std::string currentNumber;
+	if (currentView)
+		currentNumber = currentView->currentNumber();
+	if (currentNumber.length() == 0) {
+		KMessageBox::sorry(this, i18n("Can not dial without a number.\nPlease select an entry in a phone book or the call history which contains a number or name and try again."), i18n("Dialing not possible"));
+		return;
+	}
+	DBG("Dialing number = " << currentNumber);
+	QString statusMessage = i18n("Dialing %1", currentNumber.c_str());
+//	statusBar()->insertPermanentItem(statusMessage, 1); // <-- does not work :-(
+	fritz::FritzClient fc;
+	fc.InitCall(currentNumber);
+//	statusBar()->removeItem(1);
+//	statusBar()->showMessage(i18n("Done."), 5000);
 }
