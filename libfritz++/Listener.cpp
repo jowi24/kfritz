@@ -68,7 +68,6 @@ void Listener::DeleteListener() {
 }
 
 void Listener::Action() {
-	// TODO: detect system hibernation
 	std::string data = "";
 	unsigned int retry_delay = RETRY_DELAY / 2;
 	while (true) {
