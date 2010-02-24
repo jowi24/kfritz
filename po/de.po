@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-02-20 20:07+0100\n"
+"POT-Creation-Date: 2010-02-24 19:33+0100\n"
 "PO-Revision-Date: 2010-02-02 21:04+0100\n"
 "Last-Translator: Joachim Wilke <kfritz@joachim-wilke.de>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
@@ -28,7 +28,7 @@ msgstr "Ausgehender Anruf"
 msgid "Missed call"
 msgstr "Verpasster Anruf"
 
-#: KCalllistModel.cpp:56 KFritzWindow.cpp:141 libfritz++/CallList.cpp:169
+#: KCalllistModel.cpp:56 KFritzWindow.cpp:143 libfritz++/CallList.cpp:169
 msgid "unknown"
 msgstr "unbekannt"
 
@@ -88,82 +88,74 @@ msgstr "(c) 2008-2010"
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Entwickelt von Matthias Becker und Joachim Wilke."
 
-#: KFritzWindow.cpp:139
+#: KFritzWindow.cpp:141
 msgid "Outgoing call to <b>%1</b><br/>using %2"
 msgstr "Ausgehender Anruf zu <b>%1</b><br/>%2"
 
-#: KFritzWindow.cpp:141
+#: KFritzWindow.cpp:143
 msgid "Incoming call from <b>%1</b><br/>using %2"
 msgstr "Eingehender Anruf von <b>%1</b><br/>%2"
 
-#: KFritzWindow.cpp:162
+#: KFritzWindow.cpp:164
 msgid "Call disconnected (%1)."
 msgstr "Anruf beendet (%1)."
 
-#: KFritzWindow.cpp:186
+#: KFritzWindow.cpp:188
 msgid "Configure connection to Fritz!Box"
 msgstr "Verbindung zur Fritz!Box einrichten"
 
-#: KFritzWindow.cpp:186
+#: KFritzWindow.cpp:188
 msgid "Fritz!Box"
 msgstr "Fritz!Box"
 
-#: KFritzWindow.cpp:189
+#: KFritzWindow.cpp:191
 msgid "Phone books"
 msgstr "Telefonbücher"
 
-#: KFritzWindow.cpp:189
+#: KFritzWindow.cpp:191
 msgid "Select phone books to use"
 msgstr "Zu nutzende Telefonbücher auswählen"
 
-#: KFritzWindow.cpp:229
+#: KFritzWindow.cpp:231
 msgid "Enter your Fritz!Box password"
 msgstr "Geben Sie Ihr Fritz!Box Passwort ein"
 
-#: KFritzWindow.cpp:237
+#: KFritzWindow.cpp:239
 msgid "Configure KFritz..."
 msgstr "KFritz einrichten..."
 
-#: KFritzWindow.cpp:243
+#: KFritzWindow.cpp:245
 msgid "Configure Notifications..."
 msgstr "Benachrichtigungen einrichten..."
 
-#: KFritzWindow.cpp:249
+#: KFritzWindow.cpp:251
 msgid "Show log"
 msgstr "Protokoll anzeigen"
 
-#: KFritzWindow.cpp:255
+#: KFritzWindow.cpp:257
 msgid "Dial number"
 msgstr "Nummer wählen"
 
-#: KFritzWindow.cpp:281
+#: KFritzWindow.cpp:283
 msgid "Missed calls"
 msgstr "Verpasste Anrufe"
-
-#: KFritzWindow.cpp:315
-msgid "Done"
-msgstr ""
 
 #: KFritzWindow.cpp:317
 msgid "Retrieving data from Fritz!Box..."
 msgstr "Rufe Daten von der Fritz!Box ab..."
 
-#: KFritzWindow.cpp:349
+#: KFritzWindow.cpp:351
 msgid "Call history"
 msgstr "Anrufliste"
 
-#: KFritzWindow.cpp:418
+#: KFritzWindow.cpp:420
 msgid ""
 "Can not dial without a number.\n"
 "Please select an entry in a phone book or the call history which contains a number or name and try again."
 msgstr ""
 
-#: KFritzWindow.cpp:418
+#: KFritzWindow.cpp:420
 msgid "Dialing not possible"
-msgstr ""
-
-#: KFritzWindow.cpp:422
-msgid "Dialing %1"
 msgstr ""
 
 #: LogDialog.cpp:33
@@ -202,11 +194,11 @@ msgstr "MSN Filter"
 msgid "Fritz!Box phone book"
 msgstr "Fritz!Box Telefonbuch"
 
-#: libfritz++/Listener.cpp:108
+#: libfritz++/Listener.cpp:107
 msgid "POTS"
 msgstr "Festnetz"
 
-#: libfritz++/Listener.cpp:109
+#: libfritz++/Listener.cpp:108
 msgid "ISDN"
 msgstr "ISDN"
 

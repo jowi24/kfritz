@@ -144,8 +144,6 @@
 2010-02-18:
 - Added CMAKE_SKIP_RPATH to avoid setting a rpath in kfritz binary
 
---> Release 0.0.4
-
 2010-02-19:
 - Changes in libfritz++
   * Removed md5.[h,c] in favor of libgcrypt, libfritz++ now needs libgcrypt's 
@@ -163,4 +161,5 @@
 - Added "Dial number" action, which dials the current selection in a phone 
   book or the call history (suggested by Richard Bos)
   
+--> Release 0.0.4
   

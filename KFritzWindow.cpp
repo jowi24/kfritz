@@ -42,6 +42,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QProgressBar>
 #include <QStackedLayout>
 
 #include <Config.h>
@@ -64,6 +65,7 @@ KFritzWindow::KFritzWindow()
 
 	initIndicator();
 	updateMissedCallsIndicator();
+	progressIndicator = NULL;
 
 	logDialog = new LogDialog(this);
 	KTextEdit *logArea = logDialog->getLogArea();
@@ -99,7 +101,7 @@ KFritzWindow::KFritzWindow()
 	tabWidget = NULL;
 
 	libFritzInit = new LibFritzInit(fbPassword, this);
-	connect(libFritzInit, SIGNAL(ready(bool)),       this, SLOT(updateStatusbar(bool)));
+	connect(libFritzInit, SIGNAL(ready(bool)),       this, SLOT(showStatusbarBoxBusy(bool)));
 	connect(libFritzInit, SIGNAL(invalidPassword()), this, SLOT(reenterPassword()));
 	connect(libFritzInit, SIGNAL(ready(bool)),       this, SLOT(updateMainWidgets(bool)));
 	libFritzInit->start();
@@ -310,11 +312,11 @@ void KFritzWindow::updateMissedCallsIndicator() {
 #endif
 }
 
-void KFritzWindow::updateStatusbar(bool b) {
-	if (b)
-		statusBar()->showMessage(i18n("Done"), 5000);
+void KFritzWindow::showStatusbarBoxBusy(bool b) {
+	if (!b)
+		setProgressIndicator(i18n("Retrieving data from Fritz!Box..."));
 	else
-		statusBar()->showMessage(i18n("Retrieving data from Fritz!Box..."));
+		setProgressIndicator();
 }
 
 void KFritzWindow::updateMainWidgets(bool b)
@@ -418,11 +420,33 @@ void KFritzWindow::dialNumber() {
 		KMessageBox::sorry(this, i18n("Can not dial without a number.\nPlease select an entry in a phone book or the call history which contains a number or name and try again."), i18n("Dialing not possible"));
 		return;
 	}
+	//setProgressIndicator(i18n("Dialing %1", currentNumber.c_str())); //TODO: doesn't work yet (dialNumber blocks GUI thread)
 	DBG("Dialing number = " << currentNumber);
-	QString statusMessage = i18n("Dialing %1", currentNumber.c_str());
-//	statusBar()->insertPermanentItem(statusMessage, 1); // <-- does not work :-(
 	fritz::FritzClient fc;
 	fc.InitCall(currentNumber);
-//	statusBar()->removeItem(1);
-//	statusBar()->showMessage(i18n("Done."), 5000);
+	//setProgressIndicator();
+}
+
+void KFritzWindow::setProgressIndicator(QString message) {
+	if (!message.length()) {
+		if (progressIndicator) {
+			statusBar()->removeWidget(progressIndicator);
+			delete progressIndicator;
+			progressIndicator = NULL;
+		}
+	}
+	else {
+		progressIndicator = new QWidget(statusBar());
+		new QHBoxLayout(progressIndicator);
+		QProgressBar *bar = new QProgressBar(progressIndicator);
+		bar->setMaximum(0);
+		bar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+		bar->resize(100, 0);
+		QLabel *label = new QLabel(message, progressIndicator);
+		label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+		progressIndicator->layout()->addWidget(label);
+		progressIndicator->layout()->addWidget(bar);
+		progressIndicator->layout()->setMargin(0);
+		statusBar()->insertPermanentWidget(1, progressIndicator);
+	}
 }

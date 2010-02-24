@@ -59,10 +59,12 @@ private:
 	KNotification *notification;
 	QAdaptTreeView *treeCallList;
 	QIndicate::Indicator *missedCallsIndicator;
+	QWidget *progressIndicator;
 	void saveToWallet(KWallet::Wallet *wallet);
 	bool showPasswordDialog(QString &password, bool offerSaving = false);
 	void setupActions();
     void initIndicator();
+    void setProgressIndicator(QString message = QString());
     virtual bool queryClose();
 Q_SIGNALS:
 	void signalNotification(QString event, QString qMessage, bool persistent);
@@ -71,7 +73,7 @@ private Q_SLOTS:
 	void notificationClosed();
 public  Q_SLOTS:
     void updateMissedCallsIndicator();
-    void updateStatusbar(bool b);
+    void showStatusbarBoxBusy(bool b);
     void updateMainWidgets(bool b);
     void find();
     void findNext();
