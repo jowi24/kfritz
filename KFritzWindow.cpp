@@ -429,7 +429,7 @@ void KFritzWindow::dialNumber() {
 	if (currentView)
 		currentNumber = currentView->currentNumber();
 	if (currentNumber.length() == 0) {
-		KMessageBox::sorry(this, i18n("Can not dial without a number.\nPlease select an entry in a phone book or the call history which contains a number or name and try again."), i18n("Dialing not possible"));
+		KMessageBox::sorry(this, i18n("Can not dial without a number.\nSelect an entry in a phone book or the call history which contains a number or name and try again."), i18n("Dialing not possible"));
 		return;
 	}
 	//setProgressIndicator(i18n("Dialing %1", currentNumber.c_str())); //TODO: doesn't work yet (dialNumber blocks GUI thread)
@@ -448,7 +448,7 @@ void KFritzWindow::reconnectISP() {
 
 void KFritzWindow::getIP() {
 	fritz::FritzClient fc;
-	KMessageBox::information(this, i18n("Curent IP is: %1", fc.getCurrentIP().c_str()));
+	KMessageBox::information(this, i18n("Current IP is: %1", fc.getCurrentIP().c_str()));
 }
 
 void KFritzWindow::setProgressIndicator(QString message) {

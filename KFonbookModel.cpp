@@ -45,23 +45,32 @@ int KFonbookModel::rowCount(const QModelIndex & parent) const
 int KFonbookModel::columnCount(const QModelIndex & parent __attribute__((unused))) const
 {
 	// number of columns is independent of parent, ignoring parameter
-	return 3;
+	return 6;
 }
 
 QVariant KFonbookModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
 	if (role != Qt::DisplayRole)
 		return QVariant();
-	if (orientation == Qt::Horizontal){
+	if (orientation == Qt::Horizontal) {
 		switch (section){
-		case 0:
+		case fritz::FonbookEntry::ELEM_NAME:
 			return i18n("Name");
 			break;
-		case 1:
-			return  i18n("Type");
+		case fritz::FonbookEntry::ELEM_TYPE:
+			return i18n("Type");
 			break;
-		case 2:
-			return  i18n("Number");
+		case fritz::FonbookEntry::ELEM_NUMBER:
+			return i18n("Number");
+			break;
+		case fritz::FonbookEntry::ELEM_QUICKDIAL:
+			return i18n("Quickdial");
+			break;
+		case fritz::FonbookEntry::ELEM_VANITY:
+			return i18n("Vanity");
+			break;
+		case fritz::FonbookEntry::ELEM_IMPORTANT:
+			return i18n("Important");
 			break;
 		default:
 			return QVariant();
@@ -78,14 +87,23 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const{
 
 	fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
 	switch (index.column()) {
-	case 0:
+	case fritz::FonbookEntry::ELEM_NAME:
 		return QVariant(toLocalEncoding(fe->getName()));
 		break;
-	case 1:
+	case fritz::FonbookEntry::ELEM_TYPE:
 		return QVariant(getTypeName(fe->getType()));
 		break;
-	case 2:
+	case fritz::FonbookEntry::ELEM_NUMBER:
 		return QVariant(toLocalEncoding(fe->getNumber()));
+		break;
+	case fritz::FonbookEntry::ELEM_QUICKDIAL:
+		return QVariant(toLocalEncoding(fe->getQuickdialFormatted()));
+		break;
+	case fritz::FonbookEntry::ELEM_VANITY:
+		return QVariant(toLocalEncoding(fe->getVanityFormatted()));
+		break;
+	case fritz::FonbookEntry::ELEM_IMPORTANT:
+		return QVariant(toLocalEncoding((fe->isImportant()) ? "X": "")); //TODO: make some fancy icon here :-P
 		break;
 	default:
 		return QVariant();

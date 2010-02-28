@@ -58,6 +58,7 @@ private:
 		std::string lang;                   			// webinterface language
 		std::string url;                    			// fritz!box url
 		int uiPort;						                // the port of the fritz box web interface
+		int upnpPort;									// the port of the UPNP server of the fritz box
 		int listenerPort;					            // the port of the fritz box call monitor
 		std::string password;               			// fritz!box web interface password
 		time_t lastRequestTime;                         // with eLoginType::SID: time of last request sent to fritz box
@@ -90,8 +91,9 @@ public:
 	 * Sets arbitrary ports for connections to the Fritz!Box's listener and webinterface.
 	 * @param the port to connect to the listener
 	 * @param the port to connect to the webinterface
+	 * @param the port to connect to the UPNP server
 	 */
-	void static SetupPorts ( size_t listener = 1012, size_t ui = 80 );
+	void static SetupPorts ( int listener, int ui, int upnp );
 	/**
 	 * Establishes MSN filtering.
 	 * An MsnFilter enables the library to only notify the application on
@@ -122,6 +124,7 @@ public:
 	std::string &getUrl( )                            { return mConfig.url; }
 	int getUiPort( )				                  { return mConfig.uiPort; }
 	int getListenerPort( )				              { return mConfig.listenerPort; }
+	int getUpnpPort( )                                { return mConfig.upnpPort; }
 	std::string &getPassword( )                       { return mConfig.password; }
 	eLoginType getLoginType( )                        { return mConfig.loginType; }
 	void setLoginType(eLoginType type)                { mConfig.loginType = type; }

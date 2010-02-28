@@ -32,6 +32,10 @@ class FritzFonbook : public pthread::PThread, public Fonbook {
 			friend class FonbookManager;
 private:
 	FritzFonbook();
+	void ParseHtmlFonbook(std::string *msg);
+	std::string ExtractXmlElementValue(std::string element, std::string xml);
+	std::string ExtractXmlAttributeValue(std::string element, std::string attribute, std::string xml);
+	void ParseXmlFonbook(std::string *msg);
 public:
 	~FritzFonbook();
 	bool Initialize();

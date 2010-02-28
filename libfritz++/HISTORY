@@ -161,4 +161,11 @@
 
 2010-02-25:
 - Implemented FritzClient::getCurrentIP and FritzClient::reconnectISP
+
+2010-02-28:
+- Fixed bug in FritzClient::reconnectISP
+- added config option for setting the UPNP port
+- now parsing the Fritz Box's phone book via xml export file (if available)
+- phone book entries now have the addtional fields "quickdial", "vanity", 
+  "priority", "important"
  

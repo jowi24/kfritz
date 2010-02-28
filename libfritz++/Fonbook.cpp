@@ -26,10 +26,15 @@
 
 namespace fritz{
 
-FonbookEntry::FonbookEntry(std::string name, std::string number, eType type) {
-	this->name   = name;
-	this->number = number;
-	this->type   = type;
+FonbookEntry::FonbookEntry(std::string name, std::string number, eType type, \
+	     bool important, std::string quickdial, std::string vanity, int priority) {
+	this->name      = name;
+	this->number    = number;
+	this->type      = type;
+	this->important = important;
+	this->quickdial = quickdial;
+	this->vanity    = vanity;
+	this->priority  = priority;
 }
 
 bool FonbookEntry::operator<(const FonbookEntry &fe) const {
@@ -58,6 +63,24 @@ public:
 			break;
 		case FonbookEntry::ELEM_NUMBER:
 			return (ascending ? (fe1.getNumber() < fe2.getNumber()) : (fe1.getNumber() > fe2.getNumber()));
+			break;
+		case FonbookEntry::ELEM_IMPORTANT:
+			return (ascending ? (fe1.isImportant() < fe2.isImportant()) : (fe1.isImportant() > fe2.isImportant()));
+			break;
+		case FonbookEntry::ELEM_QUICKDIAL: {
+			int qd1 = atoi(fe1.getQuickdial().c_str());
+			int qd2 = atoi(fe2.getQuickdial().c_str());
+			return (ascending ? (qd1 < qd2) : (qd1 > qd2));
+		}
+			break;
+		case FonbookEntry::ELEM_VANITY: {
+			int vt1 = atoi(fe1.getVanity().c_str());
+			int vt2 = atoi(fe2.getVanity().c_str());
+			return (ascending ? (vt1 < vt2) : (vt1 > vt2));
+		}
+			break;
+		case FonbookEntry::ELEM_PRIORITY:
+			return (ascending ? (fe1.getPriority() < fe2.getPriority()) : (fe1.getPriority() > fe2.getPriority()));
 			break;
 		default:
 			ERR("invalid element given for sorting.");

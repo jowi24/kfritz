@@ -45,16 +45,35 @@ public:
 		ELEM_NAME   = 0,
 		ELEM_TYPE   = 1,
 		ELEM_NUMBER = 2,
+		ELEM_IMPORTANT,
+		ELEM_QUICKDIAL,
+		ELEM_VANITY,
+		ELEM_PRIORITY
 	};
 private:
 	std::string name;
 	std::string number;
+	bool important;
+	std::string quickdial;
+	std::string vanity;
+	int priority;
 	eType type;
 public:
-	FonbookEntry(std::string name, std::string number, eType type = TYPE_NONE);
+	FonbookEntry(std::string name, std::string number, eType type = TYPE_NONE, \
+			     bool important = false, std::string quickdial = "", std::string vanity = "", int priority = 0);
 	std::string getName() const { return name; }
 	void setName(std::string name) { this->name = name; }
 	std::string getNumber() const { return number; }
+	bool isImportant() { return important; }
+	void setImportant(bool important) { this->important = important; }
+	std::string getQuickdial() { return quickdial; }
+	std::string getQuickdialFormatted() { return quickdial.length() ? "**7"+quickdial : ""; }
+	void setQuickdial(std::string quickdial) { this->quickdial = quickdial; }
+	std::string getVanity() { return vanity; }
+	std::string getVanityFormatted() { return vanity.length() ? "**8"+vanity : ""; }
+	void setVanity(std::string vanity) { this->vanity = vanity; }
+	int getPriority() { return priority; }
+	void setPrioriy(int priority) { this->priority = priority; }
 	eType getType() const { return type; }
 	void setType(eType type) { this->type = type; }
 	bool operator<(const FonbookEntry & fe) const;

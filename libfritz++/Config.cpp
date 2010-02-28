@@ -63,10 +63,11 @@ bool Config::Setup(std::string hostname, std::string password,
 	return validPassword;
 }
 
-void Config::SetupPorts ( size_t listener, size_t ui ) {
+void Config::SetupPorts ( int listener, int ui, int upnp ) {
 	if (gConfig) {
 		gConfig->mConfig.listenerPort = listener;
 		gConfig->mConfig.uiPort = ui;
+		gConfig->mConfig.upnpPort = upnp;
 	}
 }
 
@@ -95,6 +96,7 @@ Config::Config( std::string url, std::string password) {
 	mConfig.password     	= password;
 	mConfig.uiPort       	= 80;
 	mConfig.listenerPort    = 1012;
+	mConfig.upnpPort        = 49000;
 	mConfig.loginType       = UNKNOWN;
 	mConfig.lastRequestTime = 0;
 	CharSetConv::DetectCharset();

@@ -174,20 +174,33 @@ void FritzFonbook::Action() {
 	FritzClient fc;
 	std::string msg = fc.RequestFonbook();
 
-	size_t pos, p1, p2;
+	if (msg.find("<?xml") == std::string::npos)
+		ParseHtmlFonbook(&msg);
+	else
+		ParseXmlFonbook(&msg);
+
+	INF("read " << fonbookList.size() << " entries.");
+	setInitialized(true);
+
+	std::sort(fonbookList.begin(), fonbookList.end());
+}
+
+void FritzFonbook::ParseHtmlFonbook(std::string *msg) {
+	DBG("Parsing fonbook using html parser.")
 	// determine charset (default for old firmware versions is iso-8859-15)
+	size_t pos, p1, p2;
 	std::string charset = "ISO-8859-15";
-	pos = msg.find("<meta http-equiv=content-type");
+	pos = msg->find("<meta http-equiv=content-type");
 	if (pos != std::string::npos) {
-		pos = msg.find("charset=", pos);
+		pos = msg->find("charset=", pos);
 		if (pos != std::string::npos)
-			charset = msg.substr(pos+8, msg.find('"', pos)-pos-8);
+			charset = msg->substr(pos+8, msg->find('"', pos)-pos-8);
 	}
 	DBG("using charset " << charset);
 
 	CharSetConv *conv = new CharSetConv(charset.c_str(), CharSetConv::SystemCharacterTable());
-	const char *s_converted = conv->Convert(msg.c_str());
-	msg = s_converted;
+	const char *s_converted = conv->Convert(msg->c_str());
+	std::string msgConv = s_converted;
 	delete (conv);
 
 	// parse answer
@@ -195,17 +208,17 @@ void FritzFonbook::Action() {
 	int count = 0;
 	// parser for old format
 	const std::string tag("(TrFon(");
-	while ((p1 = msg.find(tag, pos)) != std::string::npos) {
+	while ((p1 = msgConv.find(tag, pos)) != std::string::npos) {
 		p1 += 7; // points to the first "
-		int nameStart     = msg.find(',', p1)          +3;
-		int nameStop      = msg.find('"', nameStart)   -1;
-		int numberStart   = msg.find(',', nameStop)    +3;
-		int numberStop    = msg.find('"', numberStart) -1;
-		if (msg[nameStart] == '!') // skip '!' char, older firmware versions use to mark VIPs
+		int nameStart     = msgConv.find(',', p1)          +3;
+		int nameStop      = msgConv.find('"', nameStart)   -1;
+		int numberStart   = msgConv.find(',', nameStop)    +3;
+		int numberStop    = msgConv.find('"', numberStart) -1;
+		if (msgConv[nameStart] == '!') // skip '!' char, older firmware versions use to mark VIPs
 			nameStart++;
-		std::string namePart = msg.substr(nameStart, nameStop - nameStart+1);
+		std::string namePart = msgConv.substr(nameStart, nameStop - nameStart+1);
 		std::string namePart2 = convertEntities(namePart);
-		std::string numberPart = msg.substr(numberStart, numberStop - numberStart+1);
+		std::string numberPart = msgConv.substr(numberStart, numberStop - numberStart+1);
 		if (namePart2.length() && numberPart.length()) {
 			FonbookEntry fe(namePart2, numberPart, FonbookEntry::TYPE_NONE);
 			fonbookList.push_back(fe);
@@ -218,20 +231,20 @@ void FritzFonbook::Action() {
 	pos = 0;
 	const std::string tag2("TrFonName(");
 	const std::string tag3("TrFonNr("	);
-	while ((p2 = msg.find(tag3, pos)) != std::string::npos) {
+	while ((p2 = msgConv.find(tag3, pos)) != std::string::npos) {
 		int typeStart     = p2 + 9;
-		int numberStart   = msg.find(',', p2)    +3;
+		int numberStart   = msgConv.find(',', p2)    +3;
 		int typeStop      = numberStart - 5;
-		int numberStop    = msg.find('"', numberStart) -1;
-		p1 = msg.rfind(tag2, p2);
+		int numberStop    = msgConv.find('"', numberStart) -1;
+		p1 = msgConv.rfind(tag2, p2);
 		p1 += 7; // points to the first "
-		int nameStart     = msg.find(',', p1)          +3;
-		int nameStop      = msg.find('"', nameStart)   -1;
-		std::string namePart   = msg.substr(nameStart, nameStop - nameStart+1);
+		int nameStart     = msgConv.find(',', p1)          +3;
+		int nameStop      = msgConv.find('"', nameStart)   -1;
+		std::string namePart   = msgConv.substr(nameStart, nameStop - nameStart+1);
 		std::string namePart2  = convertEntities(namePart);
-		std::string numberPart = msg.substr(numberStart, numberStop - numberStart+1);
+		std::string numberPart = msgConv.substr(numberStart, numberStop - numberStart+1);
 
-		std::string typePart   = msg.substr(typeStart, typeStop - typeStart+1);
+		std::string typePart   = msgConv.substr(typeStart, typeStop - typeStart+1);
 		FonbookEntry::eType type = FonbookEntry::TYPE_NONE;
 		if      (typePart.compare("home") == 0)
 			type = FonbookEntry::TYPE_HOME;
@@ -248,10 +261,82 @@ void FritzFonbook::Action() {
 		pos = p2+10;
 		count++;
 	}
-	INF("read " << count << " entries.");
-	setInitialized(true);
+}
 
-	std::sort(fonbookList.begin(), fonbookList.end());
+std::string FritzFonbook::ExtractXmlAttributeValue(std::string element, std::string attribute, std::string xml) {
+	size_t posStart = xml.find("<"+element);
+	if (posStart != std::string::npos) {
+		posStart = xml.find(attribute+"=\"", posStart);
+		if (posStart != std::string::npos) {
+			size_t posEnd = xml.find("\"", posStart + attribute.length() + 2);
+			if (posEnd != std::string::npos)
+				return xml.substr(posStart + attribute.length() + 2, posEnd - posStart - attribute.length() - 2);
+		}
+	}
+	return "";
+}
+
+std::string FritzFonbook::ExtractXmlElementValue(std::string element, std::string xml) {
+	size_t posStart = xml.find("<"+element);
+	if (posStart != std::string::npos) {
+		posStart = xml.find(">", posStart);
+		size_t posEnd   = xml.find("</"+element+">");
+		if (posEnd != std::string::npos)
+			return xml.substr(posStart + 1, posEnd - posStart - 1);
+	}
+	return "";
+}
+
+void FritzFonbook::ParseXmlFonbook(std::string *msg) {
+	DBG("Parsing fonbook using xml parser.")
+	// determine charset
+	size_t pos, posStart, posEnd;
+	std::string charset = "ISO-8859-15";
+	posStart = msg->find("encoding=\"");
+	if (posStart != std::string::npos) {
+		posEnd = msg->find("\"", posStart + 10);
+		if (posEnd != std::string::npos)
+			charset = msg->substr(posStart + 10, posEnd - posStart - 10);
+	}
+	DBG("using charset " << charset);
+
+	CharSetConv *conv = new CharSetConv(charset.c_str(), CharSetConv::SystemCharacterTable());
+	const char *s_converted = conv->Convert(msg->c_str());
+	std::string msgConv = s_converted;
+	delete (conv);
+
+	pos = msgConv.find("<contact>");
+	while (pos != std::string::npos) {
+		std::string msgPart = msgConv.substr(pos, msgConv.find("</contact>", pos) - pos + 10);
+		std::string category = ExtractXmlElementValue("category", msgPart);
+		std::string name     = ExtractXmlElementValue("realName", msgPart);
+		size_t posNumber = msgPart.find("<number");
+		while (posNumber != std::string::npos) {
+			std::string msgPartofPart = msgPart.substr(posNumber, msgPart.find("</number>", posNumber) - posNumber + 9);
+			std::string number    = ExtractXmlElementValue  ("number",              msgPartofPart);
+			std::string typeStr   = ExtractXmlAttributeValue("number", "type",      msgPartofPart);
+			std::string quickdial = ExtractXmlAttributeValue("number", "quickdial", msgPartofPart);
+			std::string vanity    = ExtractXmlAttributeValue("number", "vanity",    msgPartofPart);
+			std::string prio      = ExtractXmlAttributeValue("number", "prio",      msgPartofPart);
+
+			if (number.size()) { // the xml may contain entries without a number!
+				FonbookEntry::eType type = FonbookEntry::TYPE_NONE;
+				if (typeStr == "home")
+					type = FonbookEntry::TYPE_HOME;
+				if (typeStr == "mobile")
+					type = FonbookEntry::TYPE_MOBILE;
+				if (typeStr == "work")
+					type = FonbookEntry::TYPE_WORK;
+
+				FonbookEntry fe(name, number, type, \
+						        (category == "1") ? true : false, quickdial, vanity, atoi(prio.c_str()));
+				fonbookList.push_back(fe);
+			}
+			posNumber = msgPart.find("<number", posNumber+1);
+		}
+
+		pos = msgConv.find("<contact>", pos+1);
+	}
 }
 
 void FritzFonbook::Reload() {

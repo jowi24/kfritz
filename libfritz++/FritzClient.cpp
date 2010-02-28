@@ -376,6 +376,33 @@ std::string FritzClient::RequestFonbook () {
 			<< std::flush;
 		tc >> msg;
 	} RETRY_END
+
+	// detect if xml export of fonbook is possible
+	if (msg.find("uiPostExportForm") != std::string::npos) {
+		RETRY_BEGIN {
+			tcpclient::HttpClient tc(gConfig->getUrl(), gConfig->getUiPort());
+			tc << tcpclient::post
+			   << "/cgi-bin/firmwarecfg"
+			   << "\nContent-Type: multipart/form-data; boundary=---------------------------177066101417337771721481521429"
+			   << std::flush
+			   << "-----------------------------177066101417337771721481521429\n"
+                  "Content-Disposition: form-data; name=\"sid\"\n\n"
+               << gConfig->getSid() << "\n"
+			   << "-----------------------------177066101417337771721481521429\n"
+			      "Content-Disposition: form-data; name=\"PhonebookId\"\n\n"
+			      "0\n"
+			      "-----------------------------177066101417337771721481521429\n"
+			      "Content-Disposition: form-data; name=\"PhonebookExportName\"\n\n"
+			      "Telefonbuch\n"
+			      "-----------------------------177066101417337771721481521429\n"
+			      "Content-Disposition: form-data; name=\"PhonebookExport\"\n\n"
+			      "\n"
+			      "-----------------------------177066101417337771721481521429--\n"
+			   << std::flush;
+			tc >> msg;
+		} RETRY_END
+	}
+
 	return msg;
 }
 
@@ -383,7 +410,7 @@ std::string FritzClient::RequestFonbook () {
 bool FritzClient::reconnectISP() {
 	std::string msg;
 	DBG("Sending reconnect request to FB.");
-	tcpclient::HttpClient tc(gConfig->getUrl(), gConfig->getUiPort());
+	tcpclient::HttpClient tc(gConfig->getUrl(), gConfig->getUpnpPort());
 	tc  << tcpclient::post
 	    << "/upnp/control/WANIPConn1"
 	    << "\nSoapAction: urn:schemas-upnp-org:service:WANIPConnection:1#ForceTermination"
@@ -397,14 +424,16 @@ bool FritzClient::reconnectISP() {
            "</s:Envelope>"
 	    << std::flush;
 	tc >> msg;
-	//TODO: return on error?
-	return true;
+	if (msg.find("ForceTerminationResponse") == std::string::npos)
+		return false;
+	else
+		return true;
 }
 
 std::string FritzClient::getCurrentIP() {
 	std::string msg;
 	DBG("Sending reconnect request to FB.");
-	tcpclient::HttpClient tc(gConfig->getUrl(), 49000);
+	tcpclient::HttpClient tc(gConfig->getUrl(), gConfig->getUpnpPort());
 	tc  << tcpclient::post
 		<< "/upnp/control/WANIPConn1"
 		<< "\nSoapAction: urn:schemas-upnp-org:service:WANIPConnection:1#GetExternalIPAddress"
@@ -428,7 +457,7 @@ std::string FritzClient::getCurrentIP() {
 	} else {
 		ERR("Error parsing response in getCurrentIP().");
 	}
-	return "";
+	return I18N_NOOP("unknown");
 }
 
 //TODO: update lastRequestTime with any request

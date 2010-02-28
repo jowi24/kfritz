@@ -168,3 +168,9 @@
   * Implemented FritzClient::getCurrentIP and FritzClient::reconnectISP
 - Added menu entries for getting IP and reconnecting to ISP
 
+2010-02-28:
+- Adapted to changes in libfritz++
+  * phone book entries now have the addtional fields "quickdial", "vanity", 
+    "priority", "important"
+- Added new columns to Fritz Box's phone book view 
+

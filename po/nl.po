@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-02-25 21:07+0100\n"
+"POT-Creation-Date: 2010-02-28 17:06+0100\n"
 "PO-Revision-Date: 2010-02-18 14:56+0100\n"
 "Last-Translator: Richard Bos <ml@radoeka.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
@@ -29,6 +29,7 @@ msgid "Missed call"
 msgstr "Gemist gesprek"
 
 #: KCalllistModel.cpp:56 KFritzWindow.cpp:143 libfritz++/CallList.cpp:169
+#: libfritz++/FritzClient.cpp:460
 msgid "unknown"
 msgstr "onbekend"
 
@@ -60,15 +61,27 @@ msgstr "Naam"
 msgid "Number"
 msgstr "Nummer"
 
-#: KFonbookModel.cpp:99
+#: KFonbookModel.cpp:67
+msgid "Quickdial"
+msgstr ""
+
+#: KFonbookModel.cpp:70
+msgid "Vanity"
+msgstr ""
+
+#: KFonbookModel.cpp:73
+msgid "Important"
+msgstr ""
+
+#: KFonbookModel.cpp:117
 msgid "Home"
 msgstr "Thuis"
 
-#: KFonbookModel.cpp:101
+#: KFonbookModel.cpp:119
 msgid "Mobile"
 msgstr "GSM"
 
-#: KFonbookModel.cpp:103
+#: KFonbookModel.cpp:121
 msgid "Work"
 msgstr "Werk"
 
@@ -159,7 +172,7 @@ msgstr "Gespreksgeschiedenis"
 #: KFritzWindow.cpp:432
 msgid ""
 "Can not dial without a number.\n"
-"Please select an entry in a phone book or the call history which contains a number or name and try again."
+"Select an entry in a phone book or the call history which contains a number or name and try again."
 msgstr ""
 
 #: KFritzWindow.cpp:432
@@ -175,7 +188,7 @@ msgid "Reconnect successfully initiated."
 msgstr ""
 
 #: KFritzWindow.cpp:451
-msgid "Curent IP is: %1"
+msgid "Current IP is: %1"
 msgstr ""
 
 #: LogDialog.cpp:33
@@ -234,9 +247,9 @@ msgstr "nummerzoeker.com"
 msgid "das-oertliche.de"
 msgstr "das-oertliche.de"
 
-#, fuzzy
-#~ msgid "Done."
+#~ msgid "Done"
 #~ msgstr "Gedaan"
 
-#~ msgid "Done"
+#, fuzzy
+#~ msgid "Done."
 #~ msgstr "Gedaan"

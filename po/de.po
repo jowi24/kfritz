@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-02-25 20:35+0100\n"
+"POT-Creation-Date: 2010-02-28 16:52+0100\n"
 "PO-Revision-Date: 2010-02-02 21:04+0100\n"
 "Last-Translator: Joachim Wilke <kfritz@joachim-wilke.de>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
@@ -29,6 +29,7 @@ msgid "Missed call"
 msgstr "Verpasster Anruf"
 
 #: KCalllistModel.cpp:56 KFritzWindow.cpp:143 libfritz++/CallList.cpp:169
+#: libfritz++/FritzClient.cpp:460
 msgid "unknown"
 msgstr "unbekannt"
 
@@ -60,15 +61,27 @@ msgstr "Name"
 msgid "Number"
 msgstr "Nummer"
 
-#: KFonbookModel.cpp:99
+#: KFonbookModel.cpp:67
+msgid "Quickdial"
+msgstr "Kurzwahl"
+
+#: KFonbookModel.cpp:70
+msgid "Vanity"
+msgstr "Vanity"
+
+#: KFonbookModel.cpp:73
+msgid "Important"
+msgstr "Wichtig"
+
+#: KFonbookModel.cpp:117
 msgid "Home"
 msgstr "Privat"
 
-#: KFonbookModel.cpp:101
+#: KFonbookModel.cpp:119
 msgid "Mobile"
 msgstr "Handy"
 
-#: KFonbookModel.cpp:103
+#: KFonbookModel.cpp:121
 msgid "Work"
 msgstr "Büro"
 
@@ -159,24 +172,26 @@ msgstr "Anrufliste"
 #: KFritzWindow.cpp:432
 msgid ""
 "Can not dial without a number.\n"
-"Please select an entry in a phone book or the call history which contains a number or name and try again."
+"Select an entry in a phone book or the call history which contains a number or name and try again."
 msgstr ""
+"Wählen ohne Nummer nicht möglich.\n"
+"Wählen sie einen Anruflisten- oder Telefonbucheintrag aus, der eine Telefonnummer enthält. Versuchen sie es danach erneut."
 
 #: KFritzWindow.cpp:432
 msgid "Dialing not possible"
-msgstr ""
+msgstr "Wählen nicht möglich"
 
 #: KFritzWindow.cpp:440
 msgid "Dialing initiated, pick up your phone now."
-msgstr ""
+msgstr "Wähle - Telefon jetzt abnehmen."
 
 #: KFritzWindow.cpp:446
 msgid "Reconnect successfully initiated."
-msgstr ""
+msgstr "Verbindung wird neu aufgebaut"
 
 #: KFritzWindow.cpp:451
-msgid "Curent IP is: %1"
-msgstr ""
+msgid "Current IP is: %1"
+msgstr "Aktuelle IP Adresse: %1"
 
 #: LogDialog.cpp:33
 msgid "Log"

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 project (KFRITZ)
 
 #set(CMAKE_VERBOSE_MAKEFILE true) # <-- enable for debugging
-#set(CMAKE_BUILD_TYPE "Debug")    # <-- enable for debugging 
+set(CMAKE_BUILD_TYPE "Debug")    # <-- enable for debugging 
 set(CMAKE_SKIP_RPATH TRUE)
 set(CMAKE_MODULE_PATH "${KFRITZ_SOURCE_DIR}/CMakeModules")
 
