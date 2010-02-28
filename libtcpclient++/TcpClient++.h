@@ -93,9 +93,13 @@ public:
 	}
 };
 
+/*
+ * TcpClientBuf - Buffer class of TcpClient (for internal use)
+ */
 class TcpClientBuf : public std::streambuf {
 private:
 	bool connected;
+	bool disconnectRequested;
 	pthread::Mutex mutex;
 	int fd;
 	void Write(std::string &s);
@@ -117,16 +121,34 @@ public:
 	void Disconnect();
 };
 
+/*
+ * TcpClient - A C++ abstraction of C tcp socket access
+ *
+ * Thread-Safety: TcpClient is reentrant, but not thread-safe. Only deleting a TcpClient object
+ * out of another thread is possible
+ *
+ * Example usage:
+ *   tcpclient::TcpClient tc("smtp.example.com", 25);
+ *   std::string msg;
+ *   tc << "HELO me" << std::flush;
+ *   tc >> msg;
+ *   //msg now contains something like "250 smtp.example.com Hello x.dip0.t-ipconnect.de [87.177.149.x]"
+ */
 class TcpClient : public std::iostream {
 public:
 	TcpClient(std::string hostname, int port) throw(tcpclient::TcpException)
 	: std::iostream(new TcpClientBuf(hostname, port)) {}
 	TcpClient(TcpClientBuf *buf)
 	: std::iostream(buf) {}
+	// Deleting a TcpClient out of another thread is possible,
+	// even while a Read or Write operation is in progress
 	virtual ~TcpClient();
 	std::iostream& operator>> (std::string &s);
 };
 
+/*
+ * HttpClientBuf - Buffer class of TcpClient (for internal use)
+ */
 class HttpClientBuf : public TcpClientBuf {
 public:
 	enum eState {
@@ -147,6 +169,14 @@ protected:
 	int	sync();
 };
 
+/*
+ * HttpClient - A C++ abstraction of C tcp sockets for HTTP request
+ *
+ * Example usage:
+ *   tcpclient::HttpClient hc("www.example.com");
+ *   hc << tcpclient::get << "/index.htm" << std::flush;
+ *   hc << tcpclient::post << "/submit.php" << std::flush << "user=me&passwd=secret" << std::flush;
+ */
 class HttpClient : public TcpClient {
 public:
 	HttpClient(std::string hostname, int port = 80)

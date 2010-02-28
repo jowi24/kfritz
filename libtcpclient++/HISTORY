@@ -24,11 +24,15 @@
 2010-01-18
 - Simplified second constructor of TcpClient to TcpClient(TcpClientBuf *buf), dropping 
   hostname and port. Adapted HttpClient.
-
+  
 2010-01-27
 - Fixed missing initialization of HttpClientBuf::state
 - Improved thread safety in TcpClient: 
   deleting TcpClient while reading from stream in another thread caused memory corruption
-  
+
 2010-02-25
 - Added possibility to set custom Content-Type header in http::post
+
+2010-02-28
+- Fixed a possible issue with "thread-safety" of TcpClient, a TcpClient object can now 
+  be deleted out of another thread while running

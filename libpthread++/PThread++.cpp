@@ -39,7 +39,9 @@
 #include <unistd.h>
 
 #define NAMESPACE "libpthread++"
-#define LOCATOR "[" << NAMESPACE << std::string(__FILE__, std::string(__FILE__).rfind('/'), std::string::npos) \
+#define LOCATOR "[" << NAMESPACE << "/" <<  \
+                std::string(__FILE__, std::string(__FILE__).rfind('/') == std::string::npos ? \
+                		          0 : std::string(__FILE__).rfind('/')+1, std::string::npos ) \
                 << ":" << __LINE__ << "] "
 #define DBG(x) *dsyslog << LOCATOR << x << std::endl;
 #define INF(x) *isyslog << LOCATOR << x << std::endl;

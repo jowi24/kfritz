@@ -114,21 +114,18 @@ TcpClientBuf::TcpClientBuf(std::string hostname, int port) throw(tcpclient::TcpE
 	// init controlled input sequence to have no data available
 	setg(0, 0, 0);
 
-	connected      = false;
-	this->hostname = hostname;
-	this->port     = port;
-	fd             = -1;
+	connected           = false;
+	disconnectRequested = false;
+	this->hostname      = hostname;
+	this->port          = port;
+	fd                  = -1;
 
 	Connect();
 }
 
 TcpClientBuf::~TcpClientBuf() {
-	Disconnect();
+	disconnectRequested = true;
 	mutex.Lock(); // proceed only when any activity is done
-}
-
-TcpClient::~TcpClient() {
-	delete ((TcpClientBuf *)rdbuf());
 }
 
 void TcpClientBuf::Connect() {
@@ -216,18 +213,20 @@ bool TcpClientBuf::Receive() {
 		fds[0].events = POLLIN | POLLPRI;
 		poll(&(fds[0]), 1, 500);
 		size = recv(fd, inputBuffer, BUF_SIZE, 0);
-	} while (size == -1 && errno == EAGAIN);
-	if (size <= 0) 	{
+	} while (size == -1 && errno == EAGAIN && disconnectRequested == false);
+	if (disconnectRequested)
+		Disconnect();
+	if (size <= 0 || connected == false) 	{
 		// connection was closed
 		setg(0, 0, 0);
 		connected = false;
 		if (fd >= 0)
 			close(fd);
 		mutex.Unlock();
-		if (size == -1) {
+//		if (size == -1) {
 			// there occurred an error
-			throw TcpException(TcpException::ERR_SOCKET_ERROR);
-		}
+//			throw TcpException(TcpException::ERR_SOCKET_ERROR);
+//		}
 		return false;
 	}
 	setg(inputBuffer, inputBuffer, inputBuffer + size);
@@ -281,6 +280,11 @@ int TcpClientBuf::overflow(int c) {
 int TcpClientBuf::sync() {
 	PutBuffer();
 	return 0;
+}
+
+
+TcpClient::~TcpClient() {
+	delete ((TcpClientBuf *)rdbuf());
 }
 
 std::iostream& TcpClient::operator>> (std::string &s) {
