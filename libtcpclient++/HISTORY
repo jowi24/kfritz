@@ -30,4 +30,5 @@
 - Improved thread safety in TcpClient: 
   deleting TcpClient while reading from stream in another thread caused memory corruption
   
-  
+2010-02-25
+- Added possibility to set custom Content-Type header in http::post

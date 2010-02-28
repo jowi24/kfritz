@@ -138,6 +138,7 @@ public:
 	};
 private:
 	eState state;
+	bool addContentType;
 	char internalBuffer[BUF_SIZE];
 public:
 	HttpClientBuf(std::string hostname, int port);

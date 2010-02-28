@@ -343,6 +343,10 @@ int HttpClientBuf::sync() {
 		result << "POST "  << postUrl  << " HTTP/1.0\n"
 		       << "Host: " << hostname
 		       << header; // only one \n, more header fields to come below
+		if (header.find("Content-Type:") != std::string::npos)
+			addContentType = false;
+		else
+			addContentType = true;
 		sputn(result.str().c_str(), result.str().size());
 		PutBuffer();
 		SetState(POSTDATA);
@@ -351,7 +355,7 @@ int HttpClientBuf::sync() {
 	case POSTDATA: {
 		SetState(PLAIN);
 		std::stringstream result;
-		result << "Content-Type: application/x-www-form-urlencoded\n"
+		result << (addContentType ? "Content-Type: application/x-www-form-urlencoded\n" : "")
 		       << "Content-Length: " << buffer.length() << "\n\n"
 		       << buffer << std::endl;
 		sputn(result.str().c_str(), result.str().size());
