@@ -379,5 +379,57 @@ std::string FritzClient::RequestFonbook () {
 	return msg;
 }
 
+
+bool FritzClient::reconnectISP() {
+	std::string msg;
+	DBG("Sending reconnect request to FB.");
+	tcpclient::HttpClient tc(gConfig->getUrl(), gConfig->getUiPort());
+	tc  << tcpclient::post
+	    << "/upnp/control/WANIPConn1"
+	    << "\nSoapAction: urn:schemas-upnp-org:service:WANIPConnection:1#ForceTermination"
+	    << "\nContent-Type: text/xml"
+	    << std::flush
+	    << "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+           "<s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+		   "<s:Body>"
+           "<u:ForceTermination xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\" />"
+           "</s:Body>"
+           "</s:Envelope>"
+	    << std::flush;
+	tc >> msg;
+	//TODO: return on error?
+	return true;
+}
+
+std::string FritzClient::getCurrentIP() {
+	std::string msg;
+	DBG("Sending reconnect request to FB.");
+	tcpclient::HttpClient tc(gConfig->getUrl(), 49000);
+	tc  << tcpclient::post
+		<< "/upnp/control/WANIPConn1"
+		<< "\nSoapAction: urn:schemas-upnp-org:service:WANIPConnection:1#GetExternalIPAddress"
+		<< "\nContent-Type: text/xml"
+		<< std::flush
+		<< "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+		   "<s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+		   "<s:Body>"
+		   "<u:GetExternalIPAddress xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\" />"
+		   "</s:Body>"
+		   "</s:Envelope>"
+		<< std::flush;
+	tc >> msg;
+	DBG("Parsing reply...");
+	std::string::size_type start = msg.find("<NewExternalIPAddress>");
+	std::string::size_type stop = msg.find("</NewExternalIPAddress>");
+	if (start != std::string::npos && stop != std::string::npos) {
+		std::string ip = msg.substr(start + 22, stop - start - 22);
+		DBG("Current ip is: " << ip);
+		return ip;
+	} else {
+		ERR("Error parsing response in getCurrentIP().");
+	}
+	return "";
+}
+
 //TODO: update lastRequestTime with any request
 }

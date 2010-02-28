@@ -46,6 +46,8 @@ public:
 	std::string RequestCallList();
 	std::string RequestFonbook();
 	bool hasValidPassword() { return validPassword; }
+	bool reconnectISP();
+	std::string getCurrentIP();
 };
 
 }
