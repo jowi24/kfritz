@@ -93,6 +93,8 @@ public Q_SLOTS:
 	void showMissedCalls(QIndicate::Indicator* indicator);
 	void showLog();
     void dialNumber();
+    void reconnectISP();
+    void getIP();
 };
 
 #endif /*KFRITZBOXWINDOW_H_*/

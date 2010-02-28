@@ -259,6 +259,18 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("dialNumber", aDialNumber);
 	connect(aDialNumber, SIGNAL(triggered(bool)), this, SLOT(dialNumber()));
 
+	KAction *aReconnectISP = new KAction(this);
+	aReconnectISP->setText(i18n("Reconnect to internet"));
+	aReconnectISP->setIcon(KIcon("network-workgroup"));
+	actionCollection()->addAction("reconnectISP", aReconnectISP);
+	connect(aReconnectISP, SIGNAL(triggered(bool)), this, SLOT(reconnectISP()));
+
+	KAction *aGetIP = new KAction(this);
+	aGetIP->setText(i18n("Get current IP address"));
+	aGetIP->setIcon(KIcon("network-server"));
+	actionCollection()->addAction("getIP", aGetIP);
+	connect(aGetIP, SIGNAL(triggered(bool)), this, SLOT(getIP()));
+
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
 //TODO: add "find" action
@@ -425,6 +437,18 @@ void KFritzWindow::dialNumber() {
 	fritz::FritzClient fc;
 	fc.InitCall(currentNumber);
 	//setProgressIndicator();
+	KMessageBox::information(this, i18n("Dialing initiated, pick up your phone now."));
+}
+
+void KFritzWindow::reconnectISP() {
+	fritz::FritzClient fc;
+	fc.reconnectISP();
+	KMessageBox::information(this, i18n("Reconnect successfully initiated."));
+}
+
+void KFritzWindow::getIP() {
+	fritz::FritzClient fc;
+	KMessageBox::information(this, i18n("Curent IP is: %1", fc.getCurrentIP().c_str()));
 }
 
 void KFritzWindow::setProgressIndicator(QString message) {

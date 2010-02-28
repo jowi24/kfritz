@@ -163,3 +163,8 @@
   
 --> Release 0.0.4
   
+2010-02-25:
+- Changes in libfritz++
+  * Implemented FritzClient::getCurrentIP and FritzClient::reconnectISP
+- Added menu entries for getting IP and reconnecting to ISP
+

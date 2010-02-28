@@ -5,10 +5,14 @@
 	xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0 http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
   <ToolBar name="mainToolBar" >
   	<Action name="dialNumber"/>
+  	<Action name="reconnectISP"/>
+  	<Action name="getIP"/>
   </ToolBar>
   <MenuBar>
     <Menu name="tools">
       <Action name="dialNumber"/>
+      <Action name="reconnectISP"/>
+      <Action name="getIP"/>
     </Menu>
     <Menu name="settings">
       <Action name="showNotifySettings" append="configure_merge"/>

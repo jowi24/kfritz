@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-02-24 19:33+0100\n"
+"POT-Creation-Date: 2010-02-25 21:07+0100\n"
 "PO-Revision-Date: 2010-02-18 14:56+0100\n"
 "Last-Translator: Richard Bos <ml@radoeka.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
@@ -136,26 +136,46 @@ msgstr "Laat de log zien"
 msgid "Dial number"
 msgstr ""
 
-#: KFritzWindow.cpp:283
+#: KFritzWindow.cpp:263
+msgid "Reconnect to internet"
+msgstr ""
+
+#: KFritzWindow.cpp:269
+msgid "Get current IP address"
+msgstr ""
+
+#: KFritzWindow.cpp:295
 msgid "Missed calls"
 msgstr "Gemiste gesprekken"
 
-#: KFritzWindow.cpp:317
+#: KFritzWindow.cpp:329
 msgid "Retrieving data from Fritz!Box..."
 msgstr "Informatie ophalen van de Fritz!Box..."
 
-#: KFritzWindow.cpp:351
+#: KFritzWindow.cpp:363
 msgid "Call history"
 msgstr "Gespreksgeschiedenis"
 
-#: KFritzWindow.cpp:420
+#: KFritzWindow.cpp:432
 msgid ""
 "Can not dial without a number.\n"
 "Please select an entry in a phone book or the call history which contains a number or name and try again."
 msgstr ""
 
-#: KFritzWindow.cpp:420
+#: KFritzWindow.cpp:432
 msgid "Dialing not possible"
+msgstr ""
+
+#: KFritzWindow.cpp:440
+msgid "Dialing initiated, pick up your phone now."
+msgstr ""
+
+#: KFritzWindow.cpp:446
+msgid "Reconnect successfully initiated."
+msgstr ""
+
+#: KFritzWindow.cpp:451
+msgid "Curent IP is: %1"
 msgstr ""
 
 #: LogDialog.cpp:33
@@ -214,9 +234,9 @@ msgstr "nummerzoeker.com"
 msgid "das-oertliche.de"
 msgstr "das-oertliche.de"
 
-#~ msgid "Done"
-#~ msgstr "Gedaan"
-
 #, fuzzy
 #~ msgid "Done."
+#~ msgstr "Gedaan"
+
+#~ msgid "Done"
 #~ msgstr "Gedaan"
