@@ -172,5 +172,10 @@
 - Adapted to changes in libfritz++
   * phone book entries now have the addtional fields "quickdial", "vanity", 
     "priority", "important"
+  * Fixed decoding of entities in xml phone book parser   
 - Added new columns to Fritz Box's phone book view 
+
+2010-03-02:
+- Moved ${GCRYPT_LIBRARIES} in CMakeLists.txt to support linking with 
+  --as-needed (suggested by Richard Bos)
 
