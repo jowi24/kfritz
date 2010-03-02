@@ -131,7 +131,7 @@ const char *Entities[97][2] = {
 	{"&amp;",   "&"},
 };
 
-std::string &convertEntities(std::string &s) {
+std::string convertEntities(std::string s) {
 	if (s.find("&") != std::string::npos) {
 		// convert the entities from iso-8859-15 to current system character table
 		CharSetConv *conv = new CharSetConv("ISO-8859-15", CharSetConv::SystemCharacterTable());
@@ -309,7 +309,7 @@ void FritzFonbook::ParseXmlFonbook(std::string *msg) {
 	while (pos != std::string::npos) {
 		std::string msgPart = msgConv.substr(pos, msgConv.find("</contact>", pos) - pos + 10);
 		std::string category = ExtractXmlElementValue("category", msgPart);
-		std::string name     = ExtractXmlElementValue("realName", msgPart);
+		std::string name     = convertEntities(ExtractXmlElementValue("realName", msgPart));
 		size_t posNumber = msgPart.find("<number");
 		while (posNumber != std::string::npos) {
 			std::string msgPartofPart = msgPart.substr(posNumber, msgPart.find("</number>", posNumber) - posNumber + 9);

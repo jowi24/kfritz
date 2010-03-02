@@ -168,4 +168,6 @@
 - now parsing the Fritz Box's phone book via xml export file (if available)
 - phone book entries now have the addtional fields "quickdial", "vanity", 
   "priority", "important"
+- Fixed decoding of entities in xml phone book parser
+
  
