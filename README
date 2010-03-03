@@ -1,0 +1,57 @@
+*Installing*
+After unpacking the source code, run
+- make
+- make install
+
+
+*Description*
+A KDE program for users of AVMs Fritz!Box to get call signaling and other 
+functions.
+
+This program has the following features:
+
+    * Call notification
+
+      KFritz connects to the Fritz!Box to inform you about incoming calls. 
+      Detailed configuration is possible either in the KFritz user interface 
+      or KDE's system settings.
+
+      To enable this feature you have to dial "#96*5*" with a telephone 
+      connected to the Fritz!Box. This works for all firmware versions 
+      >= xx.03.99
+
+      You may experience problems when trying to dial "#96*5*" with an ISDN 
+      telephone. In such a case try to activate "auto keypad", "dial * and #" 
+      or some similar setting in your ISDN telephone. If your ISDN telephone 
+      contains no keypad support simply use an analogue telephone instead.
+
+      If you do not want to be notified by every call, you can specify a list 
+      of MSNs you are interested on in the plugin\'s setup. Max. 22 monitored 
+      MSNs are supported.
+
+    * Phone book support
+
+      KFritz supports multiple phonebooks. You can configure which phonebooks 
+      are used. The order matters with respect to number lookup. When a call 
+      comes in, the plugin tries to resolve the number using the first 
+      configured phonebook. If that fails, it tries the second one, and so on.
+
+          o Fritz!Box phone book
+
+            This accesses the Fritz!Box phonebook stored on the box itself.
+
+          o das-oertliche.de/nummerzoeker.com phone books
+
+            This tries to resolve any number via online directories.
+
+          o Local Phonebook
+
+            This is a local CSV file. It must be called "localphonebook.csv" and 
+            has to be placed in $KDEHOME/share/apps/kfritz/. Each line contains 
+            one entry in the following format: "«name»,«type»,«number»". «type» 
+            has to be replaced with a type code (1=home, 2=mobile, 3=work).
+
+
+    * Fritz!Box call list
+
+      Shows the call history. Missed calls are indicated in KDE's system bar.

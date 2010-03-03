@@ -84,6 +84,7 @@ endif (INDICATEQT_FOUND)
 
 # --- installs ----------------------------------------------------------------                                
 install(TARGETS kfritz ${INSTALL_TARGETS_DEFAULT_ARGS})
+# TODO: kfritz.notifyrc is installed in /usr/local/share/apps/kfritz/ -> does not work (use /usr/share/kde4/apps/kfritz/ instead)
 install(FILES kfritz.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kfritz)
 install(FILES kfritzui.rc DESTINATION ${DATA_INSTALL_DIR}/kfritz)
 install(FILES kfritz.kcfg DESTINATION ${KCFG_INSTALL_DIR})

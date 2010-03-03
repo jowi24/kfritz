@@ -179,3 +179,7 @@
 - Moved ${GCRYPT_LIBRARIES} in CMakeLists.txt to support linking with 
   --as-needed (suggested by Richard Bos)
 
+2010-03-03:
+- Added README with installing instructions
+- Makefile: Moved install target to kde-install and created install target 
+  using sudo instead of kdesudo.

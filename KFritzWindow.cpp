@@ -55,6 +55,19 @@
 #include "KSettingsFritzBox.h"
 #include "Log.h"
 
+/* General TODOs
+ *
+ * TODO: Support multiple FBs (via profiles or similar)
+ * TODO: Add "find" action
+ * TODO: Make Fritz!Box phone book editable
+ * TODO: Copy phone books
+ * TODO: Copy numbers in call history and phone books to clipboard (suggested by Richard Bos)
+ * TODO: Show status information of FB in own tab (suggested by Sir_Aim <aim@perception.de>)
+ * TODO: Configure Port forwarding (suggested by Sir_Aim <aim@perception.de>)
+ * TODO: Configure DynDNS (suggested by Sir_Aim <aim@perception.de>)
+ */
+
+
 KFritzWindow::KFritzWindow()
 {
 	appName     = KGlobal::mainComponent().aboutData()->appName();
@@ -72,7 +85,6 @@ KFritzWindow::KFritzWindow()
 	fritz::Config::SetupLogging(LogStream::getLogStream(LogBuf::DEBUG)->setLogWidget(logArea),
 							    LogStream::getLogStream(LogBuf::INFO)->setLogWidget(logArea),
 					            LogStream::getLogStream(LogBuf::ERROR)->setLogWidget(logArea));
-//TODO: support multiple boxes
 	bool savetoWallet = false;
 	bool requestPassword = true;
 
@@ -272,8 +284,6 @@ void KFritzWindow::setupActions() {
 	connect(aGetIP, SIGNAL(triggered(bool)), this, SLOT(getIP()));
 
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
-
-//TODO: add "find" action
 
 //	KStandardAction::find(this, SLOT(find()), actionCollection());
 //	KStandardAction::findNext(this, SLOT(findNext()), actionCollection());

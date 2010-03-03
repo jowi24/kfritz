@@ -24,8 +24,11 @@ dist: clean
 	        --exclude=".cproject" --exclude=".cdtproject" --exclude="test" \
 	        -f ../kfritz_${VERSION}.orig.tar.gz ../kfritz
 
-install: all
+kde-install: all
 	cd build; kdesudo make install
+
+install:
+	cd build; sudo make install
 
 deb: dist
 	debuild -i"(\.svn|\.settings|\.(c|cdt|)project|test)"
