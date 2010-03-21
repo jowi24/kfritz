@@ -138,14 +138,15 @@ void FonbookManager::NextFonbook() {
 	gConfig->setActiveFonbook( gConfig->getFonbookIDs()[pos] );
 }
 
-FonbookEntry &FonbookManager::ResolveToName(FonbookEntry &fe) {
+Fonbook::sResolveResult FonbookManager::ResolveToName(std::string number) {
+	sResolveResult result;
 	for (size_t i=0; i<gConfig->getFonbookIDs().size(); i++) {
-		fe = fonbooks[gConfig->getFonbookIDs()[i]]->ResolveToName(fe);
-		DBG("ResolveToName: " << gConfig->getFonbookIDs()[i] << " " << fe.getName());
-		if (fe.getName().compare(fe.getNumber()) != 0)
-			return fe;
+		result = fonbooks[gConfig->getFonbookIDs()[i]]->ResolveToName(number);
+		DBG("ResolveToName: " << gConfig->getFonbookIDs()[i] << " " << result.name);
+		if (result.name.compare(number) != 0)
+			return result;
 	}
-	return fe;
+	return result;
 }
 
 Fonbook *FonbookManager::GetActiveFonbook() {

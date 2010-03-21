@@ -44,14 +44,15 @@ bool OertlichesFonbook::Initialize() {
 	return true;
 }
 
-FonbookEntry &OertlichesFonbook::ResolveToName(FonbookEntry &fe) {
-	std::string number = fe.getNumber();
+Fonbook::sResolveResult OertlichesFonbook::ResolveToName(std::string number) {
+	Fonbook::sResolveResult result;
+	result.name = number;
+	result.type = FonbookEntry::TYPE_NONE;
+
 	// resolve only german phone numbers
-	if (Tools::NormalizeNumber(number).find("0049") != 0) {
-		fe.setName(number);
-		fe.setType(FonbookEntry::TYPE_NONE);
-		return fe;
-	}
+	if (Tools::NormalizeNumber(number).find("0049") != 0)
+		return result;
+
 	std::string msg;
 	std::string name;
 	try {
@@ -65,17 +66,13 @@ FonbookEntry &OertlichesFonbook::ResolveToName(FonbookEntry &fe) {
 		tc >> msg;
 	} catch (tcpclient::TcpException te) {
 		ERR("Exception - " << te.what());
-		fe.setName(number);
-		fe.setType(FonbookEntry::TYPE_NONE);
-		return fe;
+		return result;
 	}
 	// parse answer
 	size_t start = msg.find("class=\"preview\">");
 	if (start == std::string::npos) {
 		INF("no entry found.");
-		fe.setName(number);
-		fe.setType(FonbookEntry::TYPE_NONE);
-		return fe;
+		return result;
 	}
 	// add the length of search pattern
 	start += 16;
@@ -88,9 +85,8 @@ FonbookEntry &OertlichesFonbook::ResolveToName(FonbookEntry &fe) {
 	name = s_converted;
 	delete (conv);
 	INF("resolves to " << name.c_str());
-	fe.setName(name);
-	fe.setType(FonbookEntry::TYPE_NONE);
-	return fe;
+	result.name = name;
+	return result;
 }
 
 }

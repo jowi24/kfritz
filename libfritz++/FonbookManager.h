@@ -72,11 +72,11 @@ public:
 	 */
 	void NextFonbook();
 	/**
-	 * Resolves the given number to the corresponding name.
-	 * @param number the number to resolve
-	 * @return the resolved name or the number, if unsuccesful
+	 * Resolves the number given to the corresponding name.
+	 * @param number to resolve
+	 * @return resolved name and type or the number, if unsuccessful
 	 */
-	FonbookEntry &ResolveToName(FonbookEntry &fe);
+	virtual sResolveResult ResolveToName(std::string number);
 	/**
 	 * Returns a specific telephonebook entry.
 	 * @param id unique identifier of the requested entry

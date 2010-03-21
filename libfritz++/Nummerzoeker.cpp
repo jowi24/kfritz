@@ -44,20 +44,22 @@ bool NummerzoekerFonbook::Initialize() {
 	return true;
 }
 
-FonbookEntry &NummerzoekerFonbook::ResolveToName(FonbookEntry &fe) {
+Fonbook::sResolveResult NummerzoekerFonbook::ResolveToName(std::string number) {
+	Fonbook::sResolveResult result;
+	result.name = number;
+	result.type = FonbookEntry::TYPE_NONE;
+
 	// resolve only NL phone numbers
-	std::string normNumber = Tools::NormalizeNumber(fe.getNumber());
+	std::string normNumber = Tools::NormalizeNumber(number);
 	if (normNumber.find("0031") != 0)
-		fe.setName(fe.getNumber());
-		fe.setType(FonbookEntry::TYPE_NONE);
-		return fe;
+		return result;
 
 	// __FILE__om works only with national number: remove 0031 prefix, add 0
 	normNumber = "0" + normNumber.substr(4);
 
 	std::string msg;
 	try {
-		DBG("sending reverse lookup request for " << Tools::NormalizeNumber(fe.getNumber()) << " to www.nummerzoeker.com");
+		DBG("sending reverse lookup request for " << normNumber << " to www.nummerzoeker.com");
 		std::string host = "www.nummerzoeker.com";
 		tcpclient::HttpClient tc(host);
 		tc << tcpclient::get
@@ -69,16 +71,12 @@ FonbookEntry &NummerzoekerFonbook::ResolveToName(FonbookEntry &fe) {
 		tc >> msg;
 	} catch (tcpclient::TcpException te) {
 		ERR("Exception - " << te.what());
-		fe.setName(fe.getNumber());
-		fe.setType(FonbookEntry::TYPE_NONE);
-		return fe;
+		return result;
 	}
 
 	if (msg.find("Content-Type: text/html") != std::string::npos) {
 		INF("no entry found.");
-		fe.setName(fe.getNumber());
-		fe.setType(FonbookEntry::TYPE_NONE);
-		return fe;
+		return result;
 	}
 
 	// parse answer, format is "number",name,surname,street,zip,city
@@ -103,9 +101,8 @@ FonbookEntry &NummerzoekerFonbook::ResolveToName(FonbookEntry &fe) {
 	name = s_converted;
 	delete (conv);
 	INF("resolves to " << name.c_str());
-	fe.setName(name);
-	fe.setType(FonbookEntry::TYPE_NONE);
-	return fe;
+	result.name = name;
+	return result;
 }
 
 }

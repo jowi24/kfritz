@@ -166,8 +166,22 @@
 - Fixed bug in FritzClient::reconnectISP
 - added config option for setting the UPNP port
 - now parsing the Fritz Box's phone book via xml export file (if available)
-- phone book entries now have the addtional fields "quickdial", "vanity", 
+- phone book entries now have the additional fields "quickdial", "vanity", 
   "priority", "important"
 - Fixed decoding of entities in xml phone book parser
 
+2010-03-03 / 2010-03-04 / 2010-03-21:
+- Modified FonbookEntry class: one FonbookEntry now holds all numbers of a 
+  person 
+  * Changed construction of FonbookEntrys accordingly
+  * Changed interface of Fonbook::ResolveToName
+  * Adapted FritzFonbook's parser
+  * Adapted LocalFonbook's parser
+  * Adapted ResolveToName in NummerzoekerFonbook and OertlichesFonbook
+- Adapted local phonebook to use the same xml format, new FB versions use.
+  Existing csv phone books are converted to xml automagically, entries 
+  with TYPE_NONE are converted to TYPE_HOME
+- FritzFonbook is now writeable, if FB xml import is available 
+  (firmware >= xx.04.76 needed)
+  
  

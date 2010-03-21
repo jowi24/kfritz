@@ -43,11 +43,11 @@ public:
 	 */
 	virtual bool Initialize();
 	/**
-	 * Resolves the given number to the corresponding name.
-	 * @param number the number to resolve
-	 * @return the resolved name or the number, if unsuccesful
+	 * Resolves the number given to the corresponding name.
+	 * @param number to resolve
+	 * @return resolved name and type or the number, if unsuccessful
 	 */
-	virtual FonbookEntry &ResolveToName(FonbookEntry &fe);
+	virtual sResolveResult ResolveToName(std::string number);
 	/**
 	 *  Returns the number of entries in the telephonebook.
 	 * @return the number of entries

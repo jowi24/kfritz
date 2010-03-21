@@ -406,6 +406,10 @@ std::string FritzClient::RequestFonbook () {
 	return msg;
 }
 
+void FritzClient::WriteFonbook(std::string xmlData) {
+	//TODO: do it
+}
+
 
 bool FritzClient::reconnectISP() {
 	std::string msg;

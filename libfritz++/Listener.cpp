@@ -114,9 +114,7 @@ void Listener::Action() {
 
 					if ( Tools::MatchesMsnFilter(partB) ) {
 						// do reverse lookup
-						std::string remoteName;
-						fritz::FonbookEntry fe(remoteName, partC);
-						FonbookManager::GetFonbook()->ResolveToName(fe);
+						Fonbook::sResolveResult result = FonbookManager::GetFonbook()->ResolveToName(partC);
 						// resolve SIP names
 						std::string mediumName;
 						if (partD.find("SIP")           != std::string::npos &&
@@ -125,7 +123,7 @@ void Listener::Action() {
 						else
 							mediumName = partD;
 						// notify application
-						if (event) event->HandleCall(true, connId, partC, fe.getName(), fe.getType(), partB, partD, mediumName);
+						if (event) event->HandleCall(true, connId, partC, result.name, result.type, partB, partD, mediumName);
 						activeConnections.push_back(connId);
 					}
 
@@ -137,8 +135,7 @@ void Listener::Action() {
 					if ( Tools::MatchesMsnFilter(partB) ) {
 						// do reverse lookup
 						std::string remoteName;
-						fritz::FonbookEntry fe(remoteName, partA);
-						FonbookManager::GetFonbook()->ResolveToName(fe);
+						Fonbook::sResolveResult result = FonbookManager::GetFonbook()->ResolveToName(partA);
 						// resolve SIP names
 						std::string mediumName;
 						if (partC.find("SIP")           != std::string::npos &&
@@ -147,7 +144,7 @@ void Listener::Action() {
 						else
 							mediumName = partC;
 						// notify application
-						if (event) event->HandleCall(false, connId, partA, fe.getName(), fe.getType(), partB, partC, mediumName);
+						if (event) event->HandleCall(false, connId, partA, result.name, result.type, partB, partC, mediumName);
 						activeConnections.push_back(connId);
 					}
 				} else if (type.compare("CONNECT") == 0) {

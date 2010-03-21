@@ -45,6 +45,7 @@ public:
 	std::string RequestSipSettings();
 	std::string RequestCallList();
 	std::string RequestFonbook();
+	void WriteFonbook(std::string xmlData);
 	bool hasValidPassword() { return validPassword; }
 	bool reconnectISP();
 	std::string getCurrentIP();

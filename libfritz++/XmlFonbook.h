@@ -19,27 +19,27 @@
  *
  */
 
-#ifndef LOCALFONBOOK_H_
-#define LOCALFONBOOK_H_
+#ifndef XMLFONBOOK_H_
+#define XMLFONBOOK_H_
 
-#include "XmlFonbook.h"
+#include "Fonbook.h"
 
 namespace fritz {
 
-class LocalFonbook : public XmlFonbook {
-	friend class FonbookManager;
+class XmlFonbook: public fritz::Fonbook {
 private:
-	char* filePath;
-	LocalFonbook();
-	void ParseCsvFonbook(std::string filePath);
-	virtual void Save();
+	std::string ExtractXmlAttributeValue(std::string element, std::string attribute, std::string xml);
+	std::string ExtractXmlElementValue(std::string element, std::string xml);
+	std::string charset;
+protected:
+	std::string convertEntities(std::string s);
+	void ParseXmlFonbook(std::string *msg);
+	std::string SerializeToXml();
 public:
-	virtual ~LocalFonbook() {Save();}
-	bool Initialize();
-	void Reload();
-	virtual bool AddFonbookEntry(FonbookEntry fe);
+	XmlFonbook();
+	virtual ~XmlFonbook();
 };
 
 }
 
-#endif /*LOCALFONBOOK_H_*/
+#endif /* XMLFONBOOK_H_ */
