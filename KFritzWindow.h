@@ -93,6 +93,7 @@ public Q_SLOTS:
 	void showMissedCalls(QIndicate::Indicator* indicator);
 	void showLog();
     void dialNumber();
+    void copyNumberToClipboard();
     void reconnectISP();
     void getIP();
 };

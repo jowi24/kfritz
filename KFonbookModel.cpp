@@ -24,6 +24,37 @@
 #include <KIcon>
 #include <KLocalizedString>
 
+#include "Log.h"
+
+/**
+ * KFonbookModel constructs a hierarchy model for fritz::Fonbooks
+ *
+ * The top level table contains one row for each fritz::FonbookEntry.
+ * Each name cell references to a table containing all numbers of
+ * this FonbookEntry.
+ *
+ * Example - Top level table
+ * Row/Column   1
+ * 1            Alice
+ * 2            Bob
+ * 3            Charly
+ * ...
+ *
+ * Example - Details table for (1/1) (Alice)
+ * Row/Column   1         2         3      ...
+ * 1            Private   555-1234  **711
+ * 2            Mobile    555-6789
+ * 3            Business  555-0000
+ */
+
+enum modelColumns {
+	COLUMN_NAME,
+	COLUMN_NUMBER,
+	COLUMN_QUICKDIAL,
+	COLUMN_VANITY,
+	COLUMNS_COUNT
+};
+
 KFonbookModel::KFonbookModel(std::string techID) {
 	// get the fonbook resource
 	fritz::Fonbooks *books = fritz::FonbookManager::GetFonbookManager()->GetFonbooks();
@@ -35,17 +66,22 @@ KFonbookModel::~KFonbookModel() {
 
 int KFonbookModel::rowCount(const QModelIndex & parent) const
 {
-	if (parent.isValid())
-		// the model does not have any hierarchy
+	// The top level table has details table attached to each cell in COLUMN_NAME
+	if (parent.isValid() && parent.column() == COLUMN_NAME && !parent.parent().isValid())
+		return fritz::FonbookEntry::TYPES_COUNT-1; // all types without TYPE_NONE
+	// A details table has no children
+	else if (parent.isValid())
 		return 0;
+	// The top level table has a row for each FonbookEntry
 	else
 		return fonbook->GetFonbookSize();
 }
 
-int KFonbookModel::columnCount(const QModelIndex & parent __attribute__((unused))) const
+int KFonbookModel::columnCount(const QModelIndex & parent) const
 {
-	// number of columns is independent of parent, ignoring parameter
-	return 6;
+	if (parent.isValid() && parent.parent().isValid())
+		return 0;
+	return COLUMNS_COUNT;
 }
 
 QVariant KFonbookModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -53,62 +89,85 @@ QVariant KFonbookModel::headerData(int section, Qt::Orientation orientation, int
 	if (role != Qt::DisplayRole)
 		return QVariant();
 	if (orientation == Qt::Horizontal) {
-		switch (section){
-		case fritz::FonbookEntry::ELEM_NAME:
+		switch (section) {
+		case COLUMN_NAME:
 			return i18n("Name");
 			break;
-		case fritz::FonbookEntry::ELEM_TYPE:
-			return i18n("Type");
-			break;
-		case fritz::FonbookEntry::ELEM_NUMBER:
+		case COLUMN_NUMBER:
 			return i18n("Number");
 			break;
-		case fritz::FonbookEntry::ELEM_QUICKDIAL:
+		case COLUMN_QUICKDIAL:
 			return i18n("Quickdial");
 			break;
-		case fritz::FonbookEntry::ELEM_VANITY:
+		case COLUMN_VANITY:
 			return i18n("Vanity");
-			break;
-		case fritz::FonbookEntry::ELEM_IMPORTANT:
-			return i18n("Important");
 			break;
 		default:
 			return QVariant();
 		}
-	} else {
+	} else
 		return QVariant();
-	}
-
 }
 
-QVariant KFonbookModel::data(const QModelIndex & index, int role) const{
-	if (role != Qt::DisplayRole)
+QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
+	// Neither top level nor details table
+	if (index.parent().isValid() && index.parent().parent().isValid())
 		return QVariant();
+	// Details table
+	else if (index.parent().isValid()) {
 
-	fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
-	switch (index.column()) {
-	case fritz::FonbookEntry::ELEM_NAME:
-		return QVariant(toLocalEncoding(fe->getName()));
-		break;
-	case fritz::FonbookEntry::ELEM_TYPE:
-		return QVariant(getTypeName(fe->getType()));
-		break;
-	case fritz::FonbookEntry::ELEM_NUMBER:
-		return QVariant(toLocalEncoding(fe->getNumber()));
-		break;
-	case fritz::FonbookEntry::ELEM_QUICKDIAL:
-		return QVariant(toLocalEncoding(fe->getQuickdialFormatted()));
-		break;
-	case fritz::FonbookEntry::ELEM_VANITY:
-		return QVariant(toLocalEncoding(fe->getVanityFormatted()));
-		break;
-	case fritz::FonbookEntry::ELEM_IMPORTANT:
-		return QVariant(toLocalEncoding((fe->isImportant()) ? "X": "")); //TODO: make some fancy icon here :-P
-		break;
-	default:
-		return QVariant();
+		fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.parent().row());
+
+		if (role != Qt::DisplayRole)
+			return QVariant();
+
+		// map row to type
+		fritz::FonbookEntry::eType type = (fritz::FonbookEntry::eType) (index.row() + 1); // ignore TYPE_NONE
+
+		switch (index.column()) {
+		case COLUMN_NAME: {
+			QString typeName = getTypeName(type);
+			if (fe->getPriority(type) == 1)
+				typeName += " " + i18n("(Default)");
+			return QVariant(typeName);
+		}
+		case COLUMN_NUMBER:
+			return QVariant(fe->getNumber(type).c_str());
+//		case COLUMN_QUICKDIAL:
+//			return QVariant(fe->getQuickdialFormatted(type).c_str());
+//		case COLUMN_VANITY:
+//			return QVariant(fe->getVanityFormatted(type).c_str());
+		default:
+			return QVariant();
+		}
 	}
-	return QVariant();
+	// Top level table
+	else {
+		fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
+
+		if (role == Qt::DecorationRole && index.column() == COLUMN_NAME)
+			return QVariant(fe->isImportant() ? KIcon("emblem-important") : KIcon("x-office-contact"));
+		if (role == Qt::ToolTipRole && index.column() == COLUMN_NAME)
+			return QVariant(fe->isImportant() ? i18n("Important contact") : "");
+		if (role != Qt::DisplayRole)
+			return QVariant();
+
+		switch (index.column()) {
+		case COLUMN_NAME: {
+			//QString name = "<b>" + toLocalEncoding(fe->getName()) + "</b>"; //TODO: formatting?
+			QString name = toLocalEncoding(fe->getName());
+			return QVariant(name);
+		}
+		case COLUMN_NUMBER:
+			return QVariant(fe->getNumber(fritz::FonbookEntry::TYPE_NONE).c_str());
+		case COLUMN_QUICKDIAL:
+			return QVariant(fe->getQuickdialFormatted().c_str());
+		case COLUMN_VANITY:
+			return QVariant(fe->getVanityFormatted().c_str());
+		default:
+			return QVariant();
+		}
+	}
 }
 
 QString KFonbookModel::getTypeName(const fritz::FonbookEntry::eType type) {
@@ -125,12 +184,51 @@ QString KFonbookModel::getTypeName(const fritz::FonbookEntry::eType type) {
 }
 
 void KFonbookModel::sort(int column, Qt::SortOrder order) {
-	fonbook->Sort((fritz::FonbookEntry::eElements) column, order == Qt::AscendingOrder);
+	fritz::FonbookEntry::eElements element;
+	switch (column) {
+	case COLUMN_NAME:
+		element = fritz::FonbookEntry::ELEM_NAME;
+		break;
+	case COLUMN_NUMBER:
+		return;
+	case COLUMN_QUICKDIAL:
+		element = fritz::FonbookEntry::ELEM_QUICKDIAL;
+		break;
+	case COLUMN_VANITY:
+		element = fritz::FonbookEntry::ELEM_VANITY;
+		break;
+	default:
+		ERR("Invalid column adressed while sorting.");
+	}
+	fonbook->Sort(element, order == Qt::AscendingOrder);
 	emit dataChanged(index(0,                       0,                          QModelIndex()),
 			index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
 }
 
 std::string KFonbookModel::number(const QModelIndex &i) const {
-	fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(i.row());
-	return fe->getNumber();
+	if (i.parent().isValid() && !i.parent().parent().isValid()) {
+		fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(i.parent().row());
+		return fe->getNumber((fritz::FonbookEntry::eType) i.row());
+	}
+	return "";
+}
+
+QModelIndex KFonbookModel::index(int row, int column, const QModelIndex &parent) const {
+	if (parent.isValid() && parent.parent().isValid())
+		return QModelIndex();
+	if (parent.isValid()) {
+		// index of a details table get its parent row as unique id
+		QModelIndex index = createIndex(row, column, parent.row());
+		return index;
+	}
+	else
+		// index of top level table get -1 as id
+		return createIndex(row, column, -1);
+}
+
+QModelIndex KFonbookModel::parent(const QModelIndex &child) const {
+	// index of a details table has id >= 0 (see index())
+	if (child.internalId() >= 0)
+		return index(child.internalId(), 0, QModelIndex());
+	return QModelIndex();
 }

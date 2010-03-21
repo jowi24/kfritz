@@ -24,7 +24,6 @@
 
 QAdaptTreeView::QAdaptTreeView(QWidget *parent)
 :QTreeView(parent) {
-//	connect(model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex& )),			SLOT(adaptColumns(const QModelIndex &, const QModelIndex&)));
 }
 
 QAdaptTreeView::~QAdaptTreeView() {
@@ -33,6 +32,7 @@ QAdaptTreeView::~QAdaptTreeView() {
 
 void QAdaptTreeView::reset() {
 	QTreeView::reset();
+	expandAll();
 	adaptColumns();
 }
 

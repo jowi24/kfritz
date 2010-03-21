@@ -39,6 +39,9 @@ public:
     virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
     static QString getTypeName(const fritz::FonbookEntry::eType type);
     virtual std::string number(const QModelIndex &index) const;
+    virtual QModelIndex index(int row, int column,
+    		                  const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &child) const;
 
 private:
 	fritz::Fonbook *fonbook;

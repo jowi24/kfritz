@@ -24,10 +24,6 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KLocale>
-#include <KApplication>
-#include <KAction>
-#include <KLocale>
-#include <KActionCollection>
 #include <KAboutData>
 #include <KFindDialog>
 #include <KStandardAction>
@@ -39,6 +35,7 @@
 #include <KNotifyConfigWidget>
 #include <KPasswordDialog>
 #include <QTextCodec>
+#include <QClipboard>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -65,6 +62,8 @@
  * TODO: Show status information of FB in own tab (suggested by Sir_Aim <aim@perception.de>)
  * TODO: Configure Port forwarding (suggested by Sir_Aim <aim@perception.de>)
  * TODO: Configure DynDNS (suggested by Sir_Aim <aim@perception.de>)
+ * TODO: Handle empty FB password (reported by Richard Bos)
+ * TODO: Dial any number (suggested by Richard Bos)
  */
 
 
@@ -271,6 +270,12 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("dialNumber", aDialNumber);
 	connect(aDialNumber, SIGNAL(triggered(bool)), this, SLOT(dialNumber()));
 
+	KAction *aCopyNumber = new KAction(this);
+	aCopyNumber->setText(i18n("Copy number to clipboard"));
+	aCopyNumber->setIcon(KIcon("edit-copy"));
+	actionCollection()->addAction("copyNumber", aCopyNumber);
+	connect(aCopyNumber, SIGNAL(triggered(bool)), this, SLOT(copyNumberToClipboard()));
+
 	KAction *aReconnectISP = new KAction(this);
 	aReconnectISP->setText(i18n("Reconnect to internet"));
 	aReconnectISP->setIcon(KIcon("network-workgroup"));
@@ -315,7 +320,6 @@ bool KFritzWindow::queryClose() {
 	hide();
 	return false;
 }
-
 
 void KFritzWindow::updateMissedCallsIndicator() {
 	fritz::CallList *callList = fritz::CallList::getCallList(false);
@@ -365,6 +369,7 @@ void KFritzWindow::updateMainWidgets(bool b)
 	treeCallList->setItemsExpandable(false);
 	treeCallList->setSortingEnabled(true);
 	treeCallList->addAction(actionCollection()->action("dialNumber"));
+	treeCallList->addAction(actionCollection()->action("copyNumber"));
 	treeCallList->setContextMenuPolicy(Qt::ActionsContextMenu);
 
 	treeCallList->setModel(modelCalllist);
@@ -376,24 +381,23 @@ void KFritzWindow::updateMainWidgets(bool b)
     fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
     std::string first = fm->GetTechId(); //todo: no fb configured
     do {
-
 		KFonbookModel *modelFonbook = new KFonbookModel(fm->GetTechId());
 
 		QAdaptTreeView *treeFonbook = new QAdaptTreeView(this);
 		treeFonbook->setAlternatingRowColors(true);
-		treeFonbook->setItemsExpandable(false);
+		treeFonbook->setItemsExpandable(true);
 		treeFonbook->setSortingEnabled(true);
 		treeFonbook->setModel(modelFonbook);
+		// TODO: activate editable, depending on writeable flag
 		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
 		treeFonbook->addAction(actionCollection()->action("dialNumber"));
+		treeFonbook->addAction(actionCollection()->action("copyNumber"));
 		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
-
 
 		tabWidget->insertTab(0, treeFonbook,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
 
 		fm->NextFonbook();
 	} while( first != fm->GetTechId() );
-
 }
 
 void KFritzWindow::find() {
@@ -448,6 +452,14 @@ void KFritzWindow::dialNumber() {
 	fc.InitCall(currentNumber);
 	//setProgressIndicator();
 	KMessageBox::information(this, i18n("Dialing initiated, pick up your phone now."));
+}
+
+void KFritzWindow::copyNumberToClipboard() {
+	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
+	std::string currentNumber;
+	if (currentView)
+		currentNumber = currentView->currentNumber();
+	KApplication::kApplication()->clipboard()->setText(currentNumber.c_str());
 }
 
 void KFritzWindow::reconnectISP() {

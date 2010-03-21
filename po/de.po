@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-02-28 16:52+0100\n"
+"POT-Creation-Date: 2010-03-21 21:02+0100\n"
 "PO-Revision-Date: 2010-02-02 21:04+0100\n"
 "Last-Translator: Joachim Wilke <kfritz@joachim-wilke.de>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
@@ -28,12 +28,12 @@ msgstr "Ausgehender Anruf"
 msgid "Missed call"
 msgstr "Verpasster Anruf"
 
-#: KCalllistModel.cpp:56 KFritzWindow.cpp:143 libfritz++/CallList.cpp:169
-#: libfritz++/FritzClient.cpp:460
+#: KCalllistModel.cpp:56 KFritzWindow.cpp:154 libfritz++/CallList.cpp:169
+#: libfritz++/FritzClient.cpp:464
 msgid "unknown"
 msgstr "unbekannt"
 
-#: KCalllistModel.cpp:83 KFonbookModel.cpp:61
+#: KCalllistModel.cpp:83
 msgid "Type"
 msgstr "Typ"
 
@@ -53,35 +53,39 @@ msgstr "Endgerät"
 msgid "Duration"
 msgstr "Dauer"
 
-#: KFonbookModel.cpp:58
+#: KFonbookModel.cpp:94
 msgid "Name"
 msgstr "Name"
 
-#: KFonbookModel.cpp:64
+#: KFonbookModel.cpp:97
 msgid "Number"
 msgstr "Nummer"
 
-#: KFonbookModel.cpp:67
+#: KFonbookModel.cpp:100
 msgid "Quickdial"
 msgstr "Kurzwahl"
 
-#: KFonbookModel.cpp:70
+#: KFonbookModel.cpp:103
 msgid "Vanity"
 msgstr "Vanity"
 
-#: KFonbookModel.cpp:73
-msgid "Important"
-msgstr "Wichtig"
+#: KFonbookModel.cpp:131
+msgid "(Default)"
+msgstr "(Standard)"
 
-#: KFonbookModel.cpp:117
+#: KFonbookModel.cpp:151
+msgid "Important contact"
+msgstr "Wichtige Person"
+
+#: KFonbookModel.cpp:176
 msgid "Home"
 msgstr "Privat"
 
-#: KFonbookModel.cpp:119
+#: KFonbookModel.cpp:178
 msgid "Mobile"
 msgstr "Handy"
 
-#: KFonbookModel.cpp:121
+#: KFonbookModel.cpp:180
 msgid "Work"
 msgstr "Büro"
 
@@ -101,75 +105,79 @@ msgstr "(c) 2008-2010"
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Entwickelt von Matthias Becker und Joachim Wilke."
 
-#: KFritzWindow.cpp:141
+#: KFritzWindow.cpp:152
 msgid "Outgoing call to <b>%1</b><br/>using %2"
 msgstr "Ausgehender Anruf zu <b>%1</b><br/>%2"
 
-#: KFritzWindow.cpp:143
+#: KFritzWindow.cpp:154
 msgid "Incoming call from <b>%1</b><br/>using %2"
 msgstr "Eingehender Anruf von <b>%1</b><br/>%2"
 
-#: KFritzWindow.cpp:164
+#: KFritzWindow.cpp:175
 msgid "Call disconnected (%1)."
 msgstr "Anruf beendet (%1)."
 
-#: KFritzWindow.cpp:188
+#: KFritzWindow.cpp:199
 msgid "Configure connection to Fritz!Box"
 msgstr "Verbindung zur Fritz!Box einrichten"
 
-#: KFritzWindow.cpp:188
+#: KFritzWindow.cpp:199
 msgid "Fritz!Box"
 msgstr "Fritz!Box"
 
-#: KFritzWindow.cpp:191
+#: KFritzWindow.cpp:202
 msgid "Phone books"
 msgstr "Telefonbücher"
 
-#: KFritzWindow.cpp:191
+#: KFritzWindow.cpp:202
 msgid "Select phone books to use"
 msgstr "Zu nutzende Telefonbücher auswählen"
 
-#: KFritzWindow.cpp:231
+#: KFritzWindow.cpp:242
 msgid "Enter your Fritz!Box password"
 msgstr "Geben Sie Ihr Fritz!Box Passwort ein"
 
-#: KFritzWindow.cpp:239
+#: KFritzWindow.cpp:250
 msgid "Configure KFritz..."
 msgstr "KFritz einrichten..."
 
-#: KFritzWindow.cpp:245
+#: KFritzWindow.cpp:256
 msgid "Configure Notifications..."
 msgstr "Benachrichtigungen einrichten..."
 
-#: KFritzWindow.cpp:251
+#: KFritzWindow.cpp:262
 msgid "Show log"
 msgstr "Protokoll anzeigen"
 
-#: KFritzWindow.cpp:257
+#: KFritzWindow.cpp:268
 msgid "Dial number"
 msgstr "Nummer wählen"
 
-#: KFritzWindow.cpp:263
+#: KFritzWindow.cpp:274
+msgid "Copy number to clipboard"
+msgstr "Nummer in Zwischenablage kopieren"
+
+#: KFritzWindow.cpp:280
 msgid "Reconnect to internet"
 msgstr "Verbindung zum Internet neu aufbauen"
 
-#: KFritzWindow.cpp:269
+#: KFritzWindow.cpp:286
 msgid "Get current IP address"
 msgstr "Aktuelle IP Adresse anzeigen"
 
-#: KFritzWindow.cpp:295
+#: KFritzWindow.cpp:310
 msgid "Missed calls"
 msgstr "Verpasste Anrufe"
 
-#: KFritzWindow.cpp:329
+#: KFritzWindow.cpp:343
 msgid "Retrieving data from Fritz!Box..."
 msgstr "Rufe Daten von der Fritz!Box ab..."
 
-#: KFritzWindow.cpp:363
+#: KFritzWindow.cpp:378
 msgid "Call history"
 msgstr "Anrufliste"
 
-#: KFritzWindow.cpp:432
+#: KFritzWindow.cpp:446
 msgid ""
 "Can not dial without a number.\n"
 "Select an entry in a phone book or the call history which contains a number or name and try again."
@@ -177,19 +185,19 @@ msgstr ""
 "Wählen ohne Nummer nicht möglich.\n"
 "Wählen sie einen Anruflisten- oder Telefonbucheintrag aus, der eine Telefonnummer enthält. Versuchen sie es danach erneut."
 
-#: KFritzWindow.cpp:432
+#: KFritzWindow.cpp:446
 msgid "Dialing not possible"
 msgstr "Wählen nicht möglich"
 
-#: KFritzWindow.cpp:440
+#: KFritzWindow.cpp:454
 msgid "Dialing initiated, pick up your phone now."
 msgstr "Wähle - Telefon jetzt abnehmen."
 
-#: KFritzWindow.cpp:446
+#: KFritzWindow.cpp:468
 msgid "Reconnect successfully initiated."
 msgstr "Verbindung wird neu aufgebaut"
 
-#: KFritzWindow.cpp:451
+#: KFritzWindow.cpp:473
 msgid "Current IP is: %1"
 msgstr "Aktuelle IP Adresse: %1"
 
@@ -225,7 +233,7 @@ msgstr "Anrufliste und Benachrichtigungen auf bestimmte MSN einschränken"
 msgid "MSN filter"
 msgstr "MSN Filter"
 
-#: libfritz++/FritzFonbook.cpp:154
+#: libfritz++/FritzFonbook.cpp:34
 msgid "Fritz!Box phone book"
 msgstr "Fritz!Box Telefonbuch"
 
@@ -237,7 +245,7 @@ msgstr "Festnetz"
 msgid "ISDN"
 msgstr "ISDN"
 
-#: libfritz++/LocalFonbook.cpp:74
+#: libfritz++/LocalFonbook.cpp:73
 msgid "Local phone book"
 msgstr "Lokales Telefonbuch"
 
@@ -248,3 +256,6 @@ msgstr "nummerzoeker.com"
 #: libfritz++/OertlichesFonbook.cpp:33
 msgid "das-oertliche.de"
 msgstr "das-oertliche.de"
+
+#~ msgid "Important"
+#~ msgstr "Wichtig"

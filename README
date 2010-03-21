@@ -1,8 +1,11 @@
+This file contains instructions on installing, a short description and hints 
+on contributing. Please read carefully :-)
+
+
 *Installing*
 After unpacking the source code, run
 - make
 - make install
-
 
 *Description*
 A KDE program for users of AVMs Fritz!Box to get call signaling and other 
@@ -55,3 +58,13 @@ This program has the following features:
     * Fritz!Box call list
 
       Shows the call history. Missed calls are indicated in KDE's system bar.
+
+*Contribute*
+
+Want to contribute? Bug reports and - even more - patches are always welcome. 
+If you want to translate KFritz in your own language, just use po/kfritz.pot
+as a template and create your own .po file. Attach your .po file to an email
+to me for inclusion into the next release of KFritz.
+
+Contributors are mentioned in the HISTORY and AUTHORS file including email 
+address. If you do not want this, please point this out in your email.

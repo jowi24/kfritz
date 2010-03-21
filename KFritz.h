@@ -25,6 +25,7 @@
 #include <QObject>
 #include <KSystemTrayIcon>
 #include <KAboutData>
+#include "KFritzWindow.h"
 #include <Listener.h>
 
 class KFritz : public KSystemTrayIcon
@@ -32,10 +33,11 @@ class KFritz : public KSystemTrayIcon
 	Q_OBJECT
 
 public:
-	KFritz(QWidget *mainWindow, KAboutData *aboutData);
+	KFritz(KFritzWindow *mainWindow, KAboutData *aboutData);
 	virtual ~KFritz();
 private:
-	KAboutData *aboutData;
+	KAboutData 	 *aboutData;
+	KFritzWindow *mainWindow;
 };
 
 #endif /*KFRITZBOX_H_*/

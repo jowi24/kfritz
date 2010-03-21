@@ -169,6 +169,10 @@
 - Added menu entries for getting IP and reconnecting to ISP
 
 2010-02-28:
+- Important changes in libtcpclient++
+  * Fixed a possible issue with "thread-safety" of TcpClient, a TcpClient 
+    object can now be deleted out of another thread while running
+- This prevents possible crashes when closing KFritz
 - Adapted to changes in libfritz++
   * phone book entries now have the addtional fields "quickdial", "vanity", 
     "priority", "important"
@@ -183,3 +187,20 @@
 - Added README with installing instructions
 - Makefile: Moved install target to kde-install and created install target 
   using sudo instead of kdesudo.
+- Implemented "Copy number to clipboard", added entry to context menu
+
+2010-03-04 / 2010-03-06 / 2010-03-21:
+- Fixed project's home URL in KAboutData (reported by Richard Bos)
+- Updated dutch translations (thanks to Richard Bos)
+- Updated README with contribution instructions
+- Changes in libfritz++
+  * Modified FonbookEntry class: one FonbookEntry now holds all numbers of a 
+  person 
+  * phone book entries now have the additional fields "quickdial", "vanity", 
+  "priority", "important"
+  * now parsing the Fritz Box's phone book via xml export file (if available)
+  * adapted local phonebook to use the same xml format, new FB versions use.
+    Existing csv phone books are converted to xml automagically, entries 
+    with TYPE_NONE are converted to TYPE_HOME
+- Modified displaying of phone books accordingly
+ 

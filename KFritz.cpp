@@ -29,13 +29,13 @@
 
 #include <Config.h>
 #include <FonbookManager.h>
-#include "KFritzWindow.h"
 
-static const char *VERSION        = "0.0.4";
+static const char *VERSION        = "0.0.5";
 
-KFritz::KFritz(QWidget *mainWindow, KAboutData *aboutData)
+KFritz::KFritz(KFritzWindow *mainWindow, KAboutData *aboutData)
 :KSystemTrayIcon("modem", mainWindow) {
 	this->aboutData = aboutData;
+	this->mainWindow = mainWindow;
 }
 
 KFritz::~KFritz() {
@@ -64,7 +64,7 @@ int main (int argc, char *argv[]) {
 			// Can contain any information desired.
 			ki18n("Developed by Matthias Becker and Joachim Wilke."),
 			// The program homepage string.
-			"http://www.joachim-wilke.de/kfritzbox.htm",
+			"http://www.joachim-wilke.de/kfritz.html",
 			// The bug report email address
 			"kfritzbox@joachim-wilke.de");
 
@@ -74,9 +74,9 @@ int main (int argc, char *argv[]) {
 	KApplication app;
 
 	// create GUI elements, hand-over logArea to mainWindow
-	KFritzWindow *mainWindow = new KFritzWindow();
-	KFritz *trayIcon 	    = new KFritz(mainWindow, &aboutData);
+	KFritzWindow mainWindow;
+	KFritz *trayIcon 	    = new KFritz(&mainWindow, &aboutData);
 	trayIcon->show();
-//	mainWindow->show();
-	return app.exec();
+	int ret = app.exec();
+	return ret;
 }
