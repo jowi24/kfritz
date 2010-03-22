@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-03-21 21:02+0100\n"
+"POT-Creation-Date: 2010-03-22 20:31+0100\n"
 "PO-Revision-Date: 2010-03-03 23:18+0100\n"
 "Last-Translator: Richard Bos <ml@radoeka.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
@@ -53,41 +53,38 @@ msgstr "Lokaal toestel"
 msgid "Duration"
 msgstr "Gespreksduur"
 
-#: KFonbookModel.cpp:94
+#: KFonbookModel.cpp:73
 msgid "Name"
 msgstr "Naam"
 
-#: KFonbookModel.cpp:97
-msgid "Number"
-msgstr "Nummer"
-
-#: KFonbookModel.cpp:100
-msgid "Quickdial"
-msgstr ""
-
-#: KFonbookModel.cpp:103
-msgid "Vanity"
-msgstr ""
-
-#: KFonbookModel.cpp:131
-msgid "(Default)"
-msgstr ""
-
-#: KFonbookModel.cpp:151
-msgid "Important contact"
-msgstr ""
-
-#: KFonbookModel.cpp:176
+#: KFonbookModel.cpp:75 KFonbookModel.cpp:156
 msgid "Home"
 msgstr "Thuis"
 
-#: KFonbookModel.cpp:178
+#: KFonbookModel.cpp:77 KFonbookModel.cpp:158
 msgid "Mobile"
 msgstr "GSM"
 
-#: KFonbookModel.cpp:180
+#: KFonbookModel.cpp:79 KFonbookModel.cpp:160
 msgid "Work"
 msgstr "Werk"
+
+#: KFonbookModel.cpp:81
+msgid "Quickdial"
+msgstr ""
+
+#: KFonbookModel.cpp:83
+msgid "Vanity"
+msgstr ""
+
+#: KFonbookModel.cpp:102
+msgid "Important contact"
+msgstr ""
+
+#: KFonbookModel.cpp:125
+#, fuzzy
+msgid "Default number"
+msgstr "Bel nummer"
 
 #: KFritz.cpp:54
 msgid "KFritz"
@@ -256,6 +253,9 @@ msgstr "nummerzoeker.com"
 #: libfritz++/OertlichesFonbook.cpp:33
 msgid "das-oertliche.de"
 msgstr "das-oertliche.de"
+
+#~ msgid "Number"
+#~ msgstr "Nummer"
 
 #~ msgid "Done"
 #~ msgstr "Gedaan"

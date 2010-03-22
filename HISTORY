@@ -203,4 +203,9 @@
     Existing csv phone books are converted to xml automagically, entries 
     with TYPE_NONE are converted to TYPE_HOME
 - Modified displaying of phone books accordingly
+
+2010-03-22:
+- Reworked displaying of phone books
+  * All numbers of a contact are shown in one line
+  * Default numbers are shown in bold face
  
