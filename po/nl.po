@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-03-22 20:31+0100\n"
+"POT-Creation-Date: 2010-03-25 20:39+0100\n"
 "PO-Revision-Date: 2010-03-03 23:18+0100\n"
 "Last-Translator: Richard Bos <ml@radoeka.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
@@ -57,15 +57,15 @@ msgstr "Gespreksduur"
 msgid "Name"
 msgstr "Naam"
 
-#: KFonbookModel.cpp:75 KFonbookModel.cpp:156
+#: KFonbookModel.cpp:75 KFonbookModel.cpp:220
 msgid "Home"
 msgstr "Thuis"
 
-#: KFonbookModel.cpp:77 KFonbookModel.cpp:158
+#: KFonbookModel.cpp:77 KFonbookModel.cpp:222
 msgid "Mobile"
 msgstr "GSM"
 
-#: KFonbookModel.cpp:79 KFonbookModel.cpp:160
+#: KFonbookModel.cpp:79 KFonbookModel.cpp:224
 msgid "Work"
 msgstr "Werk"
 
@@ -155,26 +155,30 @@ msgid "Copy number to clipboard"
 msgstr ""
 
 #: KFritzWindow.cpp:280
-msgid "Reconnect to internet"
+msgid "Set as default"
 msgstr ""
 
 #: KFritzWindow.cpp:286
+msgid "Reconnect to internet"
+msgstr ""
+
+#: KFritzWindow.cpp:292
 msgid "Get current IP address"
 msgstr ""
 
-#: KFritzWindow.cpp:310
+#: KFritzWindow.cpp:316
 msgid "Missed calls"
 msgstr "Gemiste gesprekken"
 
-#: KFritzWindow.cpp:343
+#: KFritzWindow.cpp:349
 msgid "Retrieving data from Fritz!Box..."
 msgstr "Informatie ophalen van de Fritz!Box..."
 
-#: KFritzWindow.cpp:378
+#: KFritzWindow.cpp:384
 msgid "Call history"
 msgstr "Gespreksgeschiedenis"
 
-#: KFritzWindow.cpp:446
+#: KFritzWindow.cpp:453
 msgid ""
 "Can not dial without a number.\n"
 "Select an entry in a phone book or the call history which contains a number or name and try again."
@@ -182,19 +186,19 @@ msgstr ""
 "Kan zonder nummer niet bellen.\n"
 "Selecteer een item uit het telefoonboek of belgeschiedenis dat een nummer of naam bevat en probeer het nogmaals."
 
-#: KFritzWindow.cpp:446
+#: KFritzWindow.cpp:453
 msgid "Dialing not possible"
 msgstr "Bellen is niet mogelijk"
 
-#: KFritzWindow.cpp:454
+#: KFritzWindow.cpp:461
 msgid "Dialing initiated, pick up your phone now."
 msgstr ""
 
-#: KFritzWindow.cpp:468
+#: KFritzWindow.cpp:481
 msgid "Reconnect successfully initiated."
 msgstr ""
 
-#: KFritzWindow.cpp:473
+#: KFritzWindow.cpp:486
 msgid "Current IP is: %1"
 msgstr ""
 
@@ -254,12 +258,12 @@ msgstr "nummerzoeker.com"
 msgid "das-oertliche.de"
 msgstr "das-oertliche.de"
 
-#~ msgid "Number"
-#~ msgstr "Nummer"
+#, fuzzy
+#~ msgid "Done."
+#~ msgstr "Gedaan"
 
 #~ msgid "Done"
 #~ msgstr "Gedaan"
 
-#, fuzzy
-#~ msgid "Done."
-#~ msgstr "Gedaan"
+#~ msgid "Number"
+#~ msgstr "Nummer"

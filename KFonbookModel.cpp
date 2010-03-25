@@ -127,7 +127,7 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 	}
 
 	// Skip all other requests, except for displayed text
-	if (role != Qt::DisplayRole)
+	if (role != Qt::DisplayRole && role != Qt::EditRole)
 		return QVariant();
 
 	switch (index.column()) {
@@ -142,12 +142,76 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 	case COLUMN_NUMBER_WORK:
 		return QVariant(fe->getNumber(fritz::FonbookEntry::TYPE_WORK).c_str());
 	case COLUMN_QUICKDIAL:
-		return QVariant(fe->getQuickdialFormatted().c_str());
+		if (role == Qt::EditRole)
+			return QVariant(fe->getQuickdial().c_str());
+		else
+			return QVariant(fe->getQuickdialFormatted().c_str());
 	case COLUMN_VANITY:
-		return QVariant(fe->getVanityFormatted().c_str());
+		if (role == Qt::EditRole)
+			return QVariant(fe->getVanity().c_str());
+		else
+			return QVariant(fe->getVanityFormatted().c_str());
 	default:
 		return QVariant();
 	}
+}
+
+bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, int role) {
+	if (role == Qt::EditRole) {
+		fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
+		switch(index.column()) {
+		case COLUMN_NAME:
+			fe->setName(value.toString().toStdString());
+			break;
+		case COLUMN_NUMBER_HOME:
+			fe->setNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_HOME);
+			break;
+		case COLUMN_NUMBER_MOBILE:
+			fe->setNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_MOBILE);
+			break;
+		case COLUMN_NUMBER_WORK:
+			fe->setNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_WORK);
+			break;
+		case COLUMN_QUICKDIAL:
+			fe->setQuickdial(value.toString().toStdString());
+			break;
+		case COLUMN_VANITY:
+			fe->setVanity(value.toString().toStdString());
+			break;
+		default:
+			return false;
+		}
+		emit dataChanged(index, index); // we changed one element
+		return true;
+	}
+	return false;
+}
+
+void KFonbookModel::setDefaultType(const QModelIndex &index) {
+	fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
+	switch(index.column()) {
+	case COLUMN_NUMBER_HOME:
+		fe->setDefaultType(fritz::FonbookEntry::TYPE_HOME);
+		break;
+	case COLUMN_NUMBER_MOBILE:
+		fe->setDefaultType(fritz::FonbookEntry::TYPE_MOBILE);
+		break;
+	case COLUMN_NUMBER_WORK:
+		fe->setDefaultType(fritz::FonbookEntry::TYPE_WORK);
+		break;
+	default:
+		return;
+	}
+	QModelIndex indexLeft = createIndex(index.row(), COLUMN_NUMBER_HOME);
+	QModelIndex indexRight = createIndex(index.row(), COLUMN_NUMBER_WORK);
+	emit dataChanged(indexLeft, indexRight); // we changed up to three elements
+}
+
+Qt::ItemFlags KFonbookModel::flags(const QModelIndex & index __attribute__((unused))) const {
+	if (fonbook->isWriteable())
+		return Qt::ItemFlags(QAbstractItemModel::flags(index) | QFlag(Qt::ItemIsEditable));
+	else
+		return QAbstractItemModel::flags(index);
 }
 
 QString KFonbookModel::getTypeName(const fritz::FonbookEntry::eType type) {

@@ -184,4 +184,7 @@
 - FritzFonbook is now writeable, if FB xml import is available 
   (firmware >= xx.04.76 needed)
   
+2010-03-25:
+- Added various set methods to FonbookEntry
+
  

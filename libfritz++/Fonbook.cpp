@@ -40,6 +40,28 @@ void FonbookEntry::addNumber(std::string number, eType type, std::string quickdi
 	numbers[type].priority  = priority;
 }
 
+FonbookEntry::eType FonbookEntry::getDefaultType() {
+	eType t = (eType) 0;
+	while (t < TYPES_COUNT) {
+		if (getPriority(t) == 1)
+			return t;
+		t = (eType) (t+1);
+	}
+	return TYPE_NONE;
+}
+
+void FonbookEntry::setDefaultType(eType type) {
+	eType oldType = getDefaultType();
+	if (type != oldType) {
+		setPrioriy(0, oldType);
+		setPrioriy(1, type);
+		setQuickdial(getQuickdial(oldType), type);
+		setVanity(getVanity(oldType), type);
+		setQuickdial("", oldType);
+		setVanity("", oldType);
+	}
+}
+
 std::string FonbookEntry::getQuickdialFormatted(eType type) {
 	switch (getQuickdial(type).length()) {
 	case 1:
@@ -55,27 +77,23 @@ std::string FonbookEntry::getQuickdial(eType type) {
 	// if no special type is given, the default "TYPES_COUNT" indicates,
 	// that the correct type has to be determined first, i.e., priority == 1
 
-	if (type == TYPES_COUNT) {
-		eType t = (eType) 0;
-		while (t <= TYPES_COUNT) {
-			if (getPriority(t) == 1)
-				return getQuickdial(t);
-			t = (eType) (t+1);
-		}
-		return "";
-	} else {
-		return numbers[type].quickdial;
-	}
+	return numbers[type == TYPES_COUNT ? getDefaultType() : type].quickdial;
 }
 
-std::string FonbookEntry::getVanity() {
-	eType t = (eType) 0;
-	while (t <= TYPES_COUNT) {
-		if (getPriority(t) == 1)
-			return getVanity(t);
-		t = (eType) (t+1);
-	}
-	return "";
+void FonbookEntry::setQuickdial(std::string quickdial, eType type) { //TODO: sanity check
+	numbers[type == TYPES_COUNT ? getDefaultType() : type].quickdial = quickdial;
+}
+
+std::string FonbookEntry::getVanity(eType type) {
+	return numbers[type == TYPES_COUNT ? getDefaultType() : type].vanity;
+}
+
+std::string FonbookEntry::getVanityFormatted(eType type) {
+	return getVanity(type).length() ? "**8"+getVanity(type) : "";
+}
+
+void FonbookEntry::setVanity(std::string vanity, eType type) { //TODO: sanity check
+	numbers[type == TYPES_COUNT ? getDefaultType() : type].vanity = vanity;
 }
 
 bool FonbookEntry::operator<(const FonbookEntry &fe) const {

@@ -82,16 +82,17 @@ public:
 	std::string getName() const { return name; }
 	void setName(std::string name) { this->name = name; }
 	std::string getNumber(eType type) const { return numbers[type].number; }
+	void setNumber(std::string number, eType type) { numbers[type].number = number; }
 	bool isImportant() { return important; }
 	void setImportant(bool important) { this->important = important; }
+	eType getDefaultType();
+	void setDefaultType(eType type);
 	std::string getQuickdialFormatted(eType type = TYPES_COUNT);
 	std::string getQuickdial(eType type = TYPES_COUNT);
-	void setQuickdial(std::string quickdial, eType type) { numbers[type].quickdial = quickdial; }
-	std::string getVanity(eType type) { return numbers[type].vanity; }
-	std::string getVanityFormatted(eType type) { return getVanity(type).length() ? "**8"+getVanity(type) : ""; }
-	std::string getVanity();
-	std::string getVanityFormatted() { return getVanity().length() ? "**8"+getVanity() : ""; }
-	void setVanity(std::string vanity, eType type) { numbers[type].vanity = vanity; }
+	void setQuickdial(std::string quickdial, eType type = TYPES_COUNT);
+	std::string getVanity(eType type = TYPES_COUNT);
+	std::string getVanityFormatted(eType type = TYPES_COUNT);
+	void setVanity(std::string vanity, eType type = TYPES_COUNT);
 	int getPriority(eType type) { return numbers[type].priority; }
 	void setPrioriy(int priority, eType type) { numbers[type].priority = priority; }
 	bool operator<(const FonbookEntry & fe) const;

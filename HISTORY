@@ -208,4 +208,7 @@
 - Reworked displaying of phone books
   * All numbers of a contact are shown in one line
   * Default numbers are shown in bold face
+  
+2010-03-25:
+- Enabled editing of existing entries of writable phonebooks
  

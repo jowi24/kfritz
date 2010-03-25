@@ -276,6 +276,12 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("copyNumber", aCopyNumber);
 	connect(aCopyNumber, SIGNAL(triggered(bool)), this, SLOT(copyNumberToClipboard()));
 
+	KAction *aSetDefaultType = new KAction(this);
+	aSetDefaultType->setText(i18n("Set as default"));
+	aSetDefaultType->setIcon(KIcon("favorites"));
+	actionCollection()->addAction("setDefaultType", aSetDefaultType);
+	connect(aSetDefaultType, SIGNAL(triggered(bool)), this, SLOT(setDefaultType()));
+
 	KAction *aReconnectISP = new KAction(this);
 	aReconnectISP->setText(i18n("Reconnect to internet"));
 	aReconnectISP->setIcon(KIcon("network-workgroup"));
@@ -392,6 +398,7 @@ void KFritzWindow::updateMainWidgets(bool b)
 		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
 		treeFonbook->addAction(actionCollection()->action("dialNumber"));
 		treeFonbook->addAction(actionCollection()->action("copyNumber"));
+		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
 		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
 
 		tabWidget->insertTab(0, treeFonbook,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
@@ -460,6 +467,12 @@ void KFritzWindow::copyNumberToClipboard() {
 	if (currentView)
 		currentNumber = currentView->currentNumber();
 	KApplication::kApplication()->clipboard()->setText(currentNumber.c_str());
+}
+
+void KFritzWindow::setDefaultType() {
+	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
+	KFonbookModel *fonbookModel = static_cast<KFonbookModel *>(currentView->model());
+	fonbookModel->setDefaultType(currentView->currentIndex());
 }
 
 void KFritzWindow::reconnectISP() {

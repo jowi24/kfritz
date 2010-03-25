@@ -94,6 +94,7 @@ public Q_SLOTS:
 	void showLog();
     void dialNumber();
     void copyNumberToClipboard();
+    void setDefaultType();
     void reconnectISP();
     void getIP();
 };
