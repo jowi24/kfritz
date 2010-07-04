@@ -41,6 +41,7 @@ FritzFonbook::~FritzFonbook() {
 	// don't delete the object, while the thread is still active
 	while (Active())
 		pthread::CondWait::SleepMs(100);
+	Save(); //TODO
 }
 
 bool FritzFonbook::Initialize() {
@@ -156,6 +157,7 @@ void FritzFonbook::Reload() {
 
 void FritzFonbook::Save() {
 	if (writeable) {
+		INF("Uploading phonebook to Fritz!Box.");
 		FritzClient fc;
 		fc.WriteFonbook(SerializeToXml());
 	}

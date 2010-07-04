@@ -407,7 +407,28 @@ std::string FritzClient::RequestFonbook () {
 }
 
 void FritzClient::WriteFonbook(std::string xmlData) {
-	//TODO: do it
+	std::string msg;
+	DBG("Saving XML Fonbook to FB...");
+	RETRY_BEGIN {
+		tcpclient::HttpClient tc(gConfig->getUrl(), gConfig->getUiPort());
+		tc << tcpclient::post
+		   << "/cgi-bin/firmwarecfg"
+		   << "\nContent-Type: multipart/form-data; boundary=---------------------------177066101417337771721481521429"
+		   << std::flush
+		   << "-----------------------------177066101417337771721481521429\n"
+              "Content-Disposition: form-data; name=\"sid\"\n\n"
+           << gConfig->getSid() << "\n"
+		   << "-----------------------------177066101417337771721481521429\n"
+		      "Content-Disposition: form-data; name=\"PhonebookId\"\n\n"
+		      "0\n"
+		      "-----------------------------177066101417337771721481521429\n"
+		      "Content-Disposition: form-data; name=\"PhonebookImportFile\"; filename=\"FRITZ.Box_Telefonbuch_01.01.10_0000.xml\"\n"
+		      "Content-Type: text/xml\n\n"
+		   << xmlData <<
+		      "\n-----------------------------177066101417337771721481521429--\n"
+		   << std::flush;
+		tc >> msg;
+	} RETRY_END
 }
 
 

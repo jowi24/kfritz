@@ -34,7 +34,7 @@ private:
 	void ParseCsvFonbook(std::string filePath);
 	virtual void Save();
 public:
-	virtual ~LocalFonbook() {Save();}
+	virtual ~LocalFonbook() {Save();} //TODO
 	bool Initialize();
 	void Reload();
 	virtual bool AddFonbookEntry(FonbookEntry fe);

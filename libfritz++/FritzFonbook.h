@@ -35,7 +35,7 @@ private:
 	void ParseHtmlFonbook(std::string *msg);
 	virtual void Save();
 public:
-	~FritzFonbook();
+	virtual ~FritzFonbook();
 	bool Initialize();
 	void Action();
 	void Reload();
