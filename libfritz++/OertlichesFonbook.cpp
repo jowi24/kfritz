@@ -60,7 +60,7 @@ Fonbook::sResolveResult OertlichesFonbook::ResolveToName(std::string number) {
 		std::string host = "www.dasoertliche.de";
 		tcpclient::HttpClient tc(host);
 		tc << tcpclient::get
-		   << "/Controller?ciid=&district=&kgs=&plz=&zvo_ok=&form_name=search_inv&buc=&kgs=&buab=&zbuab=&ph=" << Tools::NormalizeNumber(number) << "&image="
+		   << "/Controller?topKw=0&form_name=search_nat&context=0&choose=true&page=0&rci=yes&action=43&kw=" << Tools::NormalizeNumber(number)
 		   << "\nAccept-Charset: ISO-8859-1\nUser-Agent: Lynx/2.8.5"
 		   << std::flush;
 		tc >> msg;

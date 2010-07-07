@@ -33,6 +33,7 @@ namespace fritz {
  * This defines the class, to be used by every phone book implementation.
  */
 
+
 class FonbookEntry {
 public:
 	enum eType {
@@ -102,6 +103,16 @@ public:
 	 */
 	size_t getSize();
 };
+
+inline FonbookEntry::eType& operator++(FonbookEntry::eType& t) {
+	return t = static_cast<FonbookEntry::eType>(static_cast<int>(t) + 1);
+}
+inline FonbookEntry::eType operator++(FonbookEntry::eType& t, int) {
+	FonbookEntry::eType tmp(t);
+	++t;
+	return tmp;
+}
+
 
 /**
  * General telephonebook base class.

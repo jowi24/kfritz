@@ -1,5 +1,5 @@
 LIB = libfritz++.a
-OBJS = CallList.o Config.o Fonbooks.o Fonbook.o FonbookManager.o FritzClient.o FritzFonbook.o Listener.o Tools.o LocalFonbook.o Nummerzoeker.o OertlichesFonbook.o
+OBJS = CallList.o Config.o Fonbooks.o Fonbook.o FonbookManager.o FritzClient.o FritzFonbook.o Listener.o Tools.o LocalFonbook.o Nummerzoeker.o OertlichesFonbook.o XmlFonbook.o
 
 CXXFLAGS ?= -g -O2 -Wall -fPIC
 

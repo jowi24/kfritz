@@ -187,4 +187,6 @@
 2010-03-25:
 - Added various set methods to FonbookEntry
 
- 
+2010-07-04:
+- Updated OertlichesFonbook to website changes
+- Added XmlFonbook.cpp to Makefile
