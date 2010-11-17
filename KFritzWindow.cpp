@@ -282,6 +282,8 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("setDefaultType", aSetDefaultType);
 	connect(aSetDefaultType, SIGNAL(triggered(bool)), this, SLOT(setDefaultType()));
 
+	//TODO: Set Important
+
 	KAction *aReconnectISP = new KAction(this);
 	aReconnectISP->setText(i18n("Reconnect to internet"));
 	aReconnectISP->setIcon(KIcon("network-workgroup"));

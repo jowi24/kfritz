@@ -211,4 +211,9 @@
   
 2010-03-25:
 - Enabled editing of existing entries of writable phonebooks
+
+2010-07-07:
+- Changes in libfritz++
+  * Updated OertlichesFonbook to website changes
+
  

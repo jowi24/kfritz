@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-03-25 20:39+0100\n"
+"POT-Creation-Date: 2010-07-07 11:30+0200\n"
 "PO-Revision-Date: 2010-02-02 21:04+0100\n"
 "Last-Translator: Joachim Wilke <kfritz@joachim-wilke.de>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
@@ -29,7 +29,7 @@ msgid "Missed call"
 msgstr "Verpasster Anruf"
 
 #: KCalllistModel.cpp:56 KFritzWindow.cpp:154 libfritz++/CallList.cpp:169
-#: libfritz++/FritzClient.cpp:464
+#: libfritz++/FritzClient.cpp:485
 msgid "unknown"
 msgstr "unbekannt"
 
@@ -157,27 +157,27 @@ msgstr "Nummer in Zwischenablage kopieren"
 msgid "Set as default"
 msgstr "Nummer als Hauptnummer markieren"
 
-#: KFritzWindow.cpp:286
+#: KFritzWindow.cpp:288
 msgid "Reconnect to internet"
 msgstr "Verbindung zum Internet neu aufbauen"
 
-#: KFritzWindow.cpp:292
+#: KFritzWindow.cpp:294
 msgid "Get current IP address"
 msgstr "Aktuelle IP Adresse anzeigen"
 
-#: KFritzWindow.cpp:316
+#: KFritzWindow.cpp:318
 msgid "Missed calls"
 msgstr "Verpasste Anrufe"
 
-#: KFritzWindow.cpp:349
+#: KFritzWindow.cpp:351
 msgid "Retrieving data from Fritz!Box..."
 msgstr "Rufe Daten von der Fritz!Box ab..."
 
-#: KFritzWindow.cpp:384
+#: KFritzWindow.cpp:386
 msgid "Call history"
 msgstr "Anrufliste"
 
-#: KFritzWindow.cpp:453
+#: KFritzWindow.cpp:455
 msgid ""
 "Can not dial without a number.\n"
 "Select an entry in a phone book or the call history which contains a number or name and try again."
@@ -185,19 +185,19 @@ msgstr ""
 "Wählen ohne Nummer nicht möglich.\n"
 "Wählen sie einen Anruflisten- oder Telefonbucheintrag aus, der eine Telefonnummer enthält. Versuchen sie es danach erneut."
 
-#: KFritzWindow.cpp:453
+#: KFritzWindow.cpp:455
 msgid "Dialing not possible"
 msgstr "Wählen nicht möglich"
 
-#: KFritzWindow.cpp:461
+#: KFritzWindow.cpp:463
 msgid "Dialing initiated, pick up your phone now."
 msgstr "Wähle - Telefon jetzt abnehmen."
 
-#: KFritzWindow.cpp:481
+#: KFritzWindow.cpp:483
 msgid "Reconnect successfully initiated."
 msgstr "Verbindung wird neu aufgebaut"
 
-#: KFritzWindow.cpp:486
+#: KFritzWindow.cpp:488
 msgid "Current IP is: %1"
 msgstr "Aktuelle IP Adresse: %1"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-03-25 20:39+0100\n"
+"POT-Creation-Date: 2010-07-07 11:30+0200\n"
 "PO-Revision-Date: 2010-03-03 23:18+0100\n"
 "Last-Translator: Richard Bos <ml@radoeka.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
@@ -29,7 +29,7 @@ msgid "Missed call"
 msgstr "Gemist gesprek"
 
 #: KCalllistModel.cpp:56 KFritzWindow.cpp:154 libfritz++/CallList.cpp:169
-#: libfritz++/FritzClient.cpp:464
+#: libfritz++/FritzClient.cpp:485
 msgid "unknown"
 msgstr "onbekend"
 
@@ -158,27 +158,27 @@ msgstr ""
 msgid "Set as default"
 msgstr ""
 
-#: KFritzWindow.cpp:286
+#: KFritzWindow.cpp:288
 msgid "Reconnect to internet"
 msgstr ""
 
-#: KFritzWindow.cpp:292
+#: KFritzWindow.cpp:294
 msgid "Get current IP address"
 msgstr ""
 
-#: KFritzWindow.cpp:316
+#: KFritzWindow.cpp:318
 msgid "Missed calls"
 msgstr "Gemiste gesprekken"
 
-#: KFritzWindow.cpp:349
+#: KFritzWindow.cpp:351
 msgid "Retrieving data from Fritz!Box..."
 msgstr "Informatie ophalen van de Fritz!Box..."
 
-#: KFritzWindow.cpp:384
+#: KFritzWindow.cpp:386
 msgid "Call history"
 msgstr "Gespreksgeschiedenis"
 
-#: KFritzWindow.cpp:453
+#: KFritzWindow.cpp:455
 msgid ""
 "Can not dial without a number.\n"
 "Select an entry in a phone book or the call history which contains a number or name and try again."
@@ -186,19 +186,19 @@ msgstr ""
 "Kan zonder nummer niet bellen.\n"
 "Selecteer een item uit het telefoonboek of belgeschiedenis dat een nummer of naam bevat en probeer het nogmaals."
 
-#: KFritzWindow.cpp:453
+#: KFritzWindow.cpp:455
 msgid "Dialing not possible"
 msgstr "Bellen is niet mogelijk"
 
-#: KFritzWindow.cpp:461
+#: KFritzWindow.cpp:463
 msgid "Dialing initiated, pick up your phone now."
 msgstr ""
 
-#: KFritzWindow.cpp:481
+#: KFritzWindow.cpp:483
 msgid "Reconnect successfully initiated."
 msgstr ""
 
-#: KFritzWindow.cpp:486
+#: KFritzWindow.cpp:488
 msgid "Current IP is: %1"
 msgstr ""
 
