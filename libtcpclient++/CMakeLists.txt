@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 2.6)
-include_directories(../libpthread++)
-project (libtcpclient++)
-set(SRCS TcpClient++.cpp)
-add_library(tcpclient++ STATIC ${SRCS})

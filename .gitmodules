@@ -1,0 +1,9 @@
+[submodule "libtcpclient++"]
+	path = libtcpclient++
+	url = git://git.joachim-wilke.de/libtcpclient++
+[submodule "libpthread++"]
+	path = libpthread++
+	url = git://git.joachim-wilke.de/libpthread++
+[submodule "libfritz++"]
+	path = libfritz++
+	url = git://git.joachim-wilke.de/libfritz++
