@@ -30,6 +30,7 @@ LogDialog::LogDialog(QWidget *parent)
 	logArea->setReadOnly(true);
 	setMainWidget(logArea);
 	connect(this, SIGNAL(resetClicked()), this, SLOT(resetLog()));
+	resize(640,480);
 	setCaption(i18n("Log"));
 	hide();
 }
