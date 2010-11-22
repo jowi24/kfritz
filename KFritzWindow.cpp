@@ -58,7 +58,6 @@
  * TODO: Add "find" action
  * TODO: Make Fritz!Box phone book editable
  * TODO: Copy phone books
- * TODO: Copy numbers in call history and phone books to clipboard (suggested by Richard Bos)
  * TODO: Show status information of FB in own tab (suggested by Sir_Aim <aim@perception.de>)
  * TODO: Configure Port forwarding (suggested by Sir_Aim <aim@perception.de>)
  * TODO: Configure DynDNS (suggested by Sir_Aim <aim@perception.de>)

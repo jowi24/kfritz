@@ -188,6 +188,7 @@
 - Makefile: Moved install target to kde-install and created install target 
   using sudo instead of kdesudo.
 - Implemented "Copy number to clipboard", added entry to context menu
+  (suggested by Richard Bos)
 
 2010-03-04 / 2010-03-06 / 2010-03-21:
 - Fixed project's home URL in KAboutData (reported by Richard Bos)
