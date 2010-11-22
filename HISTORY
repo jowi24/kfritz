@@ -218,7 +218,8 @@
 
 2010-11-22:
 - Changes in libfritz++
+  * Fixed parsing SIP provider names
   * Sensitive Information like passwords, phone numbers, etc. are no longer 
     logged by default.
 - The new command line option --log-personal-info re-enables logging all information
-  
+
