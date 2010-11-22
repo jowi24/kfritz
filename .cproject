@@ -57,6 +57,9 @@
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 			<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 			<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+				<pathentry include="/usr/include/KDE" kind="inc" path="" system="true"/>
+				<pathentry include="/usr/include/qt4/QtCore" kind="inc" path="" system="true"/>
+				<pathentry include="/usr/include/qt4/QtGui" kind="inc" path="" system="true"/>
 				<pathentry kind="src" path=""/>
 				<pathentry kind="out" path=""/>
 				<pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
