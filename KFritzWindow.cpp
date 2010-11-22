@@ -47,6 +47,7 @@
 #include <CallList.h>
 #include <FritzClient.h>
 
+#include "DialDialog.h"
 #include "KSettings.h"
 #include "KSettingsFonbooks.h"
 #include "KSettingsFritzBox.h"
@@ -61,7 +62,6 @@
  * TODO: Configure Port forwarding (suggested by Sir_Aim <aim@perception.de>)
  * TODO: Configure DynDNS (suggested by Sir_Aim <aim@perception.de>)
  * TODO: Handle empty FB password (reported by Richard Bos)
- * TODO: Dial any number (suggested by Richard Bos)
  */
 
 
@@ -449,16 +449,9 @@ void KFritzWindow::dialNumber() {
 	std::string currentNumber;
 	if (currentView)
 		currentNumber = currentView->currentNumber();
-	if (currentNumber.length() == 0) {
-		KMessageBox::sorry(this, i18n("Can not dial without a number.\nSelect an entry in a phone book or the call history which contains a number or name and try again."), i18n("Dialing not possible"));
-		return;
-	}
-	//setProgressIndicator(i18n("Dialing %1", currentNumber.c_str())); //TODO: doesn't work yet (dialNumber blocks GUI thread)
-	DBG("Dialing number = " << currentNumber);
-	fritz::FritzClient fc;
-	fc.InitCall(currentNumber);
-	//setProgressIndicator();
-	KMessageBox::information(this, i18n("Dialing initiated, pick up your phone now."));
+	DialDialog *d = new DialDialog(this, currentNumber);
+	d->show();
+	// TODO: possible memleak?
 }
 
 void KFritzWindow::copyNumberToClipboard() {

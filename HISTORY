@@ -166,3 +166,5 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
 - Changed color of incoming call icon to blue, to improve readability
   (suggested by Mark Peter Wege and Markus Haitzer)
 - Set larger default size for log dialog
+- Dial arbitrary numbers
+  (suggested by Richard Bos and Christoph Rauch)
