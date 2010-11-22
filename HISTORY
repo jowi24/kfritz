@@ -222,4 +222,6 @@
   * Sensitive Information like passwords, phone numbers, etc. are no longer 
     logged by default.
 - The new command line option --log-personal-info re-enables logging all information
+- Changed color of incoming call icon to blue, to improve readability
+  (suggested by Mark Peter Wege and Markus Haitzer)
 
