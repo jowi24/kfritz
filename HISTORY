@@ -216,4 +216,9 @@
 - Changes in libfritz++
   * Updated OertlichesFonbook to website changes
 
- 
+2010-11-22:
+- Changes in libfritz++
+  * Sensitive Information like passwords, phone numbers, etc. are no longer 
+    logged by default.
+- The new command line option --log-personal-info re-enables logging all information
+  

@@ -70,7 +70,12 @@ int main (int argc, char *argv[]) {
 
 	aboutData.setProgramIconName("modem");
 
+	KCmdLineOptions options;
+	options.add("p");
+	options.add("log-personal-info", ki18n("log personal information (e.g. passwords, phone numbers, ...)"));
 	KCmdLineArgs::init( argc, argv, &aboutData );
+	KCmdLineArgs::addCmdLineOptions(options);
+
 	KApplication app;
 
 	// create GUI elements, hand-over logArea to mainWindow

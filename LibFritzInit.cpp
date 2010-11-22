@@ -25,6 +25,7 @@
 #include <Config.h>
 #include <CallList.h>
 #include <KGlobal>
+#include <KCmdLineArgs>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KComponentData>
@@ -50,10 +51,15 @@ void LibFritzInit::run() {
 	bool locationSettingsDetected;
 	std::string countryCode = KSettings::countryCode().toStdString();
 	std::string areaCode = KSettings::areaCode().toStdString();
+	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+	if (args->isSet("log-personal-info")) {
+		INF("Warning: Logging personal information requested!")
+	}
 	// start libfritz++
 	bool validPassword = fritz::Config::Setup(KSettings::hostname().toStdString(),
 			                                  password.toStdString(),
-			                                  &locationSettingsDetected, &countryCode, &areaCode);
+			                                  &locationSettingsDetected, &countryCode, &areaCode, args->isSet("log-personal-info"));
 	if (!validPassword) {
 		emit invalidPassword();
 		return;
