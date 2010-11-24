@@ -1,8 +1,14 @@
-2008-12-21:
-- Created SVN for kfritz
+Fritz!Box call monitor for KDE 'kfritz' Revision History
+--------------------------------------------------------
 
-2008-12-23:
-- Adapted to changes in libfritz++
+2008-12-21: Initial program
+
+- First KDE based approach of a callmonitor for Fritz!Boxes
+- Bases on libfritz++, part of vdr-fritz Plugin for the VideoDiscRecorder VDR.
+
+2010-02-11: Version 0.0.1
+
+- Updates in libfritz++
   * Made CallList a singleton.
   * Renamed various methods in fonbook classes from *Fonbuch* to *Fonbook*.
   * Implemented in-library msn filtering and reverse-lookups.
@@ -10,12 +16,6 @@
   * Introduced callType::ALL to get one complete call list (containing missed, 
     incoming and outgoing)
   * Moved callType to CallEntry
-
-2008-12-27:
-- Added "-fPIC" to Makefiles.
-
-2008-12-28:
-- Adapted to changes in libfritz++
   * A call to Config::SetupFonbookIDs now deletes a previously instantiated 
     FonbookManager to allow multiple calls to SetupFonbookIDs in case of 
     configuration changes.
@@ -28,28 +28,18 @@
   * Moved Config::SetupFonbookIDs to FonbookManager::CreateFonbookManager().
   * Renamed Tools::GetPhoneSettings() to Tools::GetLocationSettings().
   * Added resolving of SIP[0-9] to real provider names.
-
-2009-09-14:
-- Adapted to changes in libfritz++
-  * added sort routines to libfritz++
-- added sort routines to KCalllistModel and KFonbookModel
-
-2010-01-17:
-- Adapted to changes in libfritz++
+  * Added sort routines to libfritz++
   * Fixed a possible segfault when sorting calllists and fonbooks
-
-2010-01-18:
-- Adapted to changes in libfritz++
   * Added Config::SetupPorts() to provide non-standard ports
   * Removed useless check in CallList::RetrieveEntry()                                    
   * Fixed some warnings about ununsed parameters in base-classes and empty 
     implementations
-- Fixed some warnings about ununsed parameters
+- Added "-fPIC" to Makefiles.
+- Added sort routines to KCalllistModel and KFonbookModel
+- Fixed some warnings about unused parameters
 - Added debug mode to cmake file                     
 - Now logging to both UI and stdout
 - Introduced tabs for fonbook, calllist and log
-
-2010-01-24:
 - Implemented configuration dialog. 
   Hostname, area code and country code are now configurable
 - Using KNotify for notification only, now
@@ -57,30 +47,20 @@
   KFritzModel
 - Moved all libfritz initialization to a threaded class LibFritzInit, 
   speeding up application start
-  
-2010-01-25:
 - Modified LogStream to support logging from libfritz++ and main program.
   Introduced logging macros DBG, INF, ERR
 - Added support for password saving using KWallet
-
-2010-01-28:
 - Added a ':' in logging messages for better readability
 - Added support for libindicate-qt in CMakeLists.txt, introduced define 
   INDICATEQT_FOUND
 - Added "outgoingCall", "callConnected" and "callDisconnected" to KNotify
 - Integrated KEventHandler into KFritzBoxWindow
-
-2010-01-29:
 - Implemented support for libindicate-qt, "missed calls" are notified via 
   that way
 - Added .desktop file
-
-2010-01-30:	 
 - Added application specific icons "incoming-call", "outgoing-call", 
   "missed-call" and "new-call" 
 - Renamed relevant occurences of kfritzbox to kfritz
-
-2010-02-01:
 - Some improvements to debian subdir
 - Added configuration page "Phone books"
 - Added configuration tab "MSN filter" on page "Fritz!Box"
@@ -90,49 +70,39 @@
   changes
 - Replace the term "calllist" with "call history" on user interface
 - Translated UI texts to german
-
-2010-02-05:
 - Closing kfritz main window now minimizes to systray 
 - Passing window id to KWallet to remove warning
 - Translated texts coming from libfritz++ to german
-
-2010-02-07:
 - Added message to status bar while reading data from Fritz!Box
-
-2010-02-11:
 - Moved log to a separate dialog, moved menu entry to help menu
 - Fixed formatting of time at disconnect-notification
 - Added call to libfritz to set up config dir (in most cases 
   ~/.kde/share/apps/kfritz)
 
---> Release 0.0.1
+2010-02-16: Version 0.0.2
 
-2010-02-14:
 - Fixed translation of "Missed calls" wrt. desktop indicator
 - Fixed translation of "POTS" and "ISDN", which are strings sent from the FB
 - Added german translation to kfritz.notifyrc
 - Fixed a compiler failure on systems without libindicate-qt-dev and 
   detection of ssl-package in cmake (reported by Richard Bos)
 - Added german translation to kfritz.desktop file.
-
-2010-02-15:
 - Set default build type in cmake, cleaned up makefiles of static libs
 - Added missing KDE4_ENABLE_EXCEPTIONS to CXX_FLAGS
-
-2010-02-16:
 - Adapted to new logging system of libfritz++
 - Added missing COPYING and AUTHORS file (reported by Christian Mangold)
 
---> Release 0.0.2
-
+2010-02-16: Version 0.0.3
 - Adapted to changes in libfritz++
   * Removed dependency to OpenSSL due to licensing issues, 
     using copy of MD5 implementation from GNU coreutils 5.93
 - Dropped linking to libssl
 
---> Release 0.0.3
+2010-02-20: Version 0.0.4
 
-2010-02-17:
+- Changes in libfritz++
+  * Removed md5.[h,c] in favor of libgcrypt, libfritz++ now needs libgcrypt's 
+    development header "gcrypt.h" to compile
 - Fixed "missed calls" indicator. Missed calls during runtime were not 
   indicated. (reported by Christian Mangold)
 - Fixed clicking on "missed calls" indicator. A click now shows KFritz's call 
@@ -140,14 +110,7 @@
 - Added a missing ';' to kfritz.desktop
 - Call history no longer shows a length (0:00) for missed calls.
 - Added dutch translations (provided by Richard Bos)
-
-2010-02-18:
 - Added CMAKE_SKIP_RPATH to avoid setting a rpath in kfritz binary
-
-2010-02-19:
-- Changes in libfritz++
-  * Removed md5.[h,c] in favor of libgcrypt, libfritz++ now needs libgcrypt's 
-    development header "gcrypt.h" to compile
 - Added CMakeModules/FindGCrypt.cmake from 
   http://marc.info/?l=gcrypt-devel&m=126252802612599&w=2 for cmake support of 
   libgcrypt
@@ -156,73 +119,50 @@
   (reported by Richard Bos)
 - Fixed installation location of kfritz.desktop in CMakeLists.txt
   (patch provided by Sebastian Trueg)
-
-2010-02-20:
 - Added "Dial number" action, which dials the current selection in a phone 
   book or the call history (suggested by Richard Bos)
-  
---> Release 0.0.4
-  
-2010-02-25:
-- Changes in libfritz++
-  * Implemented FritzClient::getCurrentIP and FritzClient::reconnectISP
-- Added menu entries for getting IP and reconnecting to ISP
 
-2010-02-28:
-- Important changes in libtcpclient++
-  * Fixed a possible issue with "thread-safety" of TcpClient, a TcpClient 
-    object can now be deleted out of another thread while running
-- This prevents possible crashes when closing KFritz
-- Adapted to changes in libfritz++
+: Version 0.0.5
+- Changes in libfritz++
+  * Implemented functions to retrieve current IP and trigger a reconnect
   * phone book entries now have the addtional fields "quickdial", "vanity", 
     "priority", "important"
   * Fixed decoding of entities in xml phone book parser   
+  * Modified FonbookEntry class: one FonbookEntry now holds all numbers of a 
+  person 
+  * phone book entries now have the additional fields "quickdial", "vanity", 
+    "priority", "important"
+  * now parsing the Fritz Box's phone book via xml export file (if available)
+  * adapted local phonebook to use the same xml format, new FB versions use.
+    Existing csv phone books are converted to xml automagically, entries 
+    with TYPE_NONE are converted to TYPE_HOME
+  * Updated OertlichesFonbook to website changes
+  * Fixed parsing SIP provider names
+  * Sensitive Information like passwords, phone numbers, etc. are no longer 
+    logged by default.
+  -> The new command line option --log-personal-info re-enables logging all 
+    information
+- Important changes in libtcpclient++
+  * Fixed a possible issue with "thread-safety" of TcpClient, a TcpClient 
+    object can now be deleted out of another thread while running
+  -> This prevents possible crashes when closing KFritz
+- Added menu entries for getting IP and reconnecting to ISP
 - Added new columns to Fritz Box's phone book view 
-
-2010-03-02:
 - Moved ${GCRYPT_LIBRARIES} in CMakeLists.txt to support linking with 
   --as-needed (suggested by Richard Bos)
-
-2010-03-03:
 - Added README with installing instructions
 - Makefile: Moved install target to kde-install and created install target 
   using sudo instead of kdesudo.
 - Implemented "Copy number to clipboard", added entry to context menu
   (suggested by Richard Bos)
-
-2010-03-04 / 2010-03-06 / 2010-03-21:
 - Fixed project's home URL in KAboutData (reported by Richard Bos)
 - Updated dutch translations (thanks to Richard Bos)
 - Updated README with contribution instructions
-- Changes in libfritz++
-  * Modified FonbookEntry class: one FonbookEntry now holds all numbers of a 
-  person 
-  * phone book entries now have the additional fields "quickdial", "vanity", 
-  "priority", "important"
-  * now parsing the Fritz Box's phone book via xml export file (if available)
-  * adapted local phonebook to use the same xml format, new FB versions use.
-    Existing csv phone books are converted to xml automagically, entries 
-    with TYPE_NONE are converted to TYPE_HOME
 - Modified displaying of phone books accordingly
-
-2010-03-22:
 - Reworked displaying of phone books
   * All numbers of a contact are shown in one line
   * Default numbers are shown in bold face
-  
-2010-03-25:
 - Enabled editing of existing entries of writable phonebooks
-
-2010-07-07:
-- Changes in libfritz++
-  * Updated OertlichesFonbook to website changes
-
-2010-11-22:
-- Changes in libfritz++
-  * Fixed parsing SIP provider names
-  * Sensitive Information like passwords, phone numbers, etc. are no longer 
-    logged by default.
-- The new command line option --log-personal-info re-enables logging all information
 - Changed color of incoming call icon to blue, to improve readability
   (suggested by Mark Peter Wege and Markus Haitzer)
 - Set larger default size for log dialog
