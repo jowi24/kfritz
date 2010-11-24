@@ -56,7 +56,6 @@
  *
  * TODO: Support multiple FBs (via profiles or similar)
  * TODO: Add "find" action
- * TODO: Make Fritz!Box phone book editable
  * TODO: Copy phone books
  * TODO: Show status information of FB in own tab (suggested by Sir_Aim <aim@perception.de>)
  * TODO: Configure Port forwarding (suggested by Sir_Aim <aim@perception.de>)
