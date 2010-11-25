@@ -72,7 +72,7 @@ int main (int argc, char *argv[]) {
 
 	KCmdLineOptions options;
 	options.add("p");
-	options.add("log-personal-info", ki18n("log personal information (e.g. passwords, phone numbers, ...)"));
+	options.add("log-personal-info", ki18n("Log personal information (e.g. passwords, phone numbers, ...)"));
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KCmdLineArgs::addCmdLineOptions(options);
 

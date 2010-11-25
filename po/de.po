@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-11-25 22:40+0100\n"
+"POT-Creation-Date: 2010-11-25 22:50+0100\n"
 "PO-Revision-Date: 2010-02-02 21:04+0100\n"
 "Last-Translator: Joachim Wilke <kfritz@joachim-wilke.de>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
@@ -116,6 +116,9 @@ msgstr "Lokales Telefonbuch"
 msgid "Log"
 msgstr "Protokoll"
 
+msgid "Log personal information (e.g. passwords, phone numbers, ...)"
+msgstr "Persönliche Informationen (Passwörter, Telefonnummern, ...) protokollieren"
+
 msgid "MSN filter"
 msgstr "MSN Filter"
 
@@ -188,11 +191,11 @@ msgstr "Büro"
 msgid "das-oertliche.de"
 msgstr "das-oertliche.de"
 
-msgid "log personal information (e.g. passwords, phone numbers, ...)"
-msgstr ""
-
 msgid "nummerzoeker.com"
 msgstr "nummerzoeker.com"
+
+msgid "tel.local.ch"
+msgstr ""
 
 msgid "unknown"
 msgstr "unbekannt"

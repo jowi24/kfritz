@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-11-25 09:28+0100\n"
+"POT-Creation-Date: 2010-11-25 22:50+0100\n"
 "PO-Revision-Date: 2010-03-03 23:18+0100\n"
 "Last-Translator: Richard Bos <ml@radoeka.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
@@ -28,13 +28,6 @@ msgstr "Gesprek afgeschakeld (%1)."
 
 msgid "Call history"
 msgstr "Gespreksgeschiedenis"
-
-msgid ""
-"Can not dial without a number.\n"
-"Select an entry in a phone book or the call history which contains a number or name and try again."
-msgstr ""
-"Kan zonder nummer niet bellen.\n"
-"Selecteer een item uit het telefoonboek of belgeschiedenis dat een nummer of naam bevat en probeer het nogmaals."
 
 msgid "Configure KFritz..."
 msgstr "KFritz instellen..."
@@ -64,14 +57,14 @@ msgstr "Bel nummer"
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Ontwikkeld door Matthias Becker en Joachim Wilke."
 
+msgid "Dial"
+msgstr ""
+
 msgid "Dial number"
 msgstr "Bel nummer"
 
 msgid "Dialing initiated, pick up your phone now."
 msgstr ""
-
-msgid "Dialing not possible"
-msgstr "Bellen is niet mogelijk"
 
 msgid "Duration"
 msgstr "Gespreksduur"
@@ -124,6 +117,9 @@ msgstr "Lokaal telefoonboek"
 msgid "Log"
 msgstr "Log"
 
+msgid "Log personal information (e.g. passwords, phone numbers, ...)"
+msgstr ""
+
 msgid "MSN filter"
 msgstr "MSN filter"
 
@@ -144,6 +140,10 @@ msgstr "Naam / nummer"
 
 msgid "Notifies about phone activity and browses call history and telephone book on your Fritz!Box"
 msgstr "Geeft informatie over telefoongebruik, belgeschiedenis en telefoonboek op je Fritz!Box"
+
+#, fuzzy
+msgid "Number"
+msgstr "Nummer"
 
 msgid "Outgoing call"
 msgstr "Uitgaand gesprek"
@@ -193,9 +193,6 @@ msgstr "Werk"
 msgid "das-oertliche.de"
 msgstr "das-oertliche.de"
 
-msgid "log personal information (e.g. passwords, phone numbers, ...)"
-msgstr ""
-
 msgid "nummerzoeker.com"
 msgstr "nummerzoeker.com"
 
@@ -205,13 +202,19 @@ msgstr ""
 msgid "unknown"
 msgstr "onbekend"
 
+#~ msgid ""
+#~ "Can not dial without a number.\n"
+#~ "Select an entry in a phone book or the call history which contains a number or name and try again."
+#~ msgstr ""
+#~ "Kan zonder nummer niet bellen.\n"
+#~ "Selecteer een item uit het telefoonboek of belgeschiedenis dat een nummer of naam bevat en probeer het nogmaals."
+
+#~ msgid "Dialing not possible"
+#~ msgstr "Bellen is niet mogelijk"
+
 #~ msgid "Done"
 #~ msgstr "Gedaan"
 
 #, fuzzy
 #~ msgid "Done."
 #~ msgstr "Gedaan"
-
-#, fuzzy
-#~ msgid "Number"
-#~ msgstr "Nummer"
