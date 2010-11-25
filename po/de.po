@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-11-25 09:28+0100\n"
+"POT-Creation-Date: 2010-11-25 22:40+0100\n"
 "PO-Revision-Date: 2010-02-02 21:04+0100\n"
 "Last-Translator: Joachim Wilke <kfritz@joachim-wilke.de>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
@@ -28,13 +28,6 @@ msgstr "Anruf beendet (%1)."
 
 msgid "Call history"
 msgstr "Anrufliste"
-
-msgid ""
-"Can not dial without a number.\n"
-"Select an entry in a phone book or the call history which contains a number or name and try again."
-msgstr ""
-"Wählen ohne Nummer nicht möglich.\n"
-"Wählen sie einen Anruflisten- oder Telefonbucheintrag aus, der eine Telefonnummer enthält. Versuchen sie es danach erneut."
 
 msgid "Configure KFritz..."
 msgstr "KFritz einrichten..."
@@ -63,14 +56,14 @@ msgstr "Hauptnummer"
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Entwickelt von Matthias Becker und Joachim Wilke."
 
+msgid "Dial"
+msgstr "Wählen"
+
 msgid "Dial number"
 msgstr "Nummer wählen"
 
 msgid "Dialing initiated, pick up your phone now."
 msgstr "Wähle - Telefon jetzt abnehmen."
-
-msgid "Dialing not possible"
-msgstr "Wählen nicht möglich"
 
 msgid "Duration"
 msgstr "Dauer"
@@ -144,6 +137,9 @@ msgstr "Name / Nummer"
 msgid "Notifies about phone activity and browses call history and telephone book on your Fritz!Box"
 msgstr "Signalisiert ein- und ausgehende Telefonanrufe, zeigt Telefonbuch und Anrufliste der Fritz!Box an"
 
+msgid "Number"
+msgstr "Nummer"
+
 msgid "Outgoing call"
 msgstr "Ausgehender Anruf"
 
@@ -198,17 +194,18 @@ msgstr ""
 msgid "nummerzoeker.com"
 msgstr "nummerzoeker.com"
 
-msgid "tel.local.ch"
-msgstr ""
-
 msgid "unknown"
 msgstr "unbekannt"
 
-#~ msgid "(Default)"
-#~ msgstr "(Standard)"
+#~ msgid ""
+#~ "Can not dial without a number.\n"
+#~ "Select an entry in a phone book or the call history which contains a number or name and try again."
+#~ msgstr ""
+#~ "Wählen ohne Nummer nicht möglich.\n"
+#~ "Wählen sie einen Anruflisten- oder Telefonbucheintrag aus, der eine Telefonnummer enthält. Versuchen sie es danach erneut."
+
+#~ msgid "Dialing not possible"
+#~ msgstr "Wählen nicht möglich"
 
 #~ msgid "Important"
 #~ msgstr "Wichtig"
-
-#~ msgid "Number"
-#~ msgstr "Nummer"

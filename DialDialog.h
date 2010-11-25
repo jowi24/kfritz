@@ -23,12 +23,12 @@
 #define DIALDIALOG_H_
 
 #include <KDialog>
-#include <KLineEdit>
+#include "ui_DialDialog.h"
 
 class DialDialog: public KDialog {
 	Q_OBJECT
 private:
-	KLineEdit *numberLine;
+	Ui::DialDialog *ui;
 public:
 	DialDialog(QWidget *parent, std::string number = "");
 	virtual ~DialDialog();

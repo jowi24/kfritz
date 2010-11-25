@@ -22,6 +22,7 @@
 
 #include <KLocale>
 #include <KMessageBox>
+#include <QRegExpValidator>
 
 #include <FritzClient.h>
 
@@ -31,21 +32,29 @@
 DialDialog::DialDialog(QWidget *parent, std::string number)
 :KDialog(parent) {
 	setButtons(Ok | Cancel);
-	numberLine = new KLineEdit(this);
-	numberLine->setText(number.c_str());
-	setMainWidget(numberLine);
+	setButtonText(Ok, i18n("Dial"));
 	connect(this, SIGNAL(okClicked()), this, SLOT(dialNumber()));
 	resize(300,100);
 	setCaption(i18n("Dial number"));
+	QWidget *widget = new QWidget();
+	ui = new Ui::DialDialog();
+	ui->setupUi(widget);
+	setMainWidget(widget);
+	ui->numberLine->setText(number.c_str());
+	QRegExp rx("[0-9\*#]+");
+	QRegExpValidator *validator = new QRegExpValidator(rx, this);
+	ui->numberLine->setValidator(validator);
+	ui->numberLine->setFocus();
 }
 
 DialDialog::~DialDialog() {
+	delete ui;
 }
 
 void DialDialog::dialNumber() {
-	DBG("Dialing number = " << numberLine->text().toStdString());
+	DBG("Dialing number = " << ui->numberLine->text().toStdString());
 	fritz::FritzClient fc;
-	std::string number = numberLine->text().toStdString();
+	std::string number = ui->numberLine->text().toStdString();
 	fc.InitCall(number);
 	hide();
 	KMessageBox::information(this, i18n("Dialing initiated, pick up your phone now."));
