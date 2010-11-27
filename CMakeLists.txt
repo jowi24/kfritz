@@ -16,6 +16,10 @@ include_directories(${KDE4_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 include("FindGcryptConfig")
 gcrypt_check(GCRYPT REQUIRED gcrypt)
 
+# --- gnu common cpp library --------------------------------------------------
+find_package(PkgConfig)
+pkg_check_modules(CC++ REQUIRED libccgnu2)
+
 # --- support for libindicate -------------------------------------------------
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(INDICATEQT indicate-qt>=0.2.2)
@@ -32,9 +36,8 @@ endif (INDICATEQT_FOUND)
                     
 # --- include local libs ------------------------------------------------------
 subdirs(libtcpclient++)
-subdirs(libpthread++)
 subdirs(libfritz++)
-INCLUDE_DIRECTORIES(libfritz++ libtcpclient++ libpthread++)
+INCLUDE_DIRECTORIES(libfritz++ libtcpclient++)
 
 # --- include icons -----------------------------------------------------------
 subdirs(icons)
@@ -67,7 +70,7 @@ endif(GETTEXT_MSGFMT_EXECUTABLE)
 set(kfritzbox_SRCS DialDialog.cpp KFritz.cpp KFritzWindow.cpp KFonbookModel.cpp KSettingsFonbooks.cpp
                    KSettingsFritzBox.cpp KFritzModel.cpp KCalllistModel.cpp LibFritzInit.cpp 
                    Log.cpp LogDialog.cpp QAdaptTreeView.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS} ${CC++_CFLAGS}")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG") 
 
 kde4_add_kcfg_files(kfritzbox_SRCS GENERATE_MOC KSettings.kcfgc)
@@ -76,7 +79,7 @@ kde4_add_ui_files(kfritzbox_SRCS KSettingsFritzBox.ui KSettingsFonbooks.ui DialD
 configure_file(pkg-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/pkg-config.h)
 kde4_add_executable(kfritz ${kfritzbox_SRCS})
 target_link_libraries(kfritz ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
-                                fritz++ tcpclient++ pthread++ ${GCRYPT_LIBRARIES})
+                                fritz++ tcpclient++ ${GCRYPT_LIBRARIES} ${CC++_LIBRARIES})
 if (INDICATEQT_FOUND)
 	target_link_libraries(kfritz ${INDICATEQT_LIBRARIES})
 endif (INDICATEQT_FOUND)
