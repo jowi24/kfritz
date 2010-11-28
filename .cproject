@@ -66,6 +66,22 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
 				<buildTargets>
+					<target name="test" path="libfritz++/test" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>make</buildCommand>
+						<buildArguments>-s</buildArguments>
+						<buildTarget>test</buildTarget>
+						<stopOnError>false</stopOnError>
+						<useDefaultCommand>true</useDefaultCommand>
+						<runAllBuilders>true</runAllBuilders>
+					</target>
+					<target name="qmake" path="libfritz++/test" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>qmake</buildCommand>
+						<buildArguments/>
+						<buildTarget>test.pro</buildTarget>
+						<stopOnError>false</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+						<runAllBuilders>true</runAllBuilders>
+					</target>
 					<target name="all" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 						<buildCommand>make</buildCommand>
 						<buildArguments>-s</buildArguments>
