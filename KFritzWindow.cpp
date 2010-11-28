@@ -158,7 +158,7 @@ void KFritzWindow::HandleConnect(int connId __attribute__((unused)))
 {
 	if (notification)
 		notification->close();
-	emit signalNotification("callConnected", "Call connected.", false);
+	emit signalNotification("callConnected", i18n("Call connected."), false);
 }
 
 void KFritzWindow::HandleDisconnect(int connId __attribute__((unused)), std::string duration)

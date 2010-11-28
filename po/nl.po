@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"POT-Creation-Date: 2010-11-25 22:50+0100\n"
+"POT-Creation-Date: 2010-11-28 18:06+0100\n"
 "PO-Revision-Date: 2010-03-03 23:18+0100\n"
 "Last-Translator: Richard Bos <ml@radoeka.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
@@ -22,6 +22,10 @@ msgstr "(c) 2008-2010"
 
 msgid "Area code"
 msgstr "Kengetal"
+
+#, fuzzy
+msgid "Call connected."
+msgstr "Gesprek afgeschakeld (%1)."
 
 msgid "Call disconnected (%1)."
 msgstr "Gesprek afgeschakeld (%1)."
