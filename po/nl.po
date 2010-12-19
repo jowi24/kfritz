@@ -22,6 +22,10 @@ msgstr "(c) 2008-2010"
 msgid "Area code"
 msgstr "Kengetal"
 
+#, fuzzy
+msgid "Call connected."
+msgstr "Gesprek afgeschakeld (%1)."
+
 msgid "Call disconnected (%1)."
 msgstr "Gesprek afgeschakeld (%1)."
 

@@ -41,7 +41,7 @@ DialDialog::DialDialog(QWidget *parent, std::string number)
 	ui->setupUi(widget);
 	setMainWidget(widget);
 	ui->numberLine->setText(number.c_str());
-	QRegExp rx("[0-9\*#]+");
+	QRegExp rx("[0-9\\*#]+");
 	QRegExpValidator *validator = new QRegExpValidator(rx, this);
 	ui->numberLine->setValidator(validator);
 	ui->numberLine->setFocus();

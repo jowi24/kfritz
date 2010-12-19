@@ -22,6 +22,9 @@ msgstr "(c) 2008-2010"
 msgid "Area code"
 msgstr "Ortsvorwahl"
 
+msgid "Call connected."
+msgstr "Anruf angenommen."
+
 msgid "Call disconnected (%1)."
 msgstr "Anruf beendet (%1)."
 

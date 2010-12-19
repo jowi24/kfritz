@@ -57,9 +57,8 @@ void LibFritzInit::run() {
 		INF("Warning: Logging personal information requested!")
 	}
 	// start libfritz++
-	bool validPassword = fritz::Config::Setup(KSettings::hostname().toStdString(),
-			                                  password.toStdString(),
-			                                  &locationSettingsDetected, &countryCode, &areaCode, args->isSet("log-personal-info"));
+	fritz::Config::Setup(KSettings::hostname().toStdString(), password.toStdString(), args->isSet("log-personal-info"));
+	bool validPassword = fritz::Config::Init(&locationSettingsDetected, &countryCode, &areaCode);
 	if (!validPassword) {
 		emit invalidPassword();
 		return;
