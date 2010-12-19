@@ -7,6 +7,8 @@ project (KFRITZ)
 set(CMAKE_SKIP_RPATH TRUE)
 set(CMAKE_MODULE_PATH "${KFRITZ_SOURCE_DIR}/CMakeModules")
 
+find_package(PkgConfig REQUIRED)
+
 # --- kde includes ------------------------------------------------------------
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
@@ -17,11 +19,11 @@ include("FindGcryptConfig")
 gcrypt_check(GCRYPT REQUIRED gcrypt)
 
 # --- gnu common cpp library --------------------------------------------------
-find_package(PkgConfig)
-pkg_check_modules(CC++ REQUIRED libccgnu2)
+pkg_check_modules(CC++ REQUIRED libccgnu2 libccext2)
+include_directories(${CC++_INCLUDE_DIRS})
+link_directories(${CC++_LIBRARY_DIRS})
 
 # --- support for libindicate -------------------------------------------------
-find_package(PkgConfig REQUIRED)
 pkg_check_modules(INDICATEQT indicate-qt>=0.2.2)
 macro_log_feature(INDICATEQT_FOUND "indicate-qt" "QT bindings for libindicate" 
                                    "https://launchpad.net/libindicate-qt" 
@@ -70,7 +72,7 @@ endif(GETTEXT_MSGFMT_EXECUTABLE)
 set(kfritzbox_SRCS DialDialog.cpp KFritz.cpp KFritzWindow.cpp KFonbookModel.cpp KSettingsFonbooks.cpp
                    KSettingsFritzBox.cpp KFritzModel.cpp KCalllistModel.cpp LibFritzInit.cpp 
                    Log.cpp LogDialog.cpp QAdaptTreeView.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS} ${CC++_CFLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS} ${CC++_CFLAGS_OTHER}")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG") 
 
 kde4_add_kcfg_files(kfritzbox_SRCS GENERATE_MOC KSettings.kcfgc)
