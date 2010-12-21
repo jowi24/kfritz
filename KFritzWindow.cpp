@@ -282,6 +282,12 @@ void KFritzWindow::setupActions() {
 
 	//TODO: Set Important
 
+	KAction *aReload = new KAction(this);
+	aReload->setText(i18n("Reload"));
+	aReload->setIcon(KIcon("view-refresh"));
+	actionCollection()->addAction("reload", aReload);
+	connect(aReload, SIGNAL(triggered(bool)), this, SLOT(reload()));
+
 	KAction *aReconnectISP = new KAction(this);
 	aReconnectISP->setText(i18n("Reconnect to internet"));
 	aReconnectISP->setIcon(KIcon("network-workgroup"));
@@ -466,6 +472,10 @@ void KFritzWindow::setDefaultType() {
 	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
 	KFonbookModel *fonbookModel = static_cast<KFonbookModel *>(currentView->model());
 	fonbookModel->setDefaultType(currentView->currentIndex());
+}
+
+void KFritzWindow::reload() {
+	updateConfiguration();
 }
 
 void KFritzWindow::reconnectISP() {

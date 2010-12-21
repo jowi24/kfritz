@@ -169,6 +169,9 @@ msgstr ""
 msgid "Reconnect to internet"
 msgstr ""
 
+msgid "Reload"
+msgstr ""
+
 msgid "Restrict call history and notifications to certain MSNs"
 msgstr "Beperk gespreksgeschiedenis en meldingen tot bepaalde MSN nummers"
 
@@ -218,6 +221,4 @@ msgstr "onbekend"
 #~ msgid "Done"
 #~ msgstr "Gedaan"
 
-#, fuzzy
-#~ msgid "Done."
-#~ msgstr "Gedaan"
+

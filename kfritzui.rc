@@ -4,11 +4,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0 http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
   <ToolBar name="mainToolBar" >
+  	<Action name="reload"/>
   	<Action name="dialNumber"/>
-  	<Action name="reconnectISP"/>
-  	<Action name="getIP"/>
   </ToolBar>
   <MenuBar>
+    <Menu name="file">
+     <Action name="reload"/>
+    </Menu>
     <Menu name="tools">
       <Action name="dialNumber"/>
       <Action name="reconnectISP"/>

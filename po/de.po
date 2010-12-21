@@ -166,6 +166,9 @@ msgstr "Verbindung wird neu aufgebaut"
 msgid "Reconnect to internet"
 msgstr "Verbindung zum Internet neu aufbauen"
 
+msgid "Reload"
+msgstr "Neu laden"
+
 msgid "Restrict call history and notifications to certain MSNs"
 msgstr "Anrufliste und Benachrichtigungen auf bestimmte MSN einschränken"
 
