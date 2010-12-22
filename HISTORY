@@ -93,6 +93,7 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
 - Added missing COPYING and AUTHORS file (reported by Christian Mangold)
 
 2010-02-16: Version 0.0.3
+
 - Adapted to changes in libfritz++
   * Removed dependency to OpenSSL due to licensing issues, 
     using copy of MD5 implementation from GNU coreutils 5.93
@@ -122,7 +123,8 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
 - Added "Dial number" action, which dials the current selection in a phone 
   book or the call history (suggested by Richard Bos)
 
-: Version 0.0.5
+2010-12-24: Version 0.0.5
+
 - Changes in libfritz++
   * Implemented functions to retrieve current IP and trigger a reconnect
   * phone book entries now have the addtional fields "quickdial", "vanity", 
@@ -162,9 +164,26 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
 - Reworked displaying of phone books
   * All numbers of a contact are shown in one line
   * Default numbers are shown in bold face
-- Enabled editing of existing entries of writable phonebooks
+- Enabled editing of existing entries of writable phonebooks.
+  Writeable phone books are the local phone book and the Fritz!Box phone book.
+  The Fritz!Box phone book can only edited with recent firmware versions, that
+  provide an export button on the webinterface.
+- Added tel.local.ch phonebook
+  (suggested by Urs Aregger)
 - Changed color of incoming call icon to blue, to improve readability
   (suggested by Mark Peter Wege and Markus Haitzer)
 - Set larger default size for log dialog
 - Dial arbitrary numbers
   (suggested by Richard Bos and Christoph Rauch)
+- Moved partially from libtcpclient++ to socket support of libccgnu2/libccext2.
+- Moved from libpthread++ to thread support of libccgnu2.
+  To compile kfritz, development header files of the gnu common c++ library 
+  are needed!
+- Fixed german translation of "Call connected."
+- Added option to reload phone books and call list manually
+  (suggested by Michael Speier)
+- Added "copy number to clipboard" option to menu bar
+- Added italian translations 
+  (provided by Fabio Pirrello)
+
+

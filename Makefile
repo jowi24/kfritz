@@ -15,13 +15,15 @@ all: cmake $(POFILES) $(POTFILE)
 	cd build; make 
 
 clean:
+	@-make -C libfritz++ clean
+	@-make -C libtcpclient++ clean
 	@-rm ../kfritz-${VERSION}.orig.tar.gz
 	@-rm -rf build
 	
 dist: clean
 	tar cvz --dereference \
 	        --exclude-vcs --exclude="debian" --exclude=".settings" --exclude=".project" \
-	        --exclude=".cproject" --exclude=".cdtproject" --exclude="test" \
+	        --exclude=".cproject" --exclude=".cdtproject" --exclude="test" --exclude=".git*" \
 	        -f ../kfritz_${VERSION}.orig.tar.gz ../kfritz
 
 kde-install: all
