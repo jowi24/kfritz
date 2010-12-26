@@ -23,6 +23,7 @@
 
 #include <KIcon>
 #include <KLocalizedString>
+#include <iostream>
 
 KCalllistModel::KCalllistModel() {
 	calllist = fritz::CallList::getCallList(false);
