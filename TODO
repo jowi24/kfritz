@@ -1,0 +1,12 @@
+These are collected feature requests and todos in no certain order:
+
+* Support multiple FBs (via profiles or similar)
+* Add "find" action
+* Copy phone books
+* Show status information of FB in own tab (suggested by Sir_Aim <aim@perception.de>)
+* Configure Port forwarding (suggested by Sir_Aim <aim@perception.de>)
+* Configure DynDNS (suggested by Sir_Aim <aim@perception.de>)
+* Handle empty FB password (reported by Richard Bos)
+* Check categories in kfritz.desktop (reported by Richard Bos)
+* Use default number for actions when no specific number is selected 
+  in a phone book or call list  (suggested by Richard Bos)

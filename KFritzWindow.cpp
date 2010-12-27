@@ -53,18 +53,6 @@
 #include "KSettingsFritzBox.h"
 #include "Log.h"
 
-/* General TODOs
- *
- * TODO: Support multiple FBs (via profiles or similar)
- * TODO: Add "find" action
- * TODO: Copy phone books
- * TODO: Show status information of FB in own tab (suggested by Sir_Aim <aim@perception.de>)
- * TODO: Configure Port forwarding (suggested by Sir_Aim <aim@perception.de>)
- * TODO: Configure DynDNS (suggested by Sir_Aim <aim@perception.de>)
- * TODO: Handle empty FB password (reported by Richard Bos)
- */
-
-
 KFritzWindow::KFritzWindow()
 {
 	appName     = KGlobal::mainComponent().aboutData()->appName();
@@ -481,12 +469,12 @@ void KFritzWindow::reload() {
 void KFritzWindow::reconnectISP() {
 	fritz::FritzClient fc;
 	fc.reconnectISP();
-	KMessageBox::information(this, i18n("Reconnect successfully initiated."));
+	KMessageBox::information(this, i18n("Reconnect initiated."));
 }
 
 void KFritzWindow::getIP() {
 	fritz::FritzClient fc;
-	KMessageBox::information(this, i18n("Current IP is: %1", fc.getCurrentIP().c_str()));
+	KMessageBox::information(this, i18n("Current IP address is: %1", fc.getCurrentIP().c_str()));
 }
 
 void KFritzWindow::setProgressIndicator(QString message) {

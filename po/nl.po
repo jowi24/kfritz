@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: kfritz@joachim-wilke.de\n"
-"PO-Revision-Date: 2010-03-03 23:18+0100\n"
+"PO-Revision-Date: 2010-12-26 15:00+0100\n"
 "Last-Translator: Richard Bos <ml@radoeka.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
 "Language: nl\n"
@@ -22,12 +22,11 @@ msgstr "(c) 2008-2010"
 msgid "Area code"
 msgstr "Kengetal"
 
-#, fuzzy
 msgid "Call connected."
-msgstr "Gesprek afgeschakeld (%1)."
+msgstr "Verbinding opgezet."
 
 msgid "Call disconnected (%1)."
-msgstr "Gesprek afgeschakeld (%1)."
+msgstr "Verbinding verbroken (%1)."
 
 msgid "Call history"
 msgstr "Gespreksgeschiedenis"
@@ -42,32 +41,31 @@ msgid "Configure connection to Fritz!Box"
 msgstr "Verbinding naar de Fritz!Box instellen"
 
 msgid "Copy number to clipboard"
-msgstr ""
+msgstr "Kopieer nummer naar clipboard"
 
 msgid "Country code"
 msgstr "Landencode"
 
-msgid "Current IP is: %1"
-msgstr ""
+msgid "Current IP address is: %1"
+msgstr "Het huidige IP adres is: %1"
 
 msgid "Date"
 msgstr "Datum"
 
-#, fuzzy
 msgid "Default number"
-msgstr "Bel nummer"
+msgstr "Standaard nummer"
 
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Ontwikkeld door Matthias Becker en Joachim Wilke."
 
 msgid "Dial"
-msgstr ""
+msgstr "Kies"
 
 msgid "Dial number"
 msgstr "Bel nummer"
 
 msgid "Dialing initiated, pick up your phone now."
-msgstr ""
+msgstr "Kiezen opgestart, pak je telefoon"
 
 msgid "Duration"
 msgstr "Gespreksduur"
@@ -88,7 +86,7 @@ msgid "General"
 msgstr "Algemeen"
 
 msgid "Get current IP address"
-msgstr ""
+msgstr "Haal huidig IP adres op"
 
 msgid "Home"
 msgstr "Thuis"
@@ -100,7 +98,7 @@ msgid "ISDN"
 msgstr "ISDN"
 
 msgid "Important contact"
-msgstr ""
+msgstr "Belangrijk contact"
 
 msgid "Incoming call"
 msgstr "Inkomend gesprek"
@@ -121,7 +119,7 @@ msgid "Log"
 msgstr "Log"
 
 msgid "Log personal information (e.g. passwords, phone numbers, ...)"
-msgstr ""
+msgstr "Log persoonlijke informatie (bijvoorbeeld passeerwoorden, telefoonnummer, ....)"
 
 msgid "MSN filter"
 msgstr "MSN filter"
@@ -144,7 +142,6 @@ msgstr "Naam / nummer"
 msgid "Notifies about phone activity and browses call history and telephone book on your Fritz!Box"
 msgstr "Geeft informatie over telefoongebruik, belgeschiedenis en telefoonboek op je Fritz!Box"
 
-#, fuzzy
 msgid "Number"
 msgstr "Nummer"
 
@@ -161,16 +158,16 @@ msgid "Phone books"
 msgstr "Telefoonboeken"
 
 msgid "Quickdial"
-msgstr ""
+msgstr "Verkort kiezen"
 
-msgid "Reconnect successfully initiated."
-msgstr ""
+msgid "Reconnect initiated."
+msgstr "Opnieuw verbinden opgestart"
 
 msgid "Reconnect to internet"
-msgstr ""
+msgstr "Opnieuw met internet verbinden"
 
 msgid "Reload"
-msgstr ""
+msgstr "Herladen"
 
 msgid "Restrict call history and notifications to certain MSNs"
 msgstr "Beperk gespreksgeschiedenis en meldingen tot bepaalde MSN nummers"
@@ -182,7 +179,7 @@ msgid "Select phone books to use"
 msgstr "Telefoonnummerbron instellen"
 
 msgid "Set as default"
-msgstr ""
+msgstr "Als standaard zetten"
 
 msgid "Show log"
 msgstr "Laat de log zien"
@@ -191,7 +188,7 @@ msgid "Type"
 msgstr "Type"
 
 msgid "Vanity"
-msgstr ""
+msgstr "Alias"
 
 msgid "Work"
 msgstr "Werk"
@@ -203,7 +200,7 @@ msgid "nummerzoeker.com"
 msgstr "nummerzoeker.com"
 
 msgid "tel.local.ch"
-msgstr ""
+msgstr "tel.local.ch"
 
 msgid "unknown"
 msgstr "onbekend"
@@ -220,5 +217,3 @@ msgstr "onbekend"
 
 #~ msgid "Done"
 #~ msgstr "Gedaan"
-
-

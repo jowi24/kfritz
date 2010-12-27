@@ -46,7 +46,7 @@ msgstr "Nummer in Zwischenablage kopieren"
 msgid "Country code"
 msgstr "Ländervorwahl"
 
-msgid "Current IP is: %1"
+msgid "Current IP address is: %1"
 msgstr "Aktuelle IP Adresse: %1"
 
 msgid "Date"
@@ -160,7 +160,7 @@ msgstr "Telefonbücher"
 msgid "Quickdial"
 msgstr "Kurzwahl"
 
-msgid "Reconnect successfully initiated."
+msgid "Reconnect initiated."
 msgstr "Verbindung wird neu aufgebaut"
 
 msgid "Reconnect to internet"
