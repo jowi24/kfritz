@@ -26,4 +26,3 @@ Name=Call got disconnected
 Name[de]=Anruf beendet
 Name[nl]=Gesprek beeindigd
 Action=Popup
-X-Ubuntu-Gettext-Domain=desktop_kfritz
