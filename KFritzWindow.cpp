@@ -109,6 +109,9 @@ KFritzWindow::KFritzWindow()
 	setupActions();
 
 	setupGUI();
+
+	// remove handbook menu entry
+	actionCollection()->action("help_contents")->setVisible(false);
 }
 
 KFritzWindow::~KFritzWindow()
