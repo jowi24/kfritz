@@ -197,6 +197,12 @@ void KFritzWindow::showNotificationSettings() {
 }
 
 void KFritzWindow::updateConfiguration(const QString &dialogName __attribute__((unused))) {
+	// stop any pending initialization
+    libFritzInit->terminate();
+    showStatusbarBoxBusy(true);
+    // clean up before changing the configuration
+	fritz::Config::Shutdown();
+
 	libFritzInit->setPassword(fbPassword);
 	libFritzInit->start();
 }

@@ -36,6 +36,7 @@
 #include "Log.h"
 
 LibFritzInit::LibFritzInit(QString password, fritz::EventHandler *eventHandler) {
+	setTerminationEnabled(true);
 	this->eventHandler = eventHandler;
 	setPassword(password);
 }
