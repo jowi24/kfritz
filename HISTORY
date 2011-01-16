@@ -186,4 +186,38 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
 - Added italian translations 
   (provided by Fabio Pirrello)
 
-
+2011-01-16: Version 0.0.6
+- Changes in libfritz++
+  * Fixed resolving numbers with "Das Oertliche" phone book
+    (patch provided by Kurt Wanner)
+  * Improve checks when parsing result list in OertlichesFonbook
+    Check that at most one result is returned
+    (reported by Honky)
+  * Improve OertlichesFonbook parser
+    Looking for the onclick=... as a last attribute does not always work
+  * Add missing include to XmlFonbook
+    (reported by Richard Bos)
+  * Add Config::Shutdown() to gracefully shutdown the library
+  * Keep current call list as long as possible on reload
+    Current call list is now cleared after the new call list
+    has been parsed
+  * Fix XmlFonbook parser
+    XmlFonbook Parser was not aware of empty <number /> tags
+    (reported by Richard Bos and Achim Bohnet)
+  * Fix retry delay calculation in Listener
+- Add missing include to KCalllistModel
+  (reported by Richard Bos)
+- Simpler message "Reconnect initiated", changed message 
+  "Current IP adress is..."
+  (suggested by Richard Bos)
+- Updated NL translation
+  (provided by Richard Bos)
+- Adapt to new library function Config::Shutdown()   
+  This fixes changing the configuration at runtime. The library is now
+  shutdown before the configuration is changed and setup again afterwards
+- Remove X-Ubuntu-Gettext-Domain
+  (patch provided by Christian Mangold, reported by Felix Geyer)
+- Remove handbook menu entry
+  (patch provided by Felix Geyer)
+- Fix include commoncpp libraries in CMakeLists
+  (reported by Felix Geyer)

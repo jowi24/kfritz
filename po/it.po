@@ -17,8 +17,8 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "(c) 2008-2010"
-msgstr "(c) 2008-2010"
+msgid "(c) 2008-2011"
+msgstr "(c) 2008-2011"
 
 msgid "Area code"
 msgstr "Prefisso"

@@ -30,7 +30,7 @@
 #include <Config.h>
 #include <FonbookManager.h>
 
-static const char *VERSION        = "0.0.5";
+static const char *VERSION        = "0.0.6";
 
 KFritz::KFritz(KFritzWindow *mainWindow, KAboutData *aboutData)
 :KSystemTrayIcon("modem", mainWindow) {
@@ -59,14 +59,14 @@ int main (int argc, char *argv[]) {
 			// The license this code is released under
 			KAboutData::License_GPL,
 			// Copyright Statement
-			ki18n("(c) 2008-2010"),
+			ki18n("(c) 2008-2011"),
 			// Optional text shown in the About box.
 			// Can contain any information desired.
 			ki18n("Developed by Matthias Becker and Joachim Wilke."),
 			// The program homepage string.
 			"http://www.joachim-wilke.de/kfritz.html",
 			// The bug report email address
-			"kfritzbox@joachim-wilke.de");
+			"kfritz@joachim-wilke.de");
 
 	aboutData.setProgramIconName("modem");
 
