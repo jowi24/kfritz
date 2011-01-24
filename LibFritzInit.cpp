@@ -85,16 +85,9 @@ void LibFritzInit::run() {
 	QStringList phonebookList = KSettings::phonebookList();
 	while (phonebookList.count())
 		vFonbook.push_back(phonebookList.takeFirst().toStdString());
-	fritz::FonbookManager::CreateFonbookManager(vFonbook, "FRITZ");
+	fritz::FonbookManager::CreateFonbookManager(vFonbook, "");
 
 	fritz::CallList::CreateCallList();
-
-	// delay end of thread until calllist and the Fritz!Box fonbook are read
-	fritz::FonbookManager *fbm = fritz::FonbookManager::GetFonbookManager();
-	fritz::Fonbook *ffb =  (*(fbm->GetFonbooks()))["FRITZ"];
-	fritz::CallList *list = fritz::CallList::getCallList(false);
-	while (list->isValid() == false || ffb->isInitialized() == false)
-		sleep(1);
 
 	emit ready(true);
 }
