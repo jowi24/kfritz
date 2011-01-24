@@ -398,7 +398,6 @@ void KFritzWindow::updateMainWidgets(bool b)
     		treeFonbook->setItemsExpandable(true);
     		treeFonbook->setSortingEnabled(true);
     		treeFonbook->setModel(modelFonbook);
-    		// TODO: activate editable, depending on writeable flag
     		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
     		treeFonbook->addAction(actionCollection()->action("dialNumber"));
     		treeFonbook->addAction(actionCollection()->action("copyNumber"));
