@@ -388,26 +388,28 @@ void KFritzWindow::updateMainWidgets(bool b)
 
 	// init fonbooks, add to tabWidget
     fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
-    std::string first = fm->GetTechId(); //todo: no fb configured
-    do {
-		KFonbookModel *modelFonbook = new KFonbookModel(fm->GetTechId());
+    std::string first = fm->GetTechId();
+    if (first.length()) {
+    	do {
+    		KFonbookModel *modelFonbook = new KFonbookModel(fm->GetTechId());
 
-		QAdaptTreeView *treeFonbook = new QAdaptTreeView(this);
-		treeFonbook->setAlternatingRowColors(true);
-		treeFonbook->setItemsExpandable(true);
-		treeFonbook->setSortingEnabled(true);
-		treeFonbook->setModel(modelFonbook);
-		// TODO: activate editable, depending on writeable flag
-		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
-		treeFonbook->addAction(actionCollection()->action("dialNumber"));
-		treeFonbook->addAction(actionCollection()->action("copyNumber"));
-		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
-		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
+    		QAdaptTreeView *treeFonbook = new QAdaptTreeView(this);
+    		treeFonbook->setAlternatingRowColors(true);
+    		treeFonbook->setItemsExpandable(true);
+    		treeFonbook->setSortingEnabled(true);
+    		treeFonbook->setModel(modelFonbook);
+    		// TODO: activate editable, depending on writeable flag
+    		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
+    		treeFonbook->addAction(actionCollection()->action("dialNumber"));
+    		treeFonbook->addAction(actionCollection()->action("copyNumber"));
+    		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
+    		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
 
-		tabWidget->insertTab(0, treeFonbook,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
+    		tabWidget->insertTab(0, treeFonbook,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
 
-		fm->NextFonbook();
-	} while( first != fm->GetTechId() );
+    		fm->NextFonbook();
+    	} while( first != fm->GetTechId() );
+    }
 }
 
 void KFritzWindow::find() {
