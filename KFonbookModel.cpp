@@ -93,26 +93,26 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 	if (index.parent().isValid())
 		return QVariant();
 
-	fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
+	const fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
 
 	// Indicate important contacts using icon and tooltip
 	if (role == Qt::DecorationRole && index.column() == COLUMN_NAME)
-		return QVariant(fe->isImportant() ? KIcon("emblem-important") : KIcon("x-office-contact"));
+		return QVariant(fe->IsImportant() ? KIcon("emblem-important") : KIcon("x-office-contact"));
 	if (role == Qt::ToolTipRole && index.column() == COLUMN_NAME)
-		return QVariant(fe->isImportant() ? i18n("Important contact") : "");
+		return QVariant(fe->IsImportant() ? i18n("Important contact") : "");
 
 	// Indicate default number using bold font face and tooltip
 	if (role == Qt::FontRole || role == Qt::ToolTipRole) {
 		bool defaultNumber = false;
 		switch(index.column()) {
 		case COLUMN_NUMBER_HOME:
-			defaultNumber = (fe->getPriority(fritz::FonbookEntry::TYPE_HOME) == 1);
+			defaultNumber = (fe->GetPriority(fritz::FonbookEntry::TYPE_HOME) == 1);
 			break;
 		case COLUMN_NUMBER_MOBILE:
-			defaultNumber = (fe->getPriority(fritz::FonbookEntry::TYPE_MOBILE) == 1);
+			defaultNumber = (fe->GetPriority(fritz::FonbookEntry::TYPE_MOBILE) == 1);
 			break;
 		case COLUMN_NUMBER_WORK:
-			defaultNumber = (fe->getPriority(fritz::FonbookEntry::TYPE_WORK) == 1);
+			defaultNumber = (fe->GetPriority(fritz::FonbookEntry::TYPE_WORK) == 1);
 			break;
 		}
 		if (defaultNumber) {
@@ -132,25 +132,25 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 
 	switch (index.column()) {
 	case COLUMN_NAME:
-		return QVariant(toLocalEncoding(fe->getName()));
+		return QVariant(toLocalEncoding(fe->GetName()));
 	case COLUMN_NUMBER_HOME:
-		if (fe->getNumber(fritz::FonbookEntry::TYPE_NONE).length())
-			return QVariant(fe->getNumber(fritz::FonbookEntry::TYPE_NONE).c_str());
-		return QVariant(fe->getNumber(fritz::FonbookEntry::TYPE_HOME).c_str());
+		if (fe->GetNumber(fritz::FonbookEntry::TYPE_NONE).length())
+			return QVariant(fe->GetNumber(fritz::FonbookEntry::TYPE_NONE).c_str());
+		return QVariant(fe->GetNumber(fritz::FonbookEntry::TYPE_HOME).c_str());
 	case COLUMN_NUMBER_MOBILE:
-		return QVariant(fe->getNumber(fritz::FonbookEntry::TYPE_MOBILE).c_str());
+		return QVariant(fe->GetNumber(fritz::FonbookEntry::TYPE_MOBILE).c_str());
 	case COLUMN_NUMBER_WORK:
-		return QVariant(fe->getNumber(fritz::FonbookEntry::TYPE_WORK).c_str());
+		return QVariant(fe->GetNumber(fritz::FonbookEntry::TYPE_WORK).c_str());
 	case COLUMN_QUICKDIAL:
 		if (role == Qt::EditRole)
-			return QVariant(fe->getQuickdial().c_str());
+			return QVariant(fe->GetQuickdial().c_str());
 		else
-			return QVariant(fe->getQuickdialFormatted().c_str());
+			return QVariant(fe->GetQuickdialFormatted().c_str());
 	case COLUMN_VANITY:
 		if (role == Qt::EditRole)
-			return QVariant(fe->getVanity().c_str());
+			return QVariant(fe->GetVanity().c_str());
 		else
-			return QVariant(fe->getVanityFormatted().c_str());
+			return QVariant(fe->GetVanityFormatted().c_str());
 	default:
 		return QVariant();
 	}
@@ -158,29 +158,31 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 
 bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, int role) {
 	if (role == Qt::EditRole) {
-		fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
+		const fritz::FonbookEntry *_fe = fonbook->RetrieveFonbookEntry(index.row());
+		fritz::FonbookEntry fe(*_fe);
 		switch(index.column()) {
 		case COLUMN_NAME:
-			fe->setName(value.toString().toStdString());
+			fe.SetName(value.toString().toStdString());
 			break;
 		case COLUMN_NUMBER_HOME:
-			fe->setNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_HOME);
+			fe.SetNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_HOME);
 			break;
 		case COLUMN_NUMBER_MOBILE:
-			fe->setNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_MOBILE);
+			fe.SetNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_MOBILE);
 			break;
 		case COLUMN_NUMBER_WORK:
-			fe->setNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_WORK);
+			fe.SetNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_WORK);
 			break;
 		case COLUMN_QUICKDIAL:
-			fe->setQuickdial(value.toString().toStdString());
+			fe.SetQuickdial(value.toString().toStdString());
 			break;
 		case COLUMN_VANITY:
-			fe->setVanity(value.toString().toStdString());
+			fe.SetVanity(value.toString().toStdString());
 			break;
 		default:
 			return false;
 		}
+		fonbook->ChangeFonbookEntry(index.row(), fe);
 		emit dataChanged(index, index); // we changed one element
 		return true;
 	}
@@ -188,16 +190,15 @@ bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, 
 }
 
 void KFonbookModel::setDefaultType(const QModelIndex &index) {
-	fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
 	switch(index.column()) {
 	case COLUMN_NUMBER_HOME:
-		fe->setDefaultType(fritz::FonbookEntry::TYPE_HOME);
+		fonbook->SetDefaultType(index.row(), fritz::FonbookEntry::TYPE_HOME);
 		break;
 	case COLUMN_NUMBER_MOBILE:
-		fe->setDefaultType(fritz::FonbookEntry::TYPE_MOBILE);
+		fonbook->SetDefaultType(index.row(), fritz::FonbookEntry::TYPE_MOBILE);
 		break;
 	case COLUMN_NUMBER_WORK:
-		fe->setDefaultType(fritz::FonbookEntry::TYPE_WORK);
+		fonbook->SetDefaultType(index.row(), fritz::FonbookEntry::TYPE_WORK);
 		break;
 	default:
 		return;
@@ -255,14 +256,14 @@ void KFonbookModel::sort(int column, Qt::SortOrder order) {
 
 std::string KFonbookModel::number(const QModelIndex &i) const {
 	if (!i.parent().isValid()) {
-		fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(i.row());
+		const fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(i.row());
 		switch (i.column()) {
 		case COLUMN_NUMBER_HOME:
-			return fe->getNumber(fritz::FonbookEntry::TYPE_HOME);
+			return fe->GetNumber(fritz::FonbookEntry::TYPE_HOME);
 		case COLUMN_NUMBER_MOBILE:
-			return fe->getNumber(fritz::FonbookEntry::TYPE_MOBILE);
+			return fe->GetNumber(fritz::FonbookEntry::TYPE_MOBILE);
 		case COLUMN_NUMBER_WORK:
-			return fe->getNumber(fritz::FonbookEntry::TYPE_WORK);
+			return fe->GetNumber(fritz::FonbookEntry::TYPE_WORK);
 		default:
 			return "";
 		}
