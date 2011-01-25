@@ -25,6 +25,7 @@
 #include <KActionCollection>
 #include <KLocale>
 #include <KAboutData>
+#include <KFilterProxySearchLine>
 #include <KFindDialog>
 #include <KStandardAction>
 #include <KService>
@@ -48,6 +49,7 @@
 #include <FritzClient.h>
 
 #include "DialDialog.h"
+#include "KFritzProxyModel.h"
 #include "KSettings.h"
 #include "KSettingsFonbooks.h"
 #include "KSettingsFritzBox.h"
@@ -370,7 +372,6 @@ void KFritzWindow::updateMainWidgets(bool b)
 	// init call list, add to tabWidget
 	KCalllistModel *modelCalllist;
 	modelCalllist = new KCalllistModel();
-
 	connect(modelCalllist, SIGNAL(updated()), this, SLOT(updateMissedCallsIndicator()));
 
 	treeCallList = new QAdaptTreeView(this);
@@ -380,11 +381,23 @@ void KFritzWindow::updateMainWidgets(bool b)
 	treeCallList->addAction(actionCollection()->action("dialNumber"));
 	treeCallList->addAction(actionCollection()->action("copyNumber"));
 	treeCallList->setContextMenuPolicy(Qt::ActionsContextMenu);
-
-	treeCallList->setModel(modelCalllist);
 	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
 
-	tabWidget->insertTab(0, treeCallList, KIcon("application-x-gnumeric"), 	i18n("Call history"));
+	// init proxy class for filtering
+	KFritzProxyModel *proxyModelCalllist = new KFritzProxyModel(this);
+	proxyModelCalllist->setSourceModel(modelCalllist);
+	treeCallList->setModel(proxyModelCalllist);
+
+	// search line widget
+	KFilterProxySearchLine *search = new KFilterProxySearchLine(this);
+	search->setProxy(proxyModelCalllist);
+
+	// setup final calllist widget
+	QWidget *calllistWidget = new QWidget(this);
+	QVBoxLayout *layout = new QVBoxLayout(calllistWidget);
+	calllistWidget->layout()->addWidget(search);
+	calllistWidget->layout()->addWidget(treeCallList);
+	tabWidget->insertTab(0, calllistWidget, KIcon("application-x-gnumeric"), 	i18n("Call history"));
 
 	// init fonbooks, add to tabWidget
     fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
