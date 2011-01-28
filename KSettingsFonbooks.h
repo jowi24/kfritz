@@ -35,7 +35,7 @@ private:
 	Ui_KSettingsFonbooks *ui;
 public:
 	KSettingsFonbooks(QWidget *parent);
-	~KSettingsFonbooks();
+	virtual ~KSettingsFonbooks();
 };
 
 // this is a wrapper class used by KSettingsFonbooks to enable
