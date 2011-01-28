@@ -394,7 +394,7 @@ void KFritzWindow::updateMainWidgets(bool b)
 
 	// setup final calllist widget
 	QWidget *calllistWidget = new QWidget(this);
-	QVBoxLayout *layout = new QVBoxLayout(calllistWidget);
+	new QVBoxLayout(calllistWidget);
 	calllistWidget->layout()->addWidget(search);
 	calllistWidget->layout()->addWidget(treeCallList);
 	tabWidget->insertTab(0, calllistWidget, KIcon("application-x-gnumeric"), 	i18n("Call history"));
