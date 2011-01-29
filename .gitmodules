@@ -1,6 +1,3 @@
-[submodule "libtcpclient++"]
-	path = libtcpclient++
-	url = git://git.joachim-wilke.de/libtcpclient++
 [submodule "libfritz++"]
 	path = libfritz++
 	url = git://git.joachim-wilke.de/libfritz++
