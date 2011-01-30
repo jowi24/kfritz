@@ -512,8 +512,11 @@ void KFritzWindow::addFbEntry() {
 	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
 	KFonbookModel *model = dynamic_cast<KFonbookModel *>(currentView->model());
 	if (model){
-		model->addNewRow();
-//		currentView->setCurrentIndex(currentView->) TODO: jump to new entry
+
+		model->insertRows(model->rowCount(), 1, QModelIndex()); //TODO: fonbook does only allow appending at the end
+
+		currentView->scrollToBottom();
+		currentView->setCurrentIndex(model->index(model->rowCount()-1, 0, QModelIndex()));
 	}
 }
 
@@ -521,9 +524,10 @@ void KFritzWindow::deleteFbEntry() {
 	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
 	KFonbookModel *model = dynamic_cast<KFonbookModel *>(currentView->model());
 	if (model){
-		model->deleteRow(currentView->currentIndex());
+		QModelIndex index = model->index(currentView->currentIndex().row()-1, currentView->currentIndex().column());
+		model->removeRows(currentView->currentIndex().row(), 1, QModelIndex());
+		currentView->setCurrentIndex(index);
 	}
-
 }
 
 void KFritzWindow::setProgressIndicator(QString message) {

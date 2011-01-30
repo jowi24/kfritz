@@ -24,9 +24,11 @@
 #include <Tools.h>
 
 KFritzModel::KFritzModel() {
-	lastRows = 0;
 	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
 
+	// create timer, that periodically calls check() in the derived classes
+	// this is used, to refresh connected views in case the library has changed data in the meantime
+	// (e.g., new call in call list, init of phone book)
 	timer = new QTimer();
 	connect(timer, SIGNAL(timeout()), SLOT(check()));
 	timer->start(1000);
@@ -53,15 +55,6 @@ QModelIndex KFritzModel::parent(const QModelIndex & child __attribute__((unused)
 QString KFritzModel::toLocalEncoding(const std::string str) const {
 	return inputCodec->toUnicode(str.c_str());
 }
-
-void KFritzModel::check() {
-	if (lastRows != rowCount(QModelIndex())) {
-		reset();
-		emit updated();
-		lastRows = rowCount(QModelIndex());
-	}
-}
-
 
 
 

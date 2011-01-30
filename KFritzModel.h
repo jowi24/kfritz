@@ -39,11 +39,11 @@ public:
 Q_SIGNALS:
 	void updated();
 protected Q_SLOTS:
-	virtual void check();
+	virtual void check() = 0;
+protected:
+	QTimer *timer;
 private:
 	QTextCodec *inputCodec;
-	int lastRows;
-	QTimer *timer;
 };
 
 #endif /* KFRITZMODEL_H_ */
