@@ -94,6 +94,10 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 		return QVariant();
 
 	const fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
+	if (!fe) {
+		ERR("No FonbookEntry for index row " << index.row()); //TODO: this should not happen (but happens on delete entry)
+		return QVariant();
+	}
 
 	// Indicate important contacts using icon and tooltip
 	if (role == Qt::DecorationRole && index.column() == COLUMN_NAME)
@@ -206,6 +210,22 @@ void KFonbookModel::setDefaultType(const QModelIndex &index) {
 	QModelIndex indexLeft = createIndex(index.row(), COLUMN_NUMBER_HOME);
 	QModelIndex indexRight = createIndex(index.row(), COLUMN_NUMBER_WORK);
 	emit dataChanged(indexLeft, indexRight); // we changed up to three elements
+}
+
+void KFonbookModel::addNewRow() {
+	fritz::FonbookEntry fe(i18n("New Entry").toStdString());
+	fonbook->AddFonbookEntry(fe);
+	QModelIndex indexLeft = createIndex(fonbook->GetFonbookSize(), COLUMN_NAME);
+	QModelIndex indexRight = createIndex(fonbook->GetFonbookSize(), COLUMNS_COUNT-1);
+	emit dataChanged(indexLeft, indexRight);
+}
+
+void KFonbookModel::deleteRow(const QModelIndex &index) {
+	if(fonbook->DeleteFonbookEntry(index.row())){
+		QModelIndex indexLeft = createIndex(index.row(), COLUMN_NAME);
+		QModelIndex indexRight = createIndex(fonbook->GetFonbookSize()-1, COLUMNS_COUNT-1);
+		emit dataChanged(indexLeft, indexRight);
+	}
 }
 
 Qt::ItemFlags KFonbookModel::flags(const QModelIndex & index __attribute__((unused))) const {

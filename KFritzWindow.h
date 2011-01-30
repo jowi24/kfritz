@@ -98,6 +98,9 @@ public Q_SLOTS:
     void reload();
     void reconnectISP();
     void getIP();
+    void addFbEntry();
+    void deleteFbEntry();
+
 };
 
 #endif /*KFRITZBOXWINDOW_H_*/

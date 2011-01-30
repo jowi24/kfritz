@@ -45,6 +45,8 @@ public:
     virtual QModelIndex index(int row, int column,
     		                  const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &child) const;
+    void addNewRow();
+    void deleteRow(const QModelIndex &index);
 
 private:
 	fritz::Fonbook *fonbook;

@@ -19,6 +19,9 @@ msgstr ""
 msgid "(c) 2008-2011"
 msgstr "(c) 2008-2011"
 
+msgid "Add phone book entry"
+msgstr "Telefonbucheintrag hinzufügen"
+
 msgid "Area code"
 msgstr "Ortsvorwahl"
 
@@ -54,6 +57,9 @@ msgstr "Datum"
 
 msgid "Default number"
 msgstr "Hauptnummer"
+
+msgid "Delete phone book entry"
+msgstr "Telefonbucheintrag löschen"
 
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Entwickelt von Matthias Becker und Joachim Wilke."
@@ -138,6 +144,9 @@ msgstr "Name"
 
 msgid "Name / Number"
 msgstr "Name / Nummer"
+
+msgid "New Entry"
+msgstr "Neuer Eintrag"
 
 msgid "Notifies about phone activity and browses call history and telephone book on your Fritz!Box"
 msgstr "Signalisiert ein- und ausgehende Telefonanrufe, zeigt Telefonbuch und Anrufliste der Fritz!Box an"

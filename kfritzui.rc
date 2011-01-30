@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gui name="kfritz" version="5"
+<gui name="kfritz" version="6"
 	xmlns="http://www.kde.org/standards/kxmlgui/1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0 http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
   <ToolBar name="mainToolBar" >
   	<Action name="reload"/>
   	<Action name="dialNumber"/>
+  	<Action name="addFbEntry"/>
+  	<Action name="deleteFbEntry"/>
   </ToolBar>
   <MenuBar>
     <Menu name="file">

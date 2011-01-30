@@ -19,6 +19,10 @@ msgstr ""
 msgid "(c) 2008-2011"
 msgstr "(c) 2008-2011"
 
+#, fuzzy
+msgid "Add phone book entry"
+msgstr "Telefoonnummerbron instellen"
+
 msgid "Area code"
 msgstr "Kengetal"
 
@@ -54,6 +58,10 @@ msgstr "Datum"
 
 msgid "Default number"
 msgstr "Standaard nummer"
+
+#, fuzzy
+msgid "Delete phone book entry"
+msgstr "Telefoonnummerbron instellen"
 
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Ontwikkeld door Matthias Becker en Joachim Wilke."
@@ -138,6 +146,9 @@ msgstr "Naam"
 
 msgid "Name / Number"
 msgstr "Naam / nummer"
+
+msgid "New Entry"
+msgstr ""
 
 msgid "Notifies about phone activity and browses call history and telephone book on your Fritz!Box"
 msgstr "Geeft informatie over telefoongebruik, belgeschiedenis en telefoonboek op je Fritz!Box"

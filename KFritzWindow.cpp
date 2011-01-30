@@ -299,11 +299,19 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("getIP", aGetIP);
 	connect(aGetIP, SIGNAL(triggered(bool)), this, SLOT(getIP()));
 
+	//TODO: Place right
+	KAction *aAddFbEntry = new KAction(this);
+	aAddFbEntry->setText(i18n("Add phone book entry"));
+	actionCollection()->addAction("addFbEntry", aAddFbEntry);
+	connect(aAddFbEntry, SIGNAL(triggered(bool)), this, SLOT(addFbEntry()));
+
+	KAction *aDeleteFbEntry = new KAction(this);
+	aDeleteFbEntry->setText(i18n("Delete phone book entry"));
+	actionCollection()->addAction("deleteFbEntry", aDeleteFbEntry);
+	connect(aDeleteFbEntry, SIGNAL(triggered(bool)), this, SLOT(deleteFbEntry()));
+
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
-//	KStandardAction::find(this, SLOT(find()), actionCollection());
-//	KStandardAction::findNext(this, SLOT(findNext()), actionCollection());
-//	KStandardAction::findPrev(this, SLOT(findPrev()), actionCollection());
 }
 
 void KFritzWindow::initIndicator() {
@@ -498,6 +506,24 @@ void KFritzWindow::reconnectISP() {
 void KFritzWindow::getIP() {
 	fritz::FritzClient fc;
 	KMessageBox::information(this, i18n("Current IP address is: %1", fc.getCurrentIP().c_str()));
+}
+
+void KFritzWindow::addFbEntry() {
+	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
+	KFonbookModel *model = dynamic_cast<KFonbookModel *>(currentView->model());
+	if (model){
+		model->addNewRow();
+//		currentView->setCurrentIndex(currentView->) TODO: jump to new entry
+	}
+}
+
+void KFritzWindow::deleteFbEntry() {
+	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
+	KFonbookModel *model = dynamic_cast<KFonbookModel *>(currentView->model());
+	if (model){
+		model->deleteRow(currentView->currentIndex());
+	}
+
 }
 
 void KFritzWindow::setProgressIndicator(QString message) {
