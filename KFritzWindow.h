@@ -100,6 +100,7 @@ public Q_SLOTS:
     void getIP();
     void addFbEntry();
     void deleteFbEntry();
+    void updateActionProperties(int tabIndex);
 
 };
 

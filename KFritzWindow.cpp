@@ -299,16 +299,17 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("getIP", aGetIP);
 	connect(aGetIP, SIGNAL(triggered(bool)), this, SLOT(getIP()));
 
-	//TODO: Place right
-	KAction *aAddFbEntry = new KAction(this);
-	aAddFbEntry->setText(i18n("Add phone book entry"));
-	actionCollection()->addAction("addFbEntry", aAddFbEntry);
-	connect(aAddFbEntry, SIGNAL(triggered(bool)), this, SLOT(addFbEntry()));
+	KAction *aInsertEntry = new KAction(this);
+	aInsertEntry->setText(i18n("Insert")); //TODO: already translated in KDE
+	aInsertEntry->setIcon(KIcon("list-add"));
+	actionCollection()->addAction("insertEntry", aInsertEntry);
+	connect(aInsertEntry, SIGNAL(triggered(bool)), this, SLOT(addFbEntry()));
 
-	KAction *aDeleteFbEntry = new KAction(this);
-	aDeleteFbEntry->setText(i18n("Delete phone book entry"));
-	actionCollection()->addAction("deleteFbEntry", aDeleteFbEntry);
-	connect(aDeleteFbEntry, SIGNAL(triggered(bool)), this, SLOT(deleteFbEntry()));
+	KAction *aDeleteEntry = new KAction(this);
+	aDeleteEntry->setText(i18n("Delete")); //TODO: already translated in KDE
+	aDeleteEntry->setIcon(KIcon("list-remove"));
+	actionCollection()->addAction("deleteEntry", aDeleteEntry);
+	connect(aDeleteEntry, SIGNAL(triggered(bool)), this, SLOT(deleteFbEntry()));
 
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
@@ -420,6 +421,9 @@ void KFritzWindow::updateMainWidgets(bool b)
     		treeFonbook->setSortingEnabled(true);
     		treeFonbook->setModel(modelFonbook);
     		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
+    		treeFonbook->addAction(actionCollection()->action("insertEntry"));
+    		treeFonbook->addAction(actionCollection()->action("deleteEntry"));
+    		//TODO insert separator
     		treeFonbook->addAction(actionCollection()->action("dialNumber"));
     		treeFonbook->addAction(actionCollection()->action("copyNumber"));
     		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
@@ -430,6 +434,8 @@ void KFritzWindow::updateMainWidgets(bool b)
     		fm->NextFonbook();
     	} while( first != fm->GetTechId() );
     }
+    connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(updateActionProperties(int)));
+    updateActionProperties(tabWidget->currentIndex());
 }
 
 void KFritzWindow::find() {
@@ -470,7 +476,7 @@ void KFritzWindow::showLog() {
 }
 
 void KFritzWindow::dialNumber() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
+	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget()); //TODO: works no longer
 	std::string currentNumber;
 	if (currentView)
 		currentNumber = currentView->currentNumber();
@@ -480,7 +486,7 @@ void KFritzWindow::dialNumber() {
 }
 
 void KFritzWindow::copyNumberToClipboard() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
+	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget()); //TODO: works no longer
 	std::string currentNumber;
 	if (currentView)
 		currentNumber = currentView->currentNumber();
@@ -488,7 +494,7 @@ void KFritzWindow::copyNumberToClipboard() {
 }
 
 void KFritzWindow::setDefaultType() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
+	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget()); //TODO: deprecated
 	KFonbookModel *fonbookModel = static_cast<KFonbookModel *>(currentView->model());
 	fonbookModel->setDefaultType(currentView->currentIndex());
 }
@@ -509,7 +515,7 @@ void KFritzWindow::getIP() {
 }
 
 void KFritzWindow::addFbEntry() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
+	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());//TODO: deprecated
 	KFonbookModel *model = dynamic_cast<KFonbookModel *>(currentView->model());
 	if (model){
 
@@ -521,12 +527,27 @@ void KFritzWindow::addFbEntry() {
 }
 
 void KFritzWindow::deleteFbEntry() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
+	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());//TODO: deprecated
 	KFonbookModel *model = dynamic_cast<KFonbookModel *>(currentView->model());
 	if (model){
 		QModelIndex index = model->index(currentView->currentIndex().row()-1, currentView->currentIndex().column());
 		model->removeRows(currentView->currentIndex().row(), 1, QModelIndex());
 		currentView->setCurrentIndex(index);
+	}
+}
+
+void KFritzWindow::updateActionProperties(int tabIndex) {
+	actionCollection()->action("insertEntry")->setEnabled(false);
+	actionCollection()->action("deleteEntry")->setEnabled(false);
+	QAdaptTreeView *currentView = dynamic_cast<QAdaptTreeView *>(tabWidget->widget(tabIndex));
+	if (currentView) {
+		KFonbookModel *model = dynamic_cast<KFonbookModel *>(currentView->model());
+		if (model) {
+			// this is a phone book
+			//TODO only in editable phone books
+			actionCollection()->action("insertEntry")->setEnabled(true);
+			actionCollection()->action("deleteEntry")->setEnabled(true);
+		}
 	}
 }
 
