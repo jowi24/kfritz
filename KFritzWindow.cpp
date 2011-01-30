@@ -311,6 +311,10 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("deleteEntry", aDeleteEntry);
 	connect(aDeleteEntry, SIGNAL(triggered(bool)), this, SLOT(deleteFbEntry()));
 
+	KAction *aSeparator = new KAction(this);
+	aSeparator->setSeparator(true);
+	actionCollection()->addAction("separator", aSeparator);
+
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
 }
@@ -423,7 +427,7 @@ void KFritzWindow::updateMainWidgets(bool b)
     		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
     		treeFonbook->addAction(actionCollection()->action("insertEntry"));
     		treeFonbook->addAction(actionCollection()->action("deleteEntry"));
-    		//TODO insert separator
+    		treeFonbook->addAction(actionCollection()->action("separator"));
     		treeFonbook->addAction(actionCollection()->action("dialNumber"));
     		treeFonbook->addAction(actionCollection()->action("copyNumber"));
     		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
