@@ -221,6 +221,13 @@ bool KFonbookModel::insertRows(int row, int count __attribute__((unused)), const
 	return true;
 }
 
+bool KFonbookModel::insertFonbookEntry(int row, fritz::FonbookEntry &fe) {
+	beginInsertRows(QModelIndex(), row, row);
+	fonbook->AddFonbookEntry(fe); //TODO: enable inserting at arbitrary row
+	endInsertRows();
+	return true;
+}
+
 bool KFonbookModel::removeRows(int row, int count __attribute__((unused)), const QModelIndex &parent) {
 	beginRemoveRows(parent,row,row);
 	if(fonbook->DeleteFonbookEntry(row)){

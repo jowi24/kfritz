@@ -19,9 +19,8 @@ msgstr ""
 msgid "(c) 2008-2011"
 msgstr "(c) 2008-2011"
 
-#, fuzzy
-msgid "Add phone book entry"
-msgstr "Telefoonnummerbron instellen"
+msgid "Add"
+msgstr ""
 
 msgid "Area code"
 msgstr "Kengetal"
@@ -59,9 +58,8 @@ msgstr "Datum"
 msgid "Default number"
 msgstr "Standaard nummer"
 
-#, fuzzy
-msgid "Delete phone book entry"
-msgstr "Telefoonnummerbron instellen"
+msgid "Delete"
+msgstr ""
 
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Ontwikkeld door Matthias Becker en Joachim Wilke."
@@ -216,12 +214,20 @@ msgstr "tel.local.ch"
 msgid "unknown"
 msgstr "onbekend"
 
+#, fuzzy
+#~ msgid "Add phone book entry"
+#~ msgstr "Telefoonnummerbron instellen"
+
 #~ msgid ""
 #~ "Can not dial without a number.\n"
 #~ "Select an entry in a phone book or the call history which contains a number or name and try again."
 #~ msgstr ""
 #~ "Kan zonder nummer niet bellen.\n"
 #~ "Selecteer een item uit het telefoonboek of belgeschiedenis dat een nummer of naam bevat en probeer het nogmaals."
+
+#, fuzzy
+#~ msgid "Delete phone book entry"
+#~ msgstr "Telefoonnummerbron instellen"
 
 #~ msgid "Dialing not possible"
 #~ msgstr "Bellen is niet mogelijk"

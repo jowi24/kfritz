@@ -20,9 +20,8 @@ msgstr ""
 msgid "(c) 2008-2011"
 msgstr "(c) 2008-2011"
 
-#, fuzzy
-msgid "Add phone book entry"
-msgstr "Seleziona la rubrica da usare"
+msgid "Add"
+msgstr ""
 
 msgid "Area code"
 msgstr "Prefisso"
@@ -62,9 +61,8 @@ msgstr "Data"
 msgid "Default number"
 msgstr "Chiama"
 
-#, fuzzy
-msgid "Delete phone book entry"
-msgstr "Seleziona la rubrica da usare"
+msgid "Delete"
+msgstr ""
 
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Sviluppato da Matthias Becker e Joachim Wilke."
@@ -219,12 +217,20 @@ msgstr ""
 msgid "unknown"
 msgstr "sconosciuto"
 
+#, fuzzy
+#~ msgid "Add phone book entry"
+#~ msgstr "Seleziona la rubrica da usare"
+
 #~ msgid ""
 #~ "Can not dial without a number.\n"
 #~ "Please select an entry in a phone book or the call history which contains a number or name and try again."
 #~ msgstr ""
 #~ "Impossibile chiamare senza un numero.\n"
 #~ "Selezionare una voce dalla rubrica o dallo storico chiamate che contena un numero e riprovare."
+
+#, fuzzy
+#~ msgid "Delete phone book entry"
+#~ msgstr "Seleziona la rubrica da usare"
 
 #~ msgid "Dialing not possible"
 #~ msgstr "Impossibile chiamare"

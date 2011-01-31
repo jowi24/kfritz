@@ -19,8 +19,8 @@ msgstr ""
 msgid "(c) 2008-2011"
 msgstr "(c) 2008-2011"
 
-msgid "Add phone book entry"
-msgstr "Telefonbucheintrag hinzufügen"
+msgid "Add"
+msgstr "Hinzufügen"
 
 msgid "Area code"
 msgstr "Ortsvorwahl"
@@ -58,8 +58,8 @@ msgstr "Datum"
 msgid "Default number"
 msgstr "Hauptnummer"
 
-msgid "Delete phone book entry"
-msgstr "Telefonbucheintrag löschen"
+msgid "Delete"
+msgstr "Löschen"
 
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Entwickelt von Matthias Becker und Joachim Wilke."
@@ -214,6 +214,9 @@ msgstr ""
 msgid "unknown"
 msgstr "unbekannt"
 
+#~ msgid "Add phone book entry"
+#~ msgstr "Telefonbucheintrag hinzufügen"
+
 #~ msgid ""
 #~ "Can not dial without a number.\n"
 #~ "Select an entry in a phone book or the call history which contains a number or name and try again."
@@ -221,8 +224,15 @@ msgstr "unbekannt"
 #~ "Wählen ohne Nummer nicht möglich.\n"
 #~ "Wählen sie einen Anruflisten- oder Telefonbucheintrag aus, der eine Telefonnummer enthält. Versuchen sie es danach erneut."
 
+#~ msgid "Delete phone book entry"
+#~ msgstr "Telefonbucheintrag löschen"
+
 #~ msgid "Dialing not possible"
 #~ msgstr "Wählen nicht möglich"
 
 #~ msgid "Important"
 #~ msgstr "Wichtig"
+
+#, fuzzy
+#~ msgid "New entry"
+#~ msgstr "Neuer Eintrag"

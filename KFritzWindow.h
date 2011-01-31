@@ -65,6 +65,7 @@ private:
 	void setupActions();
     void initIndicator();
     void setProgressIndicator(QString message = QString());
+    QAdaptTreeView *getCurrentTreeView();
     virtual bool queryClose();
 Q_SIGNALS:
 	void signalNotification(QString event, QString qMessage, bool persistent);
@@ -98,7 +99,7 @@ public Q_SLOTS:
     void reload();
     void reconnectISP();
     void getIP();
-    void addEntry();
+    void addEntry(fritz::FonbookEntry *fe = NULL);
     void deleteEntry();
     void cutEntry();
     void copyEntry();

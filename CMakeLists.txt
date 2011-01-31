@@ -70,7 +70,7 @@ endif(GETTEXT_MSGFMT_EXECUTABLE)
 
 set(kfritzbox_SRCS ContainerWidget.cpp DialDialog.cpp KFritz.cpp KFritzProxyModel.cpp KFritzWindow.cpp KFonbookModel.cpp 
                    KSettingsFonbooks.cpp KSettingsFritzBox.cpp KFritzModel.cpp KCalllistModel.cpp 
-                   LibFritzInit.cpp Log.cpp LogDialog.cpp QAdaptTreeView.cpp)
+                   LibFritzInit.cpp Log.cpp LogDialog.cpp MimeFonbookEntry.cpp QAdaptTreeView.cpp)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS} ${CC++_CFLAGS_OTHER}")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG") 
 

@@ -301,21 +301,27 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("getIP", aGetIP);
 	connect(aGetIP, SIGNAL(triggered(bool)), this, SLOT(getIP()));
 
-	KAction *aInsertEntry = new KAction(this);
-	aInsertEntry->setText(i18n("Add"));
-	aInsertEntry->setIcon(KIcon("list-add"));
-	actionCollection()->addAction("addEntry", aInsertEntry);
-	connect(aInsertEntry, SIGNAL(triggered(bool)), this, SLOT(addEntry()));
+	KAction *aAddEntry = new KAction(this);
+	aAddEntry->setText(i18n("Add"));
+	aAddEntry->setIcon(KIcon("list-add"));
+	aAddEntry->setShortcut(Qt::CTRL + Qt::Key_N);
+	actionCollection()->addAction("addEntry", aAddEntry);
+	connect(aAddEntry, SIGNAL(triggered(bool)), this, SLOT(addEntry()));
 
 	KAction *aDeleteEntry = new KAction(this);
 	aDeleteEntry->setText(i18n("Delete"));
 	aDeleteEntry->setIcon(KIcon("list-remove"));
+	aDeleteEntry->setShortcut(Qt::Key_Delete);
 	actionCollection()->addAction("deleteEntry", aDeleteEntry);
 	connect(aDeleteEntry, SIGNAL(triggered(bool)), this, SLOT(deleteEntry()));
 
-	KAction *aSeparator = new KAction(this);
+	KAction *aSeparator;
+	aSeparator = new KAction(this);
 	aSeparator->setSeparator(true);
-	actionCollection()->addAction("separator", aSeparator);
+	actionCollection()->addAction("separator1", aSeparator);
+	aSeparator = new KAction(this);
+	aSeparator->setSeparator(true);
+	actionCollection()->addAction("separator2", aSeparator);
 
 	KStandardAction::cut(this, SLOT(cutEntry()), actionCollection());
 	KStandardAction::copy(this, SLOT(copyEntry()), actionCollection());
@@ -430,9 +436,13 @@ void KFritzWindow::updateMainWidgets(bool b)
     		treeFonbook->setSortingEnabled(true);
     		treeFonbook->setModel(modelFonbook);
     		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
-    		treeFonbook->addAction(actionCollection()->action("insertEntry"));
+    		treeFonbook->addAction(actionCollection()->action("edit_cut"));
+    		treeFonbook->addAction(actionCollection()->action("edit_copy"));
+    		treeFonbook->addAction(actionCollection()->action("edit_paste"));
+    		treeFonbook->addAction(actionCollection()->action("separator1"));
+    		treeFonbook->addAction(actionCollection()->action("addEntry"));
     		treeFonbook->addAction(actionCollection()->action("deleteEntry"));
-    		treeFonbook->addAction(actionCollection()->action("separator"));
+    		treeFonbook->addAction(actionCollection()->action("separator2"));
     		treeFonbook->addAction(actionCollection()->action("dialNumber"));
     		treeFonbook->addAction(actionCollection()->action("copyNumber"));
     		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
@@ -529,15 +539,15 @@ void KFritzWindow::getIP() {
 	KMessageBox::information(this, i18n("Current IP address is: %1", fc.getCurrentIP().c_str()));
 }
 
-void KFritzWindow::addEntry() {
-	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
-	QAdaptTreeView *treeView = container->getTreeView();
+void KFritzWindow::addEntry(fritz::FonbookEntry *fe) {
+	QAdaptTreeView *treeView = getCurrentTreeView();
 	if (treeView) {
-		KFonbookModel *model = dynamic_cast<KFonbookModel *>(container->getTreeView()->model());
+		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
 		if (model) {
-
-			model->insertRows(model->rowCount(), 1, QModelIndex()); //TODO: fonbook does only allow appending at the end
-
+			if (fe)
+				model->insertFonbookEntry(model->rowCount(), *fe); //TODO: fonbook does only allow appending at the end
+			else
+				model->insertRows(model->rowCount(), 1, QModelIndex()); //TODO: fonbook does only allow appending at the end
 			treeView->scrollToBottom();
 			treeView->setCurrentIndex(model->index(model->rowCount()-1, 0, QModelIndex()));
 		}
@@ -545,32 +555,49 @@ void KFritzWindow::addEntry() {
 }
 
 void KFritzWindow::deleteEntry() {
-	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
-	QAdaptTreeView *treeView = container->getTreeView();
+	QAdaptTreeView *treeView = getCurrentTreeView();
 	if (treeView) {
 		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
 		if (model) {
 			QModelIndex index = model->index(treeView->currentIndex().row()-1, treeView->currentIndex().column());
 			model->removeRows(treeView->currentIndex().row(), 1, QModelIndex());
-
 			treeView->setCurrentIndex(index);
 		}
 	}
 }
 
 void KFritzWindow::cutEntry() {
+	copyEntry();
+	deleteEntry();
 }
 
 void KFritzWindow::copyEntry() {
+	QAdaptTreeView *treeView = getCurrentTreeView();
+	if (treeView) {
+		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
+		if (model) {
+			const fritz::FonbookEntry *fe = model->getFonbook()->RetrieveFonbookEntry(treeView->currentIndex().row());
+		    QMimeData* mimeData = new MimeFonbookEntry(*fe);
+		    QApplication::clipboard()->setMimeData(mimeData);
+		}
+	}
 }
 
 void KFritzWindow::pasteEntry() {
+	const QMimeData *mime = QApplication::clipboard()->mimeData();
+	if (mime) {
+		const MimeFonbookEntry *mimeFonbookEntry = qobject_cast<const MimeFonbookEntry *>(mime);
+		if (mimeFonbookEntry) {
+			fritz::FonbookEntry *fe = mimeFonbookEntry->retrieveFonbookEntry();
+			if (fe)
+				addEntry(fe);
+		}
+	}
 }
 
-void KFritzWindow::updateActionProperties(int tabIndex) {
+void KFritzWindow::updateActionProperties(int tabIndex __attribute__((unused))) {
 	KXmlGuiWindow::stateChanged("NoEdit");
-	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->widget(tabIndex));
-	QAdaptTreeView *treeView = container->getTreeView();
+	QAdaptTreeView *treeView = getCurrentTreeView();
 	if (treeView) {
 		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
 		if (model) {
@@ -603,4 +630,10 @@ void KFritzWindow::setProgressIndicator(QString message) {
 		progressIndicator->layout()->setMargin(0);
 		statusBar()->insertPermanentWidget(1, progressIndicator);
 	}
+}
+
+QAdaptTreeView *KFritzWindow::getCurrentTreeView() {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	return treeView;
 }
