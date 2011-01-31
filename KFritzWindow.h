@@ -98,8 +98,11 @@ public Q_SLOTS:
     void reload();
     void reconnectISP();
     void getIP();
-    void addFbEntry();
-    void deleteFbEntry();
+    void addEntry();
+    void deleteEntry();
+    void cutEntry();
+    void copyEntry();
+    void pasteEntry();
     void updateActionProperties(int tabIndex);
 
 };

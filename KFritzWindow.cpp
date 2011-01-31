@@ -55,6 +55,7 @@
 #include "KSettingsFonbooks.h"
 #include "KSettingsFritzBox.h"
 #include "Log.h"
+#include "MimeFonbookEntry.h"
 
 KFritzWindow::KFritzWindow()
 {
@@ -301,21 +302,24 @@ void KFritzWindow::setupActions() {
 	connect(aGetIP, SIGNAL(triggered(bool)), this, SLOT(getIP()));
 
 	KAction *aInsertEntry = new KAction(this);
-	aInsertEntry->setText(i18n("Insert")); //TODO: already translated in KDE
+	aInsertEntry->setText(i18n("Add"));
 	aInsertEntry->setIcon(KIcon("list-add"));
-	actionCollection()->addAction("insertEntry", aInsertEntry);
-	connect(aInsertEntry, SIGNAL(triggered(bool)), this, SLOT(addFbEntry()));
+	actionCollection()->addAction("addEntry", aInsertEntry);
+	connect(aInsertEntry, SIGNAL(triggered(bool)), this, SLOT(addEntry()));
 
 	KAction *aDeleteEntry = new KAction(this);
-	aDeleteEntry->setText(i18n("Delete")); //TODO: already translated in KDE
+	aDeleteEntry->setText(i18n("Delete"));
 	aDeleteEntry->setIcon(KIcon("list-remove"));
 	actionCollection()->addAction("deleteEntry", aDeleteEntry);
-	connect(aDeleteEntry, SIGNAL(triggered(bool)), this, SLOT(deleteFbEntry()));
+	connect(aDeleteEntry, SIGNAL(triggered(bool)), this, SLOT(deleteEntry()));
 
 	KAction *aSeparator = new KAction(this);
 	aSeparator->setSeparator(true);
 	actionCollection()->addAction("separator", aSeparator);
 
+	KStandardAction::cut(this, SLOT(cutEntry()), actionCollection());
+	KStandardAction::copy(this, SLOT(copyEntry()), actionCollection());
+	KStandardAction::paste(this, SLOT(pasteEntry()), actionCollection());
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
 }
@@ -525,7 +529,7 @@ void KFritzWindow::getIP() {
 	KMessageBox::information(this, i18n("Current IP address is: %1", fc.getCurrentIP().c_str()));
 }
 
-void KFritzWindow::addFbEntry() {
+void KFritzWindow::addEntry() {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	QAdaptTreeView *treeView = container->getTreeView();
 	if (treeView) {
@@ -540,7 +544,7 @@ void KFritzWindow::addFbEntry() {
 	}
 }
 
-void KFritzWindow::deleteFbEntry() {
+void KFritzWindow::deleteEntry() {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	QAdaptTreeView *treeView = container->getTreeView();
 	if (treeView) {
@@ -554,9 +558,17 @@ void KFritzWindow::deleteFbEntry() {
 	}
 }
 
+void KFritzWindow::cutEntry() {
+}
+
+void KFritzWindow::copyEntry() {
+}
+
+void KFritzWindow::pasteEntry() {
+}
+
 void KFritzWindow::updateActionProperties(int tabIndex) {
-	actionCollection()->action("insertEntry")->setEnabled(false);
-	actionCollection()->action("deleteEntry")->setEnabled(false);
+	KXmlGuiWindow::stateChanged("NoEdit");
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->widget(tabIndex));
 	QAdaptTreeView *treeView = container->getTreeView();
 	if (treeView) {
@@ -564,8 +576,7 @@ void KFritzWindow::updateActionProperties(int tabIndex) {
 		if (model) {
 			// this is a phone book
 			//TODO only in editable phone books
-			actionCollection()->action("insertEntry")->setEnabled(true);
-			actionCollection()->action("deleteEntry")->setEnabled(true);
+			KXmlGuiWindow::stateChanged("WriteableFB");
 		}
 	}
 }
