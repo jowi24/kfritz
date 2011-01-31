@@ -68,7 +68,7 @@ endif(GETTEXT_MSGFMT_EXECUTABLE)
 
 # --- compile and link --------------------------------------------------------
 
-set(kfritzbox_SRCS DialDialog.cpp KFritz.cpp KFritzProxyModel.cpp KFritzWindow.cpp KFonbookModel.cpp 
+set(kfritzbox_SRCS ContainerWidget.cpp DialDialog.cpp KFritz.cpp KFritzProxyModel.cpp KFritzWindow.cpp KFonbookModel.cpp 
                    KSettingsFonbooks.cpp KSettingsFritzBox.cpp KFritzModel.cpp KCalllistModel.cpp 
                    LibFritzInit.cpp Log.cpp LogDialog.cpp QAdaptTreeView.cpp)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS} ${CC++_CFLAGS_OTHER}")

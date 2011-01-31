@@ -48,6 +48,7 @@
 #include <CallList.h>
 #include <FritzClient.h>
 
+#include "ContainerWidget.h"
 #include "DialDialog.h"
 #include "KFritzProxyModel.h"
 #include "KSettings.h"
@@ -406,11 +407,11 @@ void KFritzWindow::updateMainWidgets(bool b)
 	search->setProxy(proxyModelCalllist);
 
 	// setup final calllist widget
-	QWidget *calllistWidget = new QWidget(this);
-	new QVBoxLayout(calllistWidget);
-	calllistWidget->layout()->addWidget(search);
-	calllistWidget->layout()->addWidget(treeCallList);
-	tabWidget->insertTab(0, calllistWidget, KIcon("application-x-gnumeric"), 	i18n("Call history"));
+	ContainerWidget *calllistContainer = new ContainerWidget(this, treeCallList);
+	new QVBoxLayout(calllistContainer);
+	calllistContainer->layout()->addWidget(search);
+	calllistContainer->layout()->addWidget(treeCallList);
+	tabWidget->insertTab(0, calllistContainer, KIcon("application-x-gnumeric"), 	i18n("Call history"));
 
 	// init fonbooks, add to tabWidget
     fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
@@ -433,7 +434,10 @@ void KFritzWindow::updateMainWidgets(bool b)
     		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
     		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
 
-    		tabWidget->insertTab(0, treeFonbook,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
+    		ContainerWidget *fonbookContainer = new ContainerWidget(this, treeFonbook);
+    		new QVBoxLayout(fonbookContainer);
+    		fonbookContainer->layout()->addWidget(treeFonbook);
+    		tabWidget->insertTab(0, fonbookContainer,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
 
     		fm->NextFonbook();
     	} while( first != fm->GetTechId() );
@@ -480,27 +484,30 @@ void KFritzWindow::showLog() {
 }
 
 void KFritzWindow::dialNumber() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget()); //TODO: works no longer
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	std::string currentNumber;
-	if (currentView)
-		currentNumber = currentView->currentNumber();
+	if (container->getTreeView())
+		currentNumber = container->getTreeView()->currentNumber();
 	DialDialog *d = new DialDialog(this, currentNumber);
 	d->show();
 	// TODO: possible memleak?
 }
 
 void KFritzWindow::copyNumberToClipboard() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget()); //TODO: works no longer
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	std::string currentNumber;
-	if (currentView)
-		currentNumber = currentView->currentNumber();
+	if (container->getTreeView())
+		currentNumber = container->getTreeView()->currentNumber();
 	KApplication::kApplication()->clipboard()->setText(currentNumber.c_str());
 }
 
 void KFritzWindow::setDefaultType() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget()); //TODO: deprecated
-	KFonbookModel *fonbookModel = static_cast<KFonbookModel *>(currentView->model());
-	fonbookModel->setDefaultType(currentView->currentIndex());
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	if (container->getTreeView()) {
+		KFonbookModel *fonbookModel = dynamic_cast<KFonbookModel *>(container->getTreeView()->model());
+		if (fonbookModel)
+			fonbookModel->setDefaultType(container->getTreeView()->currentIndex());
+	}
 }
 
 void KFritzWindow::reload() {
@@ -519,33 +526,41 @@ void KFritzWindow::getIP() {
 }
 
 void KFritzWindow::addFbEntry() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());//TODO: deprecated
-	KFonbookModel *model = dynamic_cast<KFonbookModel *>(currentView->model());
-	if (model){
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (treeView) {
+		KFonbookModel *model = dynamic_cast<KFonbookModel *>(container->getTreeView()->model());
+		if (model) {
 
-		model->insertRows(model->rowCount(), 1, QModelIndex()); //TODO: fonbook does only allow appending at the end
+			model->insertRows(model->rowCount(), 1, QModelIndex()); //TODO: fonbook does only allow appending at the end
 
-		currentView->scrollToBottom();
-		currentView->setCurrentIndex(model->index(model->rowCount()-1, 0, QModelIndex()));
+			treeView->scrollToBottom();
+			treeView->setCurrentIndex(model->index(model->rowCount()-1, 0, QModelIndex()));
+		}
 	}
 }
 
 void KFritzWindow::deleteFbEntry() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());//TODO: deprecated
-	KFonbookModel *model = dynamic_cast<KFonbookModel *>(currentView->model());
-	if (model){
-		QModelIndex index = model->index(currentView->currentIndex().row()-1, currentView->currentIndex().column());
-		model->removeRows(currentView->currentIndex().row(), 1, QModelIndex());
-		currentView->setCurrentIndex(index);
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (treeView) {
+		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
+		if (model) {
+			QModelIndex index = model->index(treeView->currentIndex().row()-1, treeView->currentIndex().column());
+			model->removeRows(treeView->currentIndex().row(), 1, QModelIndex());
+
+			treeView->setCurrentIndex(index);
+		}
 	}
 }
 
 void KFritzWindow::updateActionProperties(int tabIndex) {
 	actionCollection()->action("insertEntry")->setEnabled(false);
 	actionCollection()->action("deleteEntry")->setEnabled(false);
-	QAdaptTreeView *currentView = dynamic_cast<QAdaptTreeView *>(tabWidget->widget(tabIndex));
-	if (currentView) {
-		KFonbookModel *model = dynamic_cast<KFonbookModel *>(currentView->model());
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->widget(tabIndex));
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (treeView) {
+		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
 		if (model) {
 			// this is a phone book
 			//TODO only in editable phone books
