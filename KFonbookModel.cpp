@@ -216,14 +216,14 @@ void KFonbookModel::setDefaultType(const QModelIndex &index) {
 bool KFonbookModel::insertRows(int row, int count __attribute__((unused)), const QModelIndex &parent) {
 	beginInsertRows(parent, row, row);
 	fritz::FonbookEntry fe(i18n("New Entry").toStdString());
-	fonbook->AddFonbookEntry(fe); //TODO: enable inserting at arbitrary row
+	fonbook->AddFonbookEntry(fe, row);
 	endInsertRows();
 	return true;
 }
 
 bool KFonbookModel::insertFonbookEntry(int row, fritz::FonbookEntry &fe) {
 	beginInsertRows(QModelIndex(), row, row);
-	fonbook->AddFonbookEntry(fe); //TODO: enable inserting at arbitrary row
+	fonbook->AddFonbookEntry(fe, row);
 	endInsertRows();
 	return true;
 }

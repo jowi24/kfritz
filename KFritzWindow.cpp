@@ -545,9 +545,9 @@ void KFritzWindow::addEntry(fritz::FonbookEntry *fe) {
 		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
 		if (model) {
 			if (fe)
-				model->insertFonbookEntry(model->rowCount(), *fe); //TODO: fonbook does only allow appending at the end
+				model->insertFonbookEntry(treeView->currentIndex().row(), *fe);
 			else
-				model->insertRows(model->rowCount(), 1, QModelIndex()); //TODO: fonbook does only allow appending at the end
+				model->insertRows(treeView->currentIndex().row(), 1, QModelIndex());
 			treeView->scrollToBottom();
 			treeView->setCurrentIndex(model->index(model->rowCount()-1, 0, QModelIndex()));
 		}
