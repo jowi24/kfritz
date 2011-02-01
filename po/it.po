@@ -45,6 +45,10 @@ msgstr "Configura Notifiche..."
 msgid "Configure connection to Fritz!Box"
 msgstr "Configura la connessione al Fritz!Box"
 
+#, fuzzy
+msgid "Configure other settings"
+msgstr "Configura Notifiche..."
+
 msgid "Copy number to clipboard"
 msgstr ""
 
@@ -157,6 +161,9 @@ msgstr "Mostra l'attivita' sulle linee telefoniche e consulta lo storico delle c
 msgid "Number"
 msgstr "Numero"
 
+msgid "Other"
+msgstr ""
+
 msgid "Outgoing call"
 msgstr "Chiamata in uscita"
 
@@ -199,6 +206,9 @@ msgstr ""
 
 msgid "Show log"
 msgstr "Mostra il log"
+
+msgid "Start minimized"
+msgstr ""
 
 msgid "Type"
 msgstr "Tipo"

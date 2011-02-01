@@ -44,5 +44,9 @@
   		<tooltip>Displays a tab with logging messages</tooltip>
   		<default>false</default>
   	</entry>
+  	<entry name="StartMinimized" type="Bool">
+  		<label>Start KFritz minimized</label>
+  		<default>false</default>
+  	</entry>
   </group> 
 </kcfg>

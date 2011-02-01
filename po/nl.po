@@ -43,6 +43,10 @@ msgstr "Meldingen instellen..."
 msgid "Configure connection to Fritz!Box"
 msgstr "Verbinding naar de Fritz!Box instellen"
 
+#, fuzzy
+msgid "Configure other settings"
+msgstr "Meldingen instellen..."
+
 msgid "Copy number to clipboard"
 msgstr "Kopieer nummer naar clipboard"
 
@@ -154,6 +158,9 @@ msgstr "Geeft informatie over telefoongebruik, belgeschiedenis en telefoonboek o
 msgid "Number"
 msgstr "Nummer"
 
+msgid "Other"
+msgstr ""
+
 msgid "Outgoing call"
 msgstr "Uitgaand gesprek"
 
@@ -196,6 +203,9 @@ msgstr "Als standaard zetten"
 
 msgid "Show log"
 msgstr "Laat de log zien"
+
+msgid "Start minimized"
+msgstr ""
 
 msgid "Type"
 msgstr "Type"

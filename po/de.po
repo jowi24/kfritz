@@ -43,6 +43,9 @@ msgstr "Benachrichtigungen einrichten..."
 msgid "Configure connection to Fritz!Box"
 msgstr "Verbindung zur Fritz!Box einrichten"
 
+msgid "Configure other settings"
+msgstr "Sonstige Optionen einstellen"
+
 msgid "Copy number to clipboard"
 msgstr "Nummer in Zwischenablage kopieren"
 
@@ -154,6 +157,9 @@ msgstr "Signalisiert ein- und ausgehende Telefonanrufe, zeigt Telefonbuch und An
 msgid "Number"
 msgstr "Nummer"
 
+msgid "Other"
+msgstr "Sonstiges"
+
 msgid "Outgoing call"
 msgstr "Ausgehender Anruf"
 
@@ -195,6 +201,9 @@ msgstr "Nummer als Hauptnummer markieren"
 
 msgid "Show log"
 msgstr "Protokoll anzeigen"
+
+msgid "Start minimized"
+msgstr "Minimiert starten"
 
 msgid "Type"
 msgstr "Typ"

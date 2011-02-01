@@ -54,6 +54,7 @@
 #include "KSettings.h"
 #include "KSettingsFonbooks.h"
 #include "KSettingsFritzBox.h"
+#include "KSettingsMisc.h"
 #include "Log.h"
 #include "MimeFonbookEntry.h"
 
@@ -193,6 +194,9 @@ void KFritzWindow::showSettings() {
 
     QWidget *frameFonbooks = new KSettingsFonbooks(this);
 	confDialog->addPage(frameFonbooks, i18n("Phone books"), "x-office-address-book", i18n("Select phone books to use"));
+
+	QWidget *frameMisc     = new KSettingsMisc(this);
+	confDialog->addPage(frameMisc,     i18n("Other"), "preferences-other", i18n("Configure other settings"));
 
 	connect(confDialog, SIGNAL(settingsChanged(const QString &)), this, SLOT(updateConfiguration(const QString &)));
 
