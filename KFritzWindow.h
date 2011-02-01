@@ -65,7 +65,6 @@ private:
 	void setupActions();
     void initIndicator();
     void setProgressIndicator(QString message = QString());
-    QAdaptTreeView *getCurrentTreeView();
     virtual bool queryClose();
 Q_SIGNALS:
 	void signalNotification(QString event, QString qMessage, bool persistent);

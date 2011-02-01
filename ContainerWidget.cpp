@@ -21,10 +21,18 @@
 
 #include "ContainerWidget.h"
 
-ContainerWidget::ContainerWidget(QWidget *parent, QAdaptTreeView *treeview) :
+ContainerWidget::ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KFonbookModel *model) :
 QWidget(parent) {
 	this->treeview = treeview;
+	this->fonbookModel = model;
+	this->calllistModel = NULL;
+}
 
+ContainerWidget::ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KCalllistModel *model) :
+QWidget(parent) {
+	this->treeview = treeview;
+	this->fonbookModel = NULL;
+	this->calllistModel = model;
 }
 
 ContainerWidget::~ContainerWidget() {

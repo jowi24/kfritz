@@ -425,7 +425,7 @@ void KFritzWindow::updateMainWidgets(bool b)
 	search->setProxy(proxyModelCalllist);
 
 	// setup final calllist widget
-	ContainerWidget *calllistContainer = new ContainerWidget(this, treeCallList);
+	ContainerWidget *calllistContainer = new ContainerWidget(this, treeCallList, modelCalllist);
 	new QVBoxLayout(calllistContainer);
 	calllistContainer->layout()->addWidget(search);
 	calllistContainer->layout()->addWidget(treeCallList);
@@ -456,7 +456,7 @@ void KFritzWindow::updateMainWidgets(bool b)
     		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
     		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
 
-    		ContainerWidget *fonbookContainer = new ContainerWidget(this, treeFonbook);
+    		ContainerWidget *fonbookContainer = new ContainerWidget(this, treeFonbook, modelFonbook);
     		new QVBoxLayout(fonbookContainer);
     		fonbookContainer->layout()->addWidget(treeFonbook);
     		tabWidget->insertTab(0, fonbookContainer,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
@@ -507,9 +507,10 @@ void KFritzWindow::showLog() {
 
 void KFritzWindow::dialNumber() {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
 	std::string currentNumber;
-	if (container->getTreeView())
-		currentNumber = container->getTreeView()->currentNumber();
+	if (treeView)
+		currentNumber = treeView->currentNumber();
 	DialDialog *d = new DialDialog(this, currentNumber);
 	d->show();
 	// TODO: possible memleak?
@@ -517,7 +518,8 @@ void KFritzWindow::dialNumber() {
 
 void KFritzWindow::copyNumberToClipboard() {
 	std::string currentNumber;
-	QAdaptTreeView *treeView = getCurrentTreeView();
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
 	if (treeView) {
 		currentNumber = treeView->currentNumber();
 		KApplication::kApplication()->clipboard()->setText(currentNumber.c_str());
@@ -525,11 +527,10 @@ void KFritzWindow::copyNumberToClipboard() {
 }
 
 void KFritzWindow::setDefaultType() {
-	QAdaptTreeView *treeView = getCurrentTreeView();
-	if (treeView) {
-		KFonbookModel *fonbookModel = dynamic_cast<KFonbookModel *>(treeView->model());
-		if (fonbookModel)
-			fonbookModel->setDefaultType(treeView->currentIndex());
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (container->isFonbook()) {
+		container->getFonbookModel()->setDefaultType(treeView->currentIndex());
 	}
 }
 
@@ -549,29 +550,27 @@ void KFritzWindow::getIP() {
 }
 
 void KFritzWindow::addEntry(fritz::FonbookEntry *fe) {
-	QAdaptTreeView *treeView = getCurrentTreeView();
-	if (treeView) {
-		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
-		if (model) {
-			if (fe)
-				model->insertFonbookEntry(treeView->currentIndex().row(), *fe);
-			else
-				model->insertRows(treeView->currentIndex().row(), 1, QModelIndex());
-			treeView->scrollToBottom();
-			treeView->setCurrentIndex(model->index(model->rowCount()-1, 0, QModelIndex()));
-		}
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (container->isFonbook()) {
+		KFonbookModel *model = container->getFonbookModel();
+		if (fe)
+			model->insertFonbookEntry(container->getTreeView()->currentIndex().row(), *fe);
+		else
+			model->insertRows(container->getTreeView()->currentIndex().row(), 1, QModelIndex());
+		treeView->scrollToBottom();
+		treeView->setCurrentIndex(model->index(model->rowCount()-1, 0, QModelIndex()));
 	}
 }
 
 void KFritzWindow::deleteEntry() {
-	QAdaptTreeView *treeView = getCurrentTreeView();
-	if (treeView) {
-		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
-		if (model) {
-			QModelIndex index = model->index(treeView->currentIndex().row()-1, treeView->currentIndex().column());
-			model->removeRows(treeView->currentIndex().row(), 1, QModelIndex());
-			treeView->setCurrentIndex(index);
-		}
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (container->isFonbook()) {
+		KFonbookModel *model = container->getFonbookModel();
+		QModelIndex index = model->index(treeView->currentIndex().row()-1, treeView->currentIndex().column());
+		model->removeRows(treeView->currentIndex().row(), 1, QModelIndex());
+		treeView->setCurrentIndex(index);
 	}
 }
 
@@ -581,23 +580,22 @@ void KFritzWindow::cutEntry() {
 }
 
 void KFritzWindow::copyEntry() {
-	QAdaptTreeView *treeView = getCurrentTreeView();
-	if (treeView) {
-		KFonbookModel *fbModel = dynamic_cast<KFonbookModel *>(treeView->model());
-		if (fbModel) {
-			const fritz::FonbookEntry *fe = fbModel->getFonbook()->RetrieveFonbookEntry(treeView->currentIndex().row());
-		    QMimeData* mimeData = new MimeFonbookEntry(*fe);
-		    QApplication::clipboard()->setMimeData(mimeData);
-		}
-		KFritzProxyModel *pxModel = dynamic_cast<KFritzProxyModel *>(treeView->model());
-		KCalllistModel *clModel = static_cast<KCalllistModel *>(pxModel->sourceModel());
-		if (clModel) {
-			const fritz::CallEntry *ce = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, treeView->currentIndex().row());
-			fritz::FonbookEntry fe(ce->remoteName);
-			fe.AddNumber(ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
-			QMimeData* mimeData = new MimeFonbookEntry(fe);
-			QApplication::clipboard()->setMimeData(mimeData);
-		}
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+
+	if (container->isFonbook()) {
+		KFonbookModel *model = container->getFonbookModel();
+		const fritz::FonbookEntry *fe = model->getFonbook()->RetrieveFonbookEntry(treeView->currentIndex().row());
+		QMimeData* mimeData = new MimeFonbookEntry(*fe);
+		QApplication::clipboard()->setMimeData(mimeData);
+	}
+	if (container->isCalllist()) {
+//		KCalllistModel *model = container->getCalllistModel(); TODO: access to calllist
+		const fritz::CallEntry *ce = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, treeView->currentIndex().row());
+		fritz::FonbookEntry fe(ce->remoteName);
+		fe.AddNumber(ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
+		QMimeData* mimeData = new MimeFonbookEntry(fe);
+		QApplication::clipboard()->setMimeData(mimeData);
 	}
 }
 
@@ -614,19 +612,20 @@ void KFritzWindow::pasteEntry() {
 }
 
 void KFritzWindow::resolveNumber() {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
 //TODO setProgressIndicator(i18n("Resolving..."));
-	QAdaptTreeView *treeView = getCurrentTreeView();
-	if (treeView) {
+	if (container->isCalllist()) {
 		std::string currentNumber = treeView->currentNumber();
 		fritz::Fonbook::sResolveResult result = fritz::FonbookManager::GetFonbook()->ResolveToName(currentNumber);
 		if (!result.name.compare(currentNumber)) {
 			// TODO: message: no result
-//TODO			statusBar()->insertItem(i18n("%1 did not resolve.", QString(currentNumber.c_str())), 0);
+//TODO		statusBar()->insertItem(i18n("%1 did not resolve.", QString(currentNumber.c_str())), 0);
 			DBG("Did not resolve.");
 		} else {
 			fritz::CallEntry *entry = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, treeView->currentIndex().row());
 			entry->remoteName = result.name;
-//TODO			statusBar()->insertItem(i18n("%1 resolves to %2.", QString(currentNumber.c_str()), QString(result.name.c_str())), 0);
+//TODO		statusBar()->insertItem(i18n("%1 resolves to %2.", QString(currentNumber.c_str()), QString(result.name.c_str())), 0);
 			DBG("Resolves to: " << result.name);
 		}
 	}
@@ -634,14 +633,10 @@ void KFritzWindow::resolveNumber() {
 
 void KFritzWindow::updateActionProperties(int tabIndex __attribute__((unused))) {
 	KXmlGuiWindow::stateChanged("NoEdit");
-	QAdaptTreeView *treeView = getCurrentTreeView();
-	if (treeView) {
-		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
-		if (model) {
-			// this is a phone book
-			//TODO only in editable phone books
-			KXmlGuiWindow::stateChanged("WriteableFB");
-		}
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	if (container->isFonbook()) {
+		//TODO only in editable phone books
+		KXmlGuiWindow::stateChanged("WriteableFB");
 	}
 }
 
@@ -669,8 +664,3 @@ void KFritzWindow::setProgressIndicator(QString message) {
 	}
 }
 
-QAdaptTreeView *KFritzWindow::getCurrentTreeView() {
-	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
-	QAdaptTreeView *treeView = container->getTreeView();
-	return treeView;
-}

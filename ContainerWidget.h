@@ -24,14 +24,23 @@
 
 #include <QWidget>
 #include "QAdaptTreeView.h"
+#include "KFonbookModel.h"
+#include "KCalllistModel.h"
 
 class ContainerWidget: public QWidget {
 private:
 	QAdaptTreeView *treeview;
+	KFonbookModel *fonbookModel;
+	KCalllistModel *calllistModel;
 public:
-	ContainerWidget(QWidget *parent, QAdaptTreeView *treeview = NULL);
+	ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KFonbookModel *model);
+	ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KCalllistModel *model);
 	virtual ~ContainerWidget();
 	QAdaptTreeView *getTreeView() { return treeview; }
+	KFonbookModel *getFonbookModel() { return fonbookModel; }
+	KCalllistModel *getCalllistModel() { return calllistModel; }
+	bool isFonbook() { return fonbookModel ? true : false; }
+	bool isCalllist() { return calllistModel ? true : false; }
 };
 
 #endif /* CONTAINERWIDGET_H_ */
