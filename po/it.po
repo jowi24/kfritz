@@ -181,6 +181,10 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
+#, fuzzy
+msgid "Resolve number"
+msgstr "Chiama"
+
 msgid "Restrict call history and notifications to certain MSNs"
 msgstr "Restringi lo storico chiamate solo ad alcuni MSN"
 

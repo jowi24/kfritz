@@ -104,6 +104,7 @@ public Q_SLOTS:
     void cutEntry();
     void copyEntry();
     void pasteEntry();
+    void resolveNumber();
     void updateActionProperties(int tabIndex);
 
 };

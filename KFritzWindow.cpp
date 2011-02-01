@@ -315,6 +315,11 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("deleteEntry", aDeleteEntry);
 	connect(aDeleteEntry, SIGNAL(triggered(bool)), this, SLOT(deleteEntry()));
 
+	KAction *aResolveNumber = new KAction(this);
+	aResolveNumber->setText(i18n("Resolve number"));
+	actionCollection()->addAction("resolveNumber", aResolveNumber);
+	connect(aResolveNumber, SIGNAL(triggered(bool)), this, SLOT(resolveNumber()));
+
 	KAction *aSeparator;
 	aSeparator = new KAction(this);
 	aSeparator->setSeparator(true);
@@ -404,6 +409,8 @@ void KFritzWindow::updateMainWidgets(bool b)
 	treeCallList->setSortingEnabled(true);
 	treeCallList->addAction(actionCollection()->action("dialNumber"));
 	treeCallList->addAction(actionCollection()->action("copyNumber"));
+	treeCallList->addAction(actionCollection()->action("separator1"));
+	treeCallList->addAction(actionCollection()->action("resolveNumber"));
 	treeCallList->setContextMenuPolicy(Qt::ActionsContextMenu);
 	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
 
@@ -592,6 +599,25 @@ void KFritzWindow::pasteEntry() {
 			fritz::FonbookEntry *fe = mimeFonbookEntry->retrieveFonbookEntry();
 			if (fe)
 				addEntry(fe);
+		}
+	}
+}
+
+void KFritzWindow::resolveNumber() {
+//TODO setProgressIndicator(i18n("Resolving..."));
+	QAdaptTreeView *treeView = getCurrentTreeView();
+	if (treeView) {
+		std::string currentNumber = treeView->currentNumber();
+		fritz::Fonbook::sResolveResult result = fritz::FonbookManager::GetFonbook()->ResolveToName(currentNumber);
+		if (!result.name.compare(currentNumber)) {
+			// TODO: message: no result
+//TODO			statusBar()->insertItem(i18n("%1 did not resolve.", QString(currentNumber.c_str())), 0);
+			DBG("Did not resolve.");
+		} else {
+			fritz::CallEntry *entry = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, treeView->currentIndex().row());
+			entry->remoteName = result.name;
+//TODO			statusBar()->insertItem(i18n("%1 resolves to %2.", QString(currentNumber.c_str()), QString(result.name.c_str())), 0);
+			DBG("Resolves to: " << result.name);
 		}
 	}
 }

@@ -178,6 +178,10 @@ msgstr "Opnieuw met internet verbinden"
 msgid "Reload"
 msgstr "Herladen"
 
+#, fuzzy
+msgid "Resolve number"
+msgstr "Standaard nummer"
+
 msgid "Restrict call history and notifications to certain MSNs"
 msgstr "Beperk gespreksgeschiedenis en meldingen tot bepaalde MSN nummers"
 

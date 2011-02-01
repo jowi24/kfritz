@@ -178,6 +178,9 @@ msgstr "Verbindung zum Internet neu aufbauen"
 msgid "Reload"
 msgstr "Neu laden"
 
+msgid "Resolve number"
+msgstr "Nummer nachschlagen"
+
 msgid "Restrict call history and notifications to certain MSNs"
 msgstr "Anrufliste und Benachrichtigungen auf bestimmte MSN einschränken"
 
