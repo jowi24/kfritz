@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see /usr/share/kde4/config/ui/ui_standards.rc -->
-<gui name="kfritz" version="17"
+<gui name="kfritz" version="18"
 	xmlns="http://www.kde.org/standards/kxmlgui/1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0 http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
@@ -33,7 +33,6 @@
   <State name="WriteableFB">
   	<enable>
 	  	<Action name="edit_cut"/>
-  		<Action name="edit_copy"/>
   		<Action name="edit_paste"/>
   		<Action name="addEntry"/>
   		<Action name="deleteEntry"/>
@@ -42,7 +41,6 @@
   <State name="NoEdit">
   	<disable>
 	  	<Action name="edit_cut"/>
-  		<Action name="edit_copy"/>
   		<Action name="edit_paste"/>
   		<Action name="addEntry"/>
   		<Action name="deleteEntry"/>  	

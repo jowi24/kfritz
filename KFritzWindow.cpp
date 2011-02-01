@@ -407,9 +407,10 @@ void KFritzWindow::updateMainWidgets(bool b)
 	treeCallList->setAlternatingRowColors(true);
 	treeCallList->setItemsExpandable(false);
 	treeCallList->setSortingEnabled(true);
+	treeCallList->addAction(actionCollection()->action("edit_copy"));
+	treeCallList->addAction(actionCollection()->action("separator1"));
 	treeCallList->addAction(actionCollection()->action("dialNumber"));
 	treeCallList->addAction(actionCollection()->action("copyNumber"));
-	treeCallList->addAction(actionCollection()->action("separator1"));
 	treeCallList->addAction(actionCollection()->action("resolveNumber"));
 	treeCallList->setContextMenuPolicy(Qt::ActionsContextMenu);
 	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
@@ -582,11 +583,20 @@ void KFritzWindow::cutEntry() {
 void KFritzWindow::copyEntry() {
 	QAdaptTreeView *treeView = getCurrentTreeView();
 	if (treeView) {
-		KFonbookModel *model = dynamic_cast<KFonbookModel *>(treeView->model());
-		if (model) {
-			const fritz::FonbookEntry *fe = model->getFonbook()->RetrieveFonbookEntry(treeView->currentIndex().row());
+		KFonbookModel *fbModel = dynamic_cast<KFonbookModel *>(treeView->model());
+		if (fbModel) {
+			const fritz::FonbookEntry *fe = fbModel->getFonbook()->RetrieveFonbookEntry(treeView->currentIndex().row());
 		    QMimeData* mimeData = new MimeFonbookEntry(*fe);
 		    QApplication::clipboard()->setMimeData(mimeData);
+		}
+		KFritzProxyModel *pxModel = dynamic_cast<KFritzProxyModel *>(treeView->model());
+		KCalllistModel *clModel = static_cast<KCalllistModel *>(pxModel->sourceModel());
+		if (clModel) {
+			const fritz::CallEntry *ce = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, treeView->currentIndex().row());
+			fritz::FonbookEntry fe(ce->remoteName);
+			fe.AddNumber(ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
+			QMimeData* mimeData = new MimeFonbookEntry(fe);
+			QApplication::clipboard()->setMimeData(mimeData);
 		}
 	}
 }
