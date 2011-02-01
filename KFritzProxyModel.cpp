@@ -23,10 +23,7 @@
 
 KFritzProxyModel::KFritzProxyModel(QObject *parent)
 : QSortFilterProxyModel(parent) {
-	// TODO Auto-generated constructor stub
-
 }
 
 KFritzProxyModel::~KFritzProxyModel() {
-	// TODO Auto-generated destructor stub
 }

@@ -28,5 +28,4 @@ QWidget(parent) {
 }
 
 ContainerWidget::~ContainerWidget() {
-	// TODO Auto-generated destructor stub
 }
