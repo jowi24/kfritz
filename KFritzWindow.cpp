@@ -508,19 +508,20 @@ void KFritzWindow::dialNumber() {
 }
 
 void KFritzWindow::copyNumberToClipboard() {
-	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	std::string currentNumber;
-	if (container->getTreeView())
-		currentNumber = container->getTreeView()->currentNumber();
-	KApplication::kApplication()->clipboard()->setText(currentNumber.c_str());
+	QAdaptTreeView *treeView = getCurrentTreeView();
+	if (treeView) {
+		currentNumber = treeView->currentNumber();
+		KApplication::kApplication()->clipboard()->setText(currentNumber.c_str());
+	}
 }
 
 void KFritzWindow::setDefaultType() {
-	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
-	if (container->getTreeView()) {
-		KFonbookModel *fonbookModel = dynamic_cast<KFonbookModel *>(container->getTreeView()->model());
+	QAdaptTreeView *treeView = getCurrentTreeView();
+	if (treeView) {
+		KFonbookModel *fonbookModel = dynamic_cast<KFonbookModel *>(treeView->model());
 		if (fonbookModel)
-			fonbookModel->setDefaultType(container->getTreeView()->currentIndex());
+			fonbookModel->setDefaultType(treeView->currentIndex());
 	}
 }
 

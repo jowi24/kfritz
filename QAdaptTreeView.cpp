@@ -21,6 +21,7 @@
 
 #include "QAdaptTreeView.h"
 #include "KFritzModel.h"
+#include "KFritzProxyModel.h"
 
 QAdaptTreeView::QAdaptTreeView(QWidget *parent)
 :QTreeView(parent) {
@@ -43,8 +44,15 @@ void QAdaptTreeView::adaptColumns() {
 }
 
 std::string QAdaptTreeView::currentNumber() {
-	if (currentIndex().isValid())
-		return static_cast<KFritzModel *>(model())->number(currentIndex());
-	else
+	if (currentIndex().isValid()) {
+		KFritzModel *fritzModel = dynamic_cast<KFritzModel *>(model());
+		if (fritzModel)
+			return fritzModel->number(currentIndex());
+		KFritzProxyModel *proxyModel = dynamic_cast<KFritzProxyModel *>(model());
+		if (proxyModel)
+			return static_cast<KFritzModel *>(proxyModel->sourceModel())->number(currentIndex());
 		return "";
+	} else {
+		return "";
+	}
 }
