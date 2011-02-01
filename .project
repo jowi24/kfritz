@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>kfritzbox</name>
+	<name>kfritz</name>
 	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>org.eclipse.cdt.make.core.makeBuilder</name>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
 			<arguments>
 				<dictionary>
-					<key>org.eclipse.cdt.core.errorOutputParser</key>
-					<value>org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.VCErrorParser;</value>
+					<key>?name?</key>
+					<value></value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.append_environment</key>
 					<value>true</value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.arguments</key>
-					<value>-s</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.command</key>
-					<value>make</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.location</key>
-					<value>/kfritz/</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.target.auto</key>
+					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
 					<value>all</value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.target.clean</key>
+					<key>org.eclipse.cdt.make.core.buildArguments</key>
+					<value></value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildCommand</key>
+					<value>make</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildLocation</key>
+					<value>${workspace_loc:/kfritz}</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
 					<value>clean</value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.target.inc</key>
-					<value>kde-install</value>
+					<key>org.eclipse.cdt.make.core.contents</key>
+					<value>org.eclipse.cdt.make.core.activeConfigSettings</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
-					<value>true</value>
+					<value>false</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.enableCleanBuild</key>
@@ -53,33 +54,30 @@
 					<value>true</value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.enabledIncrementalBuild</key>
-					<value>true</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.environment</key>
-					<value></value>
+					<key>org.eclipse.cdt.make.core.fullBuildTarget</key>
+					<value>kde-install-debug</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.stopOnError</key>
-					<value>false</value>
+					<value>true</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
-					<value>false</value>
+					<value>true</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>org.eclipse.cdt.make.core.ScannerConfigBuilder</name>
+			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
+			<triggers>full,incremental,</triggers>
 			<arguments>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.cdt.core.cnature</nature>
-		<nature>org.eclipse.cdt.make.core.makeNature</nature>
-		<nature>org.eclipse.cdt.make.core.ScannerConfigNature</nature>
 		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
 </projectDescription>

@@ -11,7 +11,16 @@ cmake:
 	cd build; cmake ..; \
 	fi
 
+cmake-debug:
+	@if test ! -d build; \
+	then mkdir -p build; \
+	cd build; cmake -DCMAKE_BUILD_TYPE:STRING=Debug ..; \
+	fi
+
 all: cmake $(POFILES) $(POTFILE)
+	cd build; make 
+	
+debug: cmake-debug $(POFILES) $(POTFILE)
 	cd build; make 
 
 clean:
@@ -27,6 +36,9 @@ dist: clean
 	        -f ../kfritz_${VERSION}.orig.tar.gz ../kfritz
 
 kde-install: all
+	cd build; kdesudo make install
+
+kde-install-debug: debug
 	cd build; kdesudo make install
 
 install:
