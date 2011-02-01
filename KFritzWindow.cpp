@@ -555,11 +555,11 @@ void KFritzWindow::addEntry(fritz::FonbookEntry *fe) {
 	if (container->isFonbook()) {
 		KFonbookModel *model = container->getFonbookModel();
 		if (fe)
-			model->insertFonbookEntry(container->getTreeView()->currentIndex().row(), *fe);
+			model->insertFonbookEntry(treeView->currentIndex().row(), *fe);
 		else
 			model->insertRows(container->getTreeView()->currentIndex().row(), 1, QModelIndex());
-		treeView->scrollToBottom();
-		treeView->setCurrentIndex(model->index(model->rowCount()-1, 0, QModelIndex()));
+		treeView->scrollTo(container->getTreeView()->currentIndex());
+		treeView->setCurrentIndex(model->index(treeView->currentIndex().row()-1,0,QModelIndex()));
 	}
 }
 
