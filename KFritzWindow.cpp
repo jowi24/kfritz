@@ -572,7 +572,10 @@ void KFritzWindow::deleteEntry() {
 	QAdaptTreeView *treeView = container->getTreeView();
 	if (container->isFonbook()) {
 		KFonbookModel *model = container->getFonbookModel();
-		QModelIndex index = model->index(treeView->currentIndex().row()-1, treeView->currentIndex().column());
+		size_t newRow = treeView->currentIndex().row();
+		if (treeView->currentIndex().row() == model->rowCount()-1)
+			newRow--;
+		QModelIndex index = model->index(newRow, treeView->currentIndex().column());
 		model->removeRows(treeView->currentIndex().row(), 1, QModelIndex());
 		treeView->setCurrentIndex(index);
 	}
