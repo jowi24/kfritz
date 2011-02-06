@@ -36,6 +36,7 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual const fritz::CallEntry *retrieveCallEntry(const QModelIndex &index) const;
     virtual void sort(int column, Qt::SortOrder order);
     virtual std::string number(const QModelIndex &index) const;
 

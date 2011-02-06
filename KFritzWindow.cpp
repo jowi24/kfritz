@@ -597,10 +597,10 @@ void KFritzWindow::copyEntry() {
 		QApplication::clipboard()->setMimeData(mimeData);
 	}
 	if (container->isCalllist()) {
-//		KCalllistModel *model = container->getCalllistModel(); TODO: access to calllist
+		KCalllistModel *model = container->getCalllistModel();
 		KFritzProxyModel *proxy = static_cast<KFritzProxyModel*>( treeView->model());
 		QModelIndex sourceIndex = proxy->mapToSource(treeView->currentIndex());
-		const fritz::CallEntry *ce = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, sourceIndex.row());
+		const fritz::CallEntry *ce = model->retrieveCallEntry(sourceIndex);
 		fritz::FonbookEntry fe(ce->remoteName);
 		fe.AddNumber(ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
 		QMimeData* mimeData = new MimeFonbookEntry(fe);
