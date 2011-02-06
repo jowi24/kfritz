@@ -367,12 +367,9 @@ bool KFritzWindow::queryClose() {
 
 void KFritzWindow::updateMissedCallsIndicator() {
 	fritz::CallList *callList = fritz::CallList::getCallList(false);
-	size_t missedCallCount = 0;
-	if (callList) {
-		for (size_t pos = 0; pos < callList->GetSize(fritz::CallEntry::MISSED); pos++)
-			if (KSettings::lastKnownMissedCall() < callList->RetrieveEntry(fritz::CallEntry::MISSED, pos)->timestamp)
-				missedCallCount++;
-	}
+	if (!callList)
+		return;
+	size_t missedCallCount = callList->MissedCalls(KSettings::lastKnownMissedCall());
 #ifdef INDICATEQT_FOUND
 	missedCallsIndicator->setCountProperty(missedCallCount);
 	if (missedCallCount == 0)
