@@ -66,6 +66,7 @@ private:
     void initIndicator();
     void setProgressIndicator(QString message = QString());
     virtual bool queryClose();
+    std::string getCurrentNumber();
 Q_SIGNALS:
 	void signalNotification(QString event, QString qMessage, bool persistent);
 private Q_SLOTS:

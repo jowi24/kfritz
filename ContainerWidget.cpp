@@ -28,7 +28,7 @@ QWidget(parent) {
 	this->calllistModel = NULL;
 }
 
-ContainerWidget::ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KCalllistModel *model) :
+ContainerWidget::ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KCalllistProxyModel *model) :
 QWidget(parent) {
 	this->treeview = treeview;
 	this->fonbookModel = NULL;

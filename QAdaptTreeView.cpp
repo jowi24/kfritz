@@ -21,7 +21,7 @@
 
 #include "QAdaptTreeView.h"
 #include "KFritzModel.h"
-#include "KFritzProxyModel.h"
+#include "KCalllistProxyModel.h"
 
 QAdaptTreeView::QAdaptTreeView(QWidget *parent)
 :QTreeView(parent) {
@@ -41,18 +41,4 @@ void QAdaptTreeView::adaptColumns() {
     // Resize the column to the size of its contents
     for (int col=0; col < model()->columnCount(QModelIndex()); col++)
            resizeColumnToContents(col);
-}
-
-std::string QAdaptTreeView::currentNumber() {
-	if (currentIndex().isValid()) {
-		KFritzModel *fritzModel = dynamic_cast<KFritzModel *>(model());
-		if (fritzModel)
-			return fritzModel->number(currentIndex());
-		KFritzProxyModel *proxyModel = dynamic_cast<KFritzProxyModel *>(model());
-		if (proxyModel)
-			return static_cast<KFritzModel *>(proxyModel->sourceModel())->number(proxyModel->mapToSource(currentIndex()));
-		return "";
-	} else {
-		return "";
-	}
 }

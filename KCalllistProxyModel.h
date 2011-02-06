@@ -23,11 +23,14 @@
 #define FILTERPROXYMODEL_H_
 
 #include <QSortFilterProxyModel>
+#include <CallList.h>
 
-class KFritzProxyModel : public QSortFilterProxyModel {
+class KCalllistProxyModel : public QSortFilterProxyModel {
 public:
-	KFritzProxyModel(QObject *parent);
-	virtual ~KFritzProxyModel();
+	KCalllistProxyModel(QObject *parent);
+	virtual ~KCalllistProxyModel();
+	virtual const fritz::CallEntry *retrieveCallEntry(const QModelIndex &index) const;
+	virtual std::string number(const QModelIndex &index) const;
 };
 
 #endif /* FILTERPROXYMODEL_H_ */

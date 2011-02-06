@@ -50,7 +50,7 @@
 
 #include "ContainerWidget.h"
 #include "DialDialog.h"
-#include "KFritzProxyModel.h"
+#include "KCalllistProxyModel.h"
 #include "KSettings.h"
 #include "KSettingsFonbooks.h"
 #include "KSettingsFritzBox.h"
@@ -417,7 +417,7 @@ void KFritzWindow::updateMainWidgets(bool b)
 	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
 
 	// init proxy class for filtering
-	KFritzProxyModel *proxyModelCalllist = new KFritzProxyModel(this);
+	KCalllistProxyModel *proxyModelCalllist = new KCalllistProxyModel(this);
 	proxyModelCalllist->setSourceModel(modelCalllist);
 	treeCallList->setModel(proxyModelCalllist);
 
@@ -426,7 +426,7 @@ void KFritzWindow::updateMainWidgets(bool b)
 	search->setProxy(proxyModelCalllist);
 
 	// setup final calllist widget
-	ContainerWidget *calllistContainer = new ContainerWidget(this, treeCallList, modelCalllist);
+	ContainerWidget *calllistContainer = new ContainerWidget(this, treeCallList, proxyModelCalllist);
 	new QVBoxLayout(calllistContainer);
 	calllistContainer->layout()->addWidget(search);
 	calllistContainer->layout()->addWidget(treeCallList);
@@ -506,25 +506,25 @@ void KFritzWindow::showLog() {
 	logDialog->show();
 }
 
-void KFritzWindow::dialNumber() {
+std::string KFritzWindow::getCurrentNumber() {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	QAdaptTreeView *treeView = container->getTreeView();
-	std::string currentNumber;
-	if (treeView)
-		currentNumber = treeView->currentNumber();
-	DialDialog *d = new DialDialog(this, currentNumber);
+	if (container->isFonbook()) {
+		return container->getFonbookModel()->number(treeView->currentIndex());
+	} else if (container->isCalllist()) {
+		return container->getCalllistModel()->number(treeView->currentIndex());
+	}
+	return "";
+}
+
+void KFritzWindow::dialNumber() {
+	DialDialog *d = new DialDialog(this, getCurrentNumber());
 	d->show();
 	// TODO: possible memleak?
 }
 
 void KFritzWindow::copyNumberToClipboard() {
-	std::string currentNumber;
-	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
-	QAdaptTreeView *treeView = container->getTreeView();
-	if (treeView) {
-		currentNumber = treeView->currentNumber();
-		KApplication::kApplication()->clipboard()->setText(currentNumber.c_str());
-	}
+	KApplication::kApplication()->clipboard()->setText(getCurrentNumber().c_str());
 }
 
 void KFritzWindow::setDefaultType() {
@@ -594,10 +594,8 @@ void KFritzWindow::copyEntry() {
 		QApplication::clipboard()->setMimeData(mimeData);
 	}
 	if (container->isCalllist()) {
-		KCalllistModel *model = container->getCalllistModel();
-		KFritzProxyModel *proxy = static_cast<KFritzProxyModel*>( treeView->model());
-		QModelIndex sourceIndex = proxy->mapToSource(treeView->currentIndex());
-		const fritz::CallEntry *ce = model->retrieveCallEntry(sourceIndex);
+		KCalllistProxyModel *model = container->getCalllistModel();
+		const fritz::CallEntry *ce = model->retrieveCallEntry(treeView->currentIndex());
 		fritz::FonbookEntry fe(ce->remoteName);
 		fe.AddNumber(ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
 		QMimeData* mimeData = new MimeFonbookEntry(fe);
@@ -622,14 +620,14 @@ void KFritzWindow::resolveNumber() {
 	QAdaptTreeView *treeView = container->getTreeView();
 //TODO setProgressIndicator(i18n("Resolving..."));
 	if (container->isCalllist()) {
-		std::string currentNumber = treeView->currentNumber();
+		std::string currentNumber = getCurrentNumber();
 		fritz::Fonbook::sResolveResult result = fritz::FonbookManager::GetFonbook()->ResolveToName(currentNumber);
 		if (!result.name.compare(currentNumber)) {
 			// TODO: message: no result
 //TODO		statusBar()->insertItem(i18n("%1 did not resolve.", QString(currentNumber.c_str())), 0);
 			DBG("Did not resolve.");
 		} else {
-			fritz::CallEntry *entry = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, treeView->currentIndex().row());
+			fritz::CallEntry *entry = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, container->getCalllistModel()->mapToSource(treeView->currentIndex()).row()); //TODO: no direct access to calllist
 			entry->remoteName = result.name;
 //TODO		statusBar()->insertItem(i18n("%1 resolves to %2.", QString(currentNumber.c_str()), QString(result.name.c_str())), 0);
 			DBG("Resolves to: " << result.name);

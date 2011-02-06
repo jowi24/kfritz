@@ -25,20 +25,20 @@
 #include <QWidget>
 #include "QAdaptTreeView.h"
 #include "KFonbookModel.h"
-#include "KCalllistModel.h"
+#include "KCalllistProxyModel.h"
 
 class ContainerWidget: public QWidget {
 private:
 	QAdaptTreeView *treeview;
 	KFonbookModel *fonbookModel;
-	KCalllistModel *calllistModel;
+	KCalllistProxyModel *calllistModel;
 public:
 	ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KFonbookModel *model);
-	ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KCalllistModel *model);
+	ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KCalllistProxyModel *model);
 	virtual ~ContainerWidget();
 	QAdaptTreeView *getTreeView() { return treeview; }
 	KFonbookModel *getFonbookModel() { return fonbookModel; }
-	KCalllistModel *getCalllistModel() { return calllistModel; }
+	KCalllistProxyModel *getCalllistModel() { return calllistModel; }
 	bool isFonbook() { return fonbookModel ? true : false; }
 	bool isCalllist() { return calllistModel ? true : false; }
 };
