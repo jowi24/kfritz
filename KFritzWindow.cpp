@@ -592,13 +592,15 @@ void KFritzWindow::copyEntry() {
 
 	if (container->isFonbook()) {
 		KFonbookModel *model = container->getFonbookModel();
-		const fritz::FonbookEntry *fe = model->getFonbook()->RetrieveFonbookEntry(treeView->currentIndex().row());
+		const fritz::FonbookEntry *fe = model->retrieveFonbookEntry(treeView->currentIndex());
 		QMimeData* mimeData = new MimeFonbookEntry(*fe);
 		QApplication::clipboard()->setMimeData(mimeData);
 	}
 	if (container->isCalllist()) {
 //		KCalllistModel *model = container->getCalllistModel(); TODO: access to calllist
-		const fritz::CallEntry *ce = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, treeView->currentIndex().row());
+		KFritzProxyModel *proxy = static_cast<KFritzProxyModel*>( treeView->model());
+		QModelIndex sourceIndex = proxy->mapToSource(treeView->currentIndex());
+		const fritz::CallEntry *ce = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, sourceIndex.row());
 		fritz::FonbookEntry fe(ce->remoteName);
 		fe.AddNumber(ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
 		QMimeData* mimeData = new MimeFonbookEntry(fe);

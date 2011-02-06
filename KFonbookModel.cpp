@@ -228,6 +228,10 @@ bool KFonbookModel::insertFonbookEntry(int row, fritz::FonbookEntry &fe) {
 	return true;
 }
 
+const fritz::FonbookEntry *KFonbookModel::retrieveFonbookEntry(const QModelIndex &index) const {
+	return fonbook->RetrieveFonbookEntry(index.row());
+}
+
 bool KFonbookModel::removeRows(int row, int count __attribute__((unused)), const QModelIndex &parent) {
 	beginRemoveRows(parent,row,row);
 	if(fonbook->DeleteFonbookEntry(row)){

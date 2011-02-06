@@ -50,7 +50,7 @@ std::string QAdaptTreeView::currentNumber() {
 			return fritzModel->number(currentIndex());
 		KFritzProxyModel *proxyModel = dynamic_cast<KFritzProxyModel *>(model());
 		if (proxyModel)
-			return static_cast<KFritzModel *>(proxyModel->sourceModel())->number(currentIndex());
+			return static_cast<KFritzModel *>(proxyModel->sourceModel())->number(proxyModel->mapToSource(currentIndex()));
 		return "";
 	} else {
 		return "";
