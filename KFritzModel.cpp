@@ -50,8 +50,12 @@ QModelIndex KFritzModel::parent(const QModelIndex & child __attribute__((unused)
 	return QModelIndex();
 }
 
-QString KFritzModel::toLocalEncoding(const std::string str) const {
+QString KFritzModel::toUnicode(const std::string str) const {
 	return inputCodec->toUnicode(str.c_str());
+}
+
+std::string KFritzModel::fromUnicode(const QString str) const {
+	return inputCodec->fromUnicode(str).data();
 }
 
 void KFritzModel::check() {

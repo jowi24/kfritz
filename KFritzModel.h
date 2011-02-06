@@ -34,7 +34,8 @@ public:
     virtual QModelIndex index(int row, int column,
     		                  const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &child) const;
-    QString toLocalEncoding(const std::string str) const;
+    QString toUnicode(const std::string str) const;
+    std::string fromUnicode(const QString str) const;
     virtual std::string number(const QModelIndex &index) const = 0;
 Q_SIGNALS:
 	void updated();

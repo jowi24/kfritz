@@ -132,25 +132,25 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 
 	switch (index.column()) {
 	case COLUMN_NAME:
-		return QVariant(toLocalEncoding(fe->GetName()));
+		return QVariant(toUnicode(fe->GetName()));
 	case COLUMN_NUMBER_HOME:
 		if (fe->GetNumber(fritz::FonbookEntry::TYPE_NONE).length())
 			return QVariant(fe->GetNumber(fritz::FonbookEntry::TYPE_NONE).c_str());
-		return QVariant(fe->GetNumber(fritz::FonbookEntry::TYPE_HOME).c_str());
+		return QVariant(toUnicode(fe->GetNumber(fritz::FonbookEntry::TYPE_HOME)));
 	case COLUMN_NUMBER_MOBILE:
-		return QVariant(fe->GetNumber(fritz::FonbookEntry::TYPE_MOBILE).c_str());
+		return QVariant(toUnicode(fe->GetNumber(fritz::FonbookEntry::TYPE_MOBILE)));
 	case COLUMN_NUMBER_WORK:
-		return QVariant(fe->GetNumber(fritz::FonbookEntry::TYPE_WORK).c_str());
+		return QVariant(toUnicode(fe->GetNumber(fritz::FonbookEntry::TYPE_WORK)));
 	case COLUMN_QUICKDIAL:
 		if (role == Qt::EditRole)
-			return QVariant(fe->GetQuickdial().c_str());
+			return QVariant(toUnicode(fe->GetQuickdial()));
 		else
-			return QVariant(fe->GetQuickdialFormatted().c_str());
+			return QVariant(toUnicode(fe->GetQuickdialFormatted()));
 	case COLUMN_VANITY:
 		if (role == Qt::EditRole)
-			return QVariant(fe->GetVanity().c_str());
+			return QVariant(toUnicode(fe->GetVanity()));
 		else
-			return QVariant(fe->GetVanityFormatted().c_str());
+			return QVariant(toUnicode(fe->GetVanityFormatted()));
 	default:
 		return QVariant();
 	}
@@ -162,22 +162,22 @@ bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, 
 		fritz::FonbookEntry fe(*_fe);
 		switch(index.column()) {
 		case COLUMN_NAME:
-			fe.SetName(value.toString().toStdString());
+			fe.SetName(fromUnicode(value.toString()));
 			break;
 		case COLUMN_NUMBER_HOME:
-			fe.SetNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_HOME);
+			fe.SetNumber(fromUnicode(value.toString()), fritz::FonbookEntry::TYPE_HOME);
 			break;
 		case COLUMN_NUMBER_MOBILE:
-			fe.SetNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_MOBILE);
+			fe.SetNumber(fromUnicode(value.toString()), fritz::FonbookEntry::TYPE_MOBILE);
 			break;
 		case COLUMN_NUMBER_WORK:
-			fe.SetNumber(value.toString().toStdString(), fritz::FonbookEntry::TYPE_WORK);
+			fe.SetNumber(fromUnicode(value.toString()), fritz::FonbookEntry::TYPE_WORK);
 			break;
 		case COLUMN_QUICKDIAL:
-			fe.SetQuickdial(value.toString().toStdString());
+			fe.SetQuickdial(fromUnicode(value.toString()));
 			break;
 		case COLUMN_VANITY:
-			fe.SetVanity(value.toString().toStdString());
+			fe.SetVanity(fromUnicode(value.toString()));
 			break;
 		default:
 			return false;

@@ -49,25 +49,25 @@ QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
 
 	switch (index.column()) {
 		case 1:
-			return QVariant(toLocalEncoding((ce->date+" "+ce->time)));
+			return QVariant(toUnicode((ce->date+" "+ce->time)));
 			break;
 		case 2:
 			if (ce->remoteName.size() == 0)
 				if (ce->remoteNumber.size() == 0)
 					return QVariant(i18n("unknown"));
 				else
-					return QVariant(toLocalEncoding(ce->remoteNumber));
+					return QVariant(toUnicode(ce->remoteNumber));
 			else
-				return QVariant(toLocalEncoding(ce->remoteName));
+				return QVariant(toUnicode(ce->remoteName));
 			break;
 		case 3:
 			//TODO: resolve names using available phonebooks and cache result (e.g., in case of dasoertliche etc.) (suggested by Florian Petry / kde-apps.org)
-			return QVariant(toLocalEncoding(ce->localName));
+			return QVariant(toUnicode(ce->localName));
 			break;
 		case 4:
 			if (ce->type == fritz::CallEntry::MISSED)
 				return QVariant();
-			return QVariant(toLocalEncoding(ce->duration));
+			return QVariant(toUnicode(ce->duration));
 			break;
 		default:
 			return QVariant();
