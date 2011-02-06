@@ -221,9 +221,9 @@ bool KFonbookModel::insertRows(int row, int count __attribute__((unused)), const
 	return true;
 }
 
-bool KFonbookModel::insertFonbookEntry(int row, fritz::FonbookEntry &fe) {
-	beginInsertRows(QModelIndex(), row, row);
-	fonbook->AddFonbookEntry(fe, row);
+bool KFonbookModel::insertFonbookEntry(const QModelIndex &index, fritz::FonbookEntry &fe) {
+	beginInsertRows(QModelIndex(), index.row(), index.row());
+	fonbook->AddFonbookEntry(fe, index.row());
 	endInsertRows();
 	return true;
 }
