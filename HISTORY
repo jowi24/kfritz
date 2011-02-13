@@ -221,3 +221,23 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
   (patch provided by Felix Geyer)
 - Fix include commoncpp libraries in CMakeLists
   (reported by Felix Geyer)
+
+2011-02-13: Version 0.0.7
+- Important changes in libfritz++
+  * Fix FonbookManager if no phone book is configured at all
+  * Add methods for adding and deleting fonbook entries
+  * Only write phone books back if changes are pending
+  * Extend Fonbook::AddFonbookEntry() to allow arbitrary position for new entry
+- Fix init if FRITZ phone book is not configured
+- Fix crash if no phone book is configured at all
+- Enable filtering in call list
+- Speed up shutdown of kfritz
+- Fixed some compiler warnings
+- Removed libtcpclient, which is obsolete after complete migration to libcommoncpp2
+- Handle umlauts in phone book editing correctly
+  (reported by Achim Bohnet)
+- Add and delete phone book entries
+- Add copy, paste and cut actions
+- Add "Resolve number" action in call list
+- Copy elements from call list and non-writeable phone books
+- New setup option "Start minimized"
