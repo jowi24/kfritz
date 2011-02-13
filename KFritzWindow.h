@@ -66,6 +66,7 @@ private:
     void initIndicator();
     void setProgressIndicator(QString message = QString());
     virtual bool queryClose();
+    std::string getCurrentNumber();
 Q_SIGNALS:
 	void signalNotification(QString event, QString qMessage, bool persistent);
 private Q_SLOTS:
@@ -98,6 +99,14 @@ public Q_SLOTS:
     void reload();
     void reconnectISP();
     void getIP();
+    void addEntry(fritz::FonbookEntry *fe = NULL);
+    void deleteEntry();
+    void cutEntry();
+    void copyEntry();
+    void pasteEntry();
+    void resolveNumber();
+    void updateActionProperties(int tabIndex);
+
 };
 
 #endif /*KFRITZBOXWINDOW_H_*/

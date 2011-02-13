@@ -17,8 +17,17 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "%1 did not resolve."
+msgstr ""
+
+msgid "%1 resolves to \"%2\"."
+msgstr ""
+
 msgid "(c) 2008-2011"
 msgstr "(c) 2008-2011"
+
+msgid "Add"
+msgstr ""
 
 msgid "Area code"
 msgstr "Prefisso"
@@ -42,6 +51,10 @@ msgstr "Configura Notifiche..."
 msgid "Configure connection to Fritz!Box"
 msgstr "Configura la connessione al Fritz!Box"
 
+#, fuzzy
+msgid "Configure other settings"
+msgstr "Configura Notifiche..."
+
 msgid "Copy number to clipboard"
 msgstr ""
 
@@ -57,6 +70,9 @@ msgstr "Data"
 #, fuzzy
 msgid "Default number"
 msgstr "Chiama"
+
+msgid "Delete"
+msgstr ""
 
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Sviluppato da Matthias Becker e Joachim Wilke."
@@ -142,11 +158,17 @@ msgstr "Nome"
 msgid "Name / Number"
 msgstr "Nome / Numero"
 
+msgid "New Entry"
+msgstr ""
+
 msgid "Notifies about phone activity and browses call history and telephone book on your Fritz!Box"
 msgstr "Mostra l'attivita' sulle linee telefoniche e consulta lo storico delle chiamate e la rubrica del Fritz!Box"
 
 msgid "Number"
 msgstr "Numero"
+
+msgid "Other"
+msgstr ""
 
 msgid "Outgoing call"
 msgstr "Chiamata in uscita"
@@ -172,6 +194,10 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
+#, fuzzy
+msgid "Resolve number"
+msgstr "Chiama"
+
 msgid "Restrict call history and notifications to certain MSNs"
 msgstr "Restringi lo storico chiamate solo ad alcuni MSN"
 
@@ -186,6 +212,9 @@ msgstr ""
 
 msgid "Show log"
 msgstr "Mostra il log"
+
+msgid "Start minimized"
+msgstr ""
 
 msgid "Type"
 msgstr "Tipo"
@@ -208,12 +237,20 @@ msgstr ""
 msgid "unknown"
 msgstr "sconosciuto"
 
+#, fuzzy
+#~ msgid "Add phone book entry"
+#~ msgstr "Seleziona la rubrica da usare"
+
 #~ msgid ""
 #~ "Can not dial without a number.\n"
 #~ "Please select an entry in a phone book or the call history which contains a number or name and try again."
 #~ msgstr ""
 #~ "Impossibile chiamare senza un numero.\n"
 #~ "Selezionare una voce dalla rubrica o dallo storico chiamate che contena un numero e riprovare."
+
+#, fuzzy
+#~ msgid "Delete phone book entry"
+#~ msgstr "Seleziona la rubrica da usare"
 
 #~ msgid "Dialing not possible"
 #~ msgstr "Impossibile chiamare"

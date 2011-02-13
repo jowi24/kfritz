@@ -1,7 +1,7 @@
 /*
  * KFritz
  *
- * Copyright (C) 2010 Joachim Wilke <kfritz@joachim-wilke.de>
+ * Copyright (C) 2011 Joachim Wilke <kfritz@joachim-wilke.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,15 +19,21 @@
  *
  */
 
-#ifndef FILTERPROXYMODEL_H_
-#define FILTERPROXYMODEL_H_
+#include "ContainerWidget.h"
 
-#include <QSortFilterProxyModel>
+ContainerWidget::ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KFonbookModel *model) :
+QWidget(parent) {
+	this->treeview = treeview;
+	this->fonbookModel = model;
+	this->calllistModel = NULL;
+}
 
-class KFritzProxyModel : public QSortFilterProxyModel {
-public:
-	KFritzProxyModel(QObject *parent);
-	virtual ~KFritzProxyModel();
-};
+ContainerWidget::ContainerWidget(QWidget *parent, QAdaptTreeView *treeview, KCalllistProxyModel *model) :
+QWidget(parent) {
+	this->treeview = treeview;
+	this->fonbookModel = NULL;
+	this->calllistModel = model;
+}
 
-#endif /* FILTERPROXYMODEL_H_ */
+ContainerWidget::~ContainerWidget() {
+}

@@ -1,7 +1,7 @@
 /*
  * KFritz
  *
- * Copyright (C) 2010 Joachim Wilke <kfritz@joachim-wilke.de>
+ * Copyright (C) 2011 Joachim Wilke <kfritz@joachim-wilke.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,26 +19,22 @@
  *
  */
 
-#include "QAdaptTreeView.h"
-#include "KFritzModel.h"
-#include "KCalllistProxyModel.h"
+#ifndef KSETTINGSMISC_H_
+#define KSETTINGSMISC_H_
 
-QAdaptTreeView::QAdaptTreeView(QWidget *parent)
-:QTreeView(parent) {
-}
+#include <QWidget>
 
-QAdaptTreeView::~QAdaptTreeView() {
-	delete model();
-}
+#include "ui_KSettingsMisc.h"
 
-void QAdaptTreeView::reset() {
-	QTreeView::reset();
-	expandAll();
-	adaptColumns();
-}
+// use this class to add a configuration page to a KConfigDialog
 
-void QAdaptTreeView::adaptColumns() {
-    // Resize the column to the size of its contents
-    for (int col=0; col < model()->columnCount(QModelIndex()); col++)
-           resizeColumnToContents(col);
-}
+class KSettingsMisc: public QWidget {
+	Q_OBJECT
+private:
+	Ui_KSettingsMisc *ui;
+public:
+	KSettingsMisc(QWidget *parent);
+	virtual ~KSettingsMisc();
+};
+
+#endif /* KSETTINGSMISC_H_ */

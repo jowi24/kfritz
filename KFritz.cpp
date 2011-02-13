@@ -30,6 +30,8 @@
 #include <Config.h>
 #include <FonbookManager.h>
 
+#include "KSettings.h"
+
 static const char *VERSION        = "0.0.6";
 
 KFritz::KFritz(KFritzWindow *mainWindow, KAboutData *aboutData)
@@ -80,6 +82,8 @@ int main (int argc, char *argv[]) {
 
 	// create GUI elements, hand-over logArea to mainWindow
 	KFritzWindow mainWindow;
+	if (!KSettings::startMinimized())
+		mainWindow.show();
 	KFritz *trayIcon 	    = new KFritz(&mainWindow, &aboutData);
 	trayIcon->show();
 	int ret = app.exec();

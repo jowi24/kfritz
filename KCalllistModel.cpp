@@ -103,6 +103,10 @@ QVariant KCalllistModel::headerData(int section, Qt::Orientation orientation, in
 	}
 }
 
+fritz::CallEntry *KCalllistModel::retrieveCallEntry(const QModelIndex &index) const {
+	return calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
+}
+
 int KCalllistModel::columnCount(const QModelIndex & parent __attribute__((unused))) const {
 	// the number of columns is independent of the current parent, ignoring this parameter
 	return 5;

@@ -1,7 +1,7 @@
 /*
  * KFritz
  *
- * Copyright (C) 2010 Joachim Wilke <kfritz@joachim-wilke.de>
+ * Copyright (C) 2011 Joachim Wilke <kfritz@joachim-wilke.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,26 +19,26 @@
  *
  */
 
-#include "QAdaptTreeView.h"
-#include "KFritzModel.h"
-#include "KCalllistProxyModel.h"
+#ifndef MIMEFONBOOKENTRY_H_
+#define MIMEFONBOOKENTRY_H_
 
-QAdaptTreeView::QAdaptTreeView(QWidget *parent)
-:QTreeView(parent) {
-}
+#include <QMimeData>
+#include <QStringList>
+#include <Fonbook.h>
 
-QAdaptTreeView::~QAdaptTreeView() {
-	delete model();
-}
+class MimeFonbookEntry: public QMimeData {
+	Q_OBJECT
+private:
+	fritz::FonbookEntry *fonbookEntry;
+protected:
+	virtual QVariant retrieveData(const QString &mimetype,
+	                                      QVariant::Type preferredType) const;
+public:
+	MimeFonbookEntry(const fritz::FonbookEntry &fonbookEntry);
+	virtual ~MimeFonbookEntry();
+	virtual bool hasFormat(const QString &mimetype) const;
+	virtual QStringList formats() const;
+	fritz::FonbookEntry *retrieveFonbookEntry() const;
+};
 
-void QAdaptTreeView::reset() {
-	QTreeView::reset();
-	expandAll();
-	adaptColumns();
-}
-
-void QAdaptTreeView::adaptColumns() {
-    // Resize the column to the size of its contents
-    for (int col=0; col < model()->columnCount(QModelIndex()); col++)
-           resizeColumnToContents(col);
-}
+#endif /* MIMEFONBOOKENTRY_H_ */

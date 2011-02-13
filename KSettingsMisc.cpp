@@ -1,7 +1,7 @@
 /*
  * KFritz
  *
- * Copyright (C) 2010 Joachim Wilke <kfritz@joachim-wilke.de>
+ * Copyright (C) 2011 Joachim Wilke <kfritz@joachim-wilke.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,26 +19,17 @@
  *
  */
 
-#include "QAdaptTreeView.h"
-#include "KFritzModel.h"
-#include "KCalllistProxyModel.h"
+#include "KSettingsMisc.h"
 
-QAdaptTreeView::QAdaptTreeView(QWidget *parent)
-:QTreeView(parent) {
+#include <KConfigDialogManager>
+
+KSettingsMisc::KSettingsMisc(QWidget *parent) :
+QWidget(parent) {
+	ui = new Ui_KSettingsMisc();
+	ui->setupUi(this);
+
 }
 
-QAdaptTreeView::~QAdaptTreeView() {
-	delete model();
-}
-
-void QAdaptTreeView::reset() {
-	QTreeView::reset();
-	expandAll();
-	adaptColumns();
-}
-
-void QAdaptTreeView::adaptColumns() {
-    // Resize the column to the size of its contents
-    for (int col=0; col < model()->columnCount(QModelIndex()); col++)
-           resizeColumnToContents(col);
+KSettingsMisc::~KSettingsMisc() {
+	delete ui;
 }

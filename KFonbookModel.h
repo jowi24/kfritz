@@ -45,9 +45,16 @@ public:
     virtual QModelIndex index(int row, int column,
     		                  const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &child) const;
-
+    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    virtual bool insertFonbookEntry(const QModelIndex &index, fritz::FonbookEntry &fe);
+    virtual const fritz::FonbookEntry *retrieveFonbookEntry(const QModelIndex &index) const;
+    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    const fritz::Fonbook *getFonbook() const { return fonbook; }
+public Q_SLOTS:
+	virtual void check();
 private:
 	fritz::Fonbook *fonbook;
+	int lastRows;
 };
 
 #endif /* KFONBOOKMODEL_H_ */

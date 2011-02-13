@@ -19,14 +19,20 @@
  *
  */
 
-#include "KFritzProxyModel.h"
+#include "KCalllistProxyModel.h"
+#include "KCalllistModel.h"
 
-KFritzProxyModel::KFritzProxyModel(QObject *parent)
+KCalllistProxyModel::KCalllistProxyModel(QObject *parent)
 : QSortFilterProxyModel(parent) {
-	// TODO Auto-generated constructor stub
-
 }
 
-KFritzProxyModel::~KFritzProxyModel() {
-	// TODO Auto-generated destructor stub
+KCalllistProxyModel::~KCalllistProxyModel() {
+}
+
+fritz::CallEntry *KCalllistProxyModel::retrieveCallEntry(const QModelIndex &index) const {
+	return static_cast<KCalllistModel *>(sourceModel())->retrieveCallEntry(mapToSource(index));
+}
+
+std::string KCalllistProxyModel::number(const QModelIndex &index) const {
+	return static_cast<KCalllistModel *>(sourceModel())->number(mapToSource(index));
 }

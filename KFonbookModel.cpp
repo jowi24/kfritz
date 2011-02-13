@@ -44,6 +44,7 @@ KFonbookModel::KFonbookModel(std::string techID) {
 	// get the fonbook resource
 	fritz::Fonbooks *books = fritz::FonbookManager::GetFonbookManager()->GetFonbooks();
 	fonbook = (*books)[techID];
+	lastRows = 0;
 }
 
 KFonbookModel::~KFonbookModel() {
@@ -94,6 +95,10 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 		return QVariant();
 
 	const fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
+	if (!fe) {
+		ERR("No FonbookEntry for index row " << index.row());
+		return QVariant();
+	}
 
 	// Indicate important contacts using icon and tooltip
 	if (role == Qt::DecorationRole && index.column() == COLUMN_NAME)
@@ -208,7 +213,35 @@ void KFonbookModel::setDefaultType(const QModelIndex &index) {
 	emit dataChanged(indexLeft, indexRight); // we changed up to three elements
 }
 
-Qt::ItemFlags KFonbookModel::flags(const QModelIndex & index __attribute__((unused))) const {
+bool KFonbookModel::insertRows(int row, int count __attribute__((unused)), const QModelIndex &parent) {
+	beginInsertRows(parent, row, row);
+	fritz::FonbookEntry fe(i18n("New Entry").toStdString());
+	fonbook->AddFonbookEntry(fe, row);
+	endInsertRows();
+	return true;
+}
+
+bool KFonbookModel::insertFonbookEntry(const QModelIndex &index, fritz::FonbookEntry &fe) {
+	beginInsertRows(QModelIndex(), index.row(), index.row());
+	fonbook->AddFonbookEntry(fe, index.row());
+	endInsertRows();
+	return true;
+}
+
+const fritz::FonbookEntry *KFonbookModel::retrieveFonbookEntry(const QModelIndex &index) const {
+	return fonbook->RetrieveFonbookEntry(index.row());
+}
+
+bool KFonbookModel::removeRows(int row, int count __attribute__((unused)), const QModelIndex &parent) {
+	beginRemoveRows(parent,row,row);
+	if(fonbook->DeleteFonbookEntry(row)){
+		endRemoveRows();
+		return true;
+	} else
+		return false;
+}
+
+Qt::ItemFlags KFonbookModel::flags(const QModelIndex & index) const {
 	if (fonbook->isWriteable())
 		return Qt::ItemFlags(QAbstractItemModel::flags(index) | QFlag(Qt::ItemIsEditable));
 	else
@@ -279,4 +312,14 @@ QModelIndex KFonbookModel::index(int row, int column, const QModelIndex &parent)
 
 QModelIndex KFonbookModel::parent(const QModelIndex &child __attribute__((unused))) const {
 	return QModelIndex();
+}
+
+void KFonbookModel::check() {
+	if (lastRows != rowCount(QModelIndex())) {
+		reset();
+		emit updated();
+		// stop time, because no more changes are expected
+		timer->stop();
+		lastRows = rowCount(QModelIndex());
+	}
 }

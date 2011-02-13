@@ -16,8 +16,17 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "%1 did not resolve."
+msgstr "Kein Treffer für %1."
+
+msgid "%1 resolves to \"%2\"."
+msgstr "%1 gehört zu \"%2\"."
+
 msgid "(c) 2008-2011"
 msgstr "(c) 2008-2011"
+
+msgid "Add"
+msgstr "Hinzufügen"
 
 msgid "Area code"
 msgstr "Ortsvorwahl"
@@ -40,6 +49,9 @@ msgstr "Benachrichtigungen einrichten..."
 msgid "Configure connection to Fritz!Box"
 msgstr "Verbindung zur Fritz!Box einrichten"
 
+msgid "Configure other settings"
+msgstr "Sonstige Optionen einstellen"
+
 msgid "Copy number to clipboard"
 msgstr "Nummer in Zwischenablage kopieren"
 
@@ -54,6 +66,9 @@ msgstr "Datum"
 
 msgid "Default number"
 msgstr "Hauptnummer"
+
+msgid "Delete"
+msgstr "Löschen"
 
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Entwickelt von Matthias Becker und Joachim Wilke."
@@ -139,11 +154,17 @@ msgstr "Name"
 msgid "Name / Number"
 msgstr "Name / Nummer"
 
+msgid "New Entry"
+msgstr "Neuer Eintrag"
+
 msgid "Notifies about phone activity and browses call history and telephone book on your Fritz!Box"
 msgstr "Signalisiert ein- und ausgehende Telefonanrufe, zeigt Telefonbuch und Anrufliste der Fritz!Box an"
 
 msgid "Number"
 msgstr "Nummer"
+
+msgid "Other"
+msgstr "Sonstiges"
 
 msgid "Outgoing call"
 msgstr "Ausgehender Anruf"
@@ -169,6 +190,9 @@ msgstr "Verbindung zum Internet neu aufbauen"
 msgid "Reload"
 msgstr "Neu laden"
 
+msgid "Resolve number"
+msgstr "Nummer nachschlagen"
+
 msgid "Restrict call history and notifications to certain MSNs"
 msgstr "Anrufliste und Benachrichtigungen auf bestimmte MSN einschränken"
 
@@ -183,6 +207,9 @@ msgstr "Nummer als Hauptnummer markieren"
 
 msgid "Show log"
 msgstr "Protokoll anzeigen"
+
+msgid "Start minimized"
+msgstr "Minimiert starten"
 
 msgid "Type"
 msgstr "Typ"
@@ -205,6 +232,9 @@ msgstr ""
 msgid "unknown"
 msgstr "unbekannt"
 
+#~ msgid "Add phone book entry"
+#~ msgstr "Telefonbucheintrag hinzufügen"
+
 #~ msgid ""
 #~ "Can not dial without a number.\n"
 #~ "Select an entry in a phone book or the call history which contains a number or name and try again."
@@ -212,8 +242,15 @@ msgstr "unbekannt"
 #~ "Wählen ohne Nummer nicht möglich.\n"
 #~ "Wählen sie einen Anruflisten- oder Telefonbucheintrag aus, der eine Telefonnummer enthält. Versuchen sie es danach erneut."
 
+#~ msgid "Delete phone book entry"
+#~ msgstr "Telefonbucheintrag löschen"
+
 #~ msgid "Dialing not possible"
 #~ msgstr "Wählen nicht möglich"
 
 #~ msgid "Important"
 #~ msgstr "Wichtig"
+
+#, fuzzy
+#~ msgid "New entry"
+#~ msgstr "Neuer Eintrag"

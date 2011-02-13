@@ -16,8 +16,17 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "%1 did not resolve."
+msgstr ""
+
+msgid "%1 resolves to \"%2\"."
+msgstr ""
+
 msgid "(c) 2008-2011"
 msgstr "(c) 2008-2011"
+
+msgid "Add"
+msgstr ""
 
 msgid "Area code"
 msgstr "Kengetal"
@@ -40,6 +49,10 @@ msgstr "Meldingen instellen..."
 msgid "Configure connection to Fritz!Box"
 msgstr "Verbinding naar de Fritz!Box instellen"
 
+#, fuzzy
+msgid "Configure other settings"
+msgstr "Meldingen instellen..."
+
 msgid "Copy number to clipboard"
 msgstr "Kopieer nummer naar clipboard"
 
@@ -54,6 +67,9 @@ msgstr "Datum"
 
 msgid "Default number"
 msgstr "Standaard nummer"
+
+msgid "Delete"
+msgstr ""
 
 msgid "Developed by Matthias Becker and Joachim Wilke."
 msgstr "Ontwikkeld door Matthias Becker en Joachim Wilke."
@@ -139,11 +155,17 @@ msgstr "Naam"
 msgid "Name / Number"
 msgstr "Naam / nummer"
 
+msgid "New Entry"
+msgstr ""
+
 msgid "Notifies about phone activity and browses call history and telephone book on your Fritz!Box"
 msgstr "Geeft informatie over telefoongebruik, belgeschiedenis en telefoonboek op je Fritz!Box"
 
 msgid "Number"
 msgstr "Nummer"
+
+msgid "Other"
+msgstr ""
 
 msgid "Outgoing call"
 msgstr "Uitgaand gesprek"
@@ -169,6 +191,10 @@ msgstr "Opnieuw met internet verbinden"
 msgid "Reload"
 msgstr "Herladen"
 
+#, fuzzy
+msgid "Resolve number"
+msgstr "Standaard nummer"
+
 msgid "Restrict call history and notifications to certain MSNs"
 msgstr "Beperk gespreksgeschiedenis en meldingen tot bepaalde MSN nummers"
 
@@ -183,6 +209,9 @@ msgstr "Als standaard zetten"
 
 msgid "Show log"
 msgstr "Laat de log zien"
+
+msgid "Start minimized"
+msgstr ""
 
 msgid "Type"
 msgstr "Type"
@@ -205,12 +234,20 @@ msgstr "tel.local.ch"
 msgid "unknown"
 msgstr "onbekend"
 
+#, fuzzy
+#~ msgid "Add phone book entry"
+#~ msgstr "Telefoonnummerbron instellen"
+
 #~ msgid ""
 #~ "Can not dial without a number.\n"
 #~ "Select an entry in a phone book or the call history which contains a number or name and try again."
 #~ msgstr ""
 #~ "Kan zonder nummer niet bellen.\n"
 #~ "Selecteer een item uit het telefoonboek of belgeschiedenis dat een nummer of naam bevat en probeer het nogmaals."
+
+#, fuzzy
+#~ msgid "Delete phone book entry"
+#~ msgstr "Telefoonnummerbron instellen"
 
 #~ msgid "Dialing not possible"
 #~ msgstr "Bellen is niet mogelijk"

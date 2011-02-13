@@ -48,12 +48,15 @@
 #include <CallList.h>
 #include <FritzClient.h>
 
+#include "ContainerWidget.h"
 #include "DialDialog.h"
-#include "KFritzProxyModel.h"
+#include "KCalllistProxyModel.h"
 #include "KSettings.h"
 #include "KSettingsFonbooks.h"
 #include "KSettingsFritzBox.h"
+#include "KSettingsMisc.h"
 #include "Log.h"
+#include "MimeFonbookEntry.h"
 
 KFritzWindow::KFritzWindow()
 {
@@ -111,6 +114,7 @@ KFritzWindow::KFritzWindow()
 	setupActions();
 
 	setupGUI();
+	KXmlGuiWindow::stateChanged("NoEdit");
 
 	// remove handbook menu entry
 	actionCollection()->action("help_contents")->setVisible(false);
@@ -191,6 +195,9 @@ void KFritzWindow::showSettings() {
 
     QWidget *frameFonbooks = new KSettingsFonbooks(this);
 	confDialog->addPage(frameFonbooks, i18n("Phone books"), "x-office-address-book", i18n("Select phone books to use"));
+
+	QWidget *frameMisc     = new KSettingsMisc(this);
+	confDialog->addPage(frameMisc,     i18n("Other"), "preferences-other", i18n("Configure other settings"));
 
 	connect(confDialog, SIGNAL(settingsChanged(const QString &)), this, SLOT(updateConfiguration(const QString &)));
 
@@ -299,11 +306,38 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("getIP", aGetIP);
 	connect(aGetIP, SIGNAL(triggered(bool)), this, SLOT(getIP()));
 
+	KAction *aAddEntry = new KAction(this);
+	aAddEntry->setText(i18n("Add"));
+	aAddEntry->setIcon(KIcon("list-add"));
+	aAddEntry->setShortcut(Qt::CTRL + Qt::Key_N);
+	actionCollection()->addAction("addEntry", aAddEntry);
+	connect(aAddEntry, SIGNAL(triggered(bool)), this, SLOT(addEntry()));
+
+	KAction *aDeleteEntry = new KAction(this);
+	aDeleteEntry->setText(i18n("Delete"));
+	aDeleteEntry->setIcon(KIcon("list-remove"));
+	aDeleteEntry->setShortcut(Qt::Key_Delete);
+	actionCollection()->addAction("deleteEntry", aDeleteEntry);
+	connect(aDeleteEntry, SIGNAL(triggered(bool)), this, SLOT(deleteEntry()));
+
+	KAction *aResolveNumber = new KAction(this);
+	aResolveNumber->setText(i18n("Resolve number"));
+	actionCollection()->addAction("resolveNumber", aResolveNumber);
+	connect(aResolveNumber, SIGNAL(triggered(bool)), this, SLOT(resolveNumber()));
+
+	KAction *aSeparator;
+	aSeparator = new KAction(this);
+	aSeparator->setSeparator(true);
+	actionCollection()->addAction("separator1", aSeparator);
+	aSeparator = new KAction(this);
+	aSeparator->setSeparator(true);
+	actionCollection()->addAction("separator2", aSeparator);
+
+	KStandardAction::cut(this, SLOT(cutEntry()), actionCollection());
+	KStandardAction::copy(this, SLOT(copyEntry()), actionCollection());
+	KStandardAction::paste(this, SLOT(pasteEntry()), actionCollection());
 	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
-//	KStandardAction::find(this, SLOT(find()), actionCollection());
-//	KStandardAction::findNext(this, SLOT(findNext()), actionCollection());
-//	KStandardAction::findPrev(this, SLOT(findPrev()), actionCollection());
 }
 
 void KFritzWindow::initIndicator() {
@@ -334,12 +368,9 @@ bool KFritzWindow::queryClose() {
 
 void KFritzWindow::updateMissedCallsIndicator() {
 	fritz::CallList *callList = fritz::CallList::getCallList(false);
-	size_t missedCallCount = 0;
-	if (callList) {
-		for (size_t pos = 0; pos < callList->GetSize(fritz::CallEntry::MISSED); pos++)
-			if (KSettings::lastKnownMissedCall() < callList->RetrieveEntry(fritz::CallEntry::MISSED, pos)->timestamp)
-				missedCallCount++;
-	}
+	if (!callList)
+		return;
+	size_t missedCallCount = callList->MissedCalls(KSettings::lastKnownMissedCall());
 #ifdef INDICATEQT_FOUND
 	missedCallsIndicator->setCountProperty(missedCallCount);
 	if (missedCallCount == 0)
@@ -378,13 +409,16 @@ void KFritzWindow::updateMainWidgets(bool b)
 	treeCallList->setAlternatingRowColors(true);
 	treeCallList->setItemsExpandable(false);
 	treeCallList->setSortingEnabled(true);
+	treeCallList->addAction(actionCollection()->action("edit_copy"));
+	treeCallList->addAction(actionCollection()->action("separator1"));
 	treeCallList->addAction(actionCollection()->action("dialNumber"));
 	treeCallList->addAction(actionCollection()->action("copyNumber"));
+	treeCallList->addAction(actionCollection()->action("resolveNumber"));
 	treeCallList->setContextMenuPolicy(Qt::ActionsContextMenu);
 	treeCallList->sortByColumn(1, Qt::DescendingOrder); //sort by Date
 
 	// init proxy class for filtering
-	KFritzProxyModel *proxyModelCalllist = new KFritzProxyModel(this);
+	KCalllistProxyModel *proxyModelCalllist = new KCalllistProxyModel(this);
 	proxyModelCalllist->setSourceModel(modelCalllist);
 	treeCallList->setModel(proxyModelCalllist);
 
@@ -393,11 +427,11 @@ void KFritzWindow::updateMainWidgets(bool b)
 	search->setProxy(proxyModelCalllist);
 
 	// setup final calllist widget
-	QWidget *calllistWidget = new QWidget(this);
-	new QVBoxLayout(calllistWidget);
-	calllistWidget->layout()->addWidget(search);
-	calllistWidget->layout()->addWidget(treeCallList);
-	tabWidget->insertTab(0, calllistWidget, KIcon("application-x-gnumeric"), 	i18n("Call history"));
+	ContainerWidget *calllistContainer = new ContainerWidget(this, treeCallList, proxyModelCalllist);
+	new QVBoxLayout(calllistContainer);
+	calllistContainer->layout()->addWidget(search);
+	calllistContainer->layout()->addWidget(treeCallList);
+	tabWidget->insertTab(0, calllistContainer, KIcon("application-x-gnumeric"), 	i18n("Call history"));
 
 	// init fonbooks, add to tabWidget
     fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
@@ -412,16 +446,29 @@ void KFritzWindow::updateMainWidgets(bool b)
     		treeFonbook->setSortingEnabled(true);
     		treeFonbook->setModel(modelFonbook);
     		treeFonbook->sortByColumn(0, Qt::AscendingOrder); //sort by Name
+    		treeFonbook->addAction(actionCollection()->action("edit_cut"));
+    		treeFonbook->addAction(actionCollection()->action("edit_copy"));
+    		treeFonbook->addAction(actionCollection()->action("edit_paste"));
+    		treeFonbook->addAction(actionCollection()->action("separator1"));
+    		treeFonbook->addAction(actionCollection()->action("addEntry"));
+    		treeFonbook->addAction(actionCollection()->action("deleteEntry"));
+    		treeFonbook->addAction(actionCollection()->action("separator2"));
     		treeFonbook->addAction(actionCollection()->action("dialNumber"));
     		treeFonbook->addAction(actionCollection()->action("copyNumber"));
     		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
     		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
 
-    		tabWidget->insertTab(0, treeFonbook,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
+    		ContainerWidget *fonbookContainer = new ContainerWidget(this, treeFonbook, modelFonbook);
+    		new QVBoxLayout(fonbookContainer);
+    		fonbookContainer->layout()->addWidget(treeFonbook);
+    		tabWidget->insertTab(0, fonbookContainer,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
 
     		fm->NextFonbook();
     	} while( first != fm->GetTechId() );
     }
+    connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(updateActionProperties(int)));
+    connect(tabWidget, SIGNAL(currentChanged(int)), statusBar(), SLOT(clearMessage()));
+    updateActionProperties(tabWidget->currentIndex());
 }
 
 void KFritzWindow::find() {
@@ -461,28 +508,32 @@ void KFritzWindow::showLog() {
 	logDialog->show();
 }
 
+std::string KFritzWindow::getCurrentNumber() {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (container->isFonbook()) {
+		return container->getFonbookModel()->number(treeView->currentIndex());
+	} else if (container->isCalllist()) {
+		return container->getCalllistModel()->number(treeView->currentIndex());
+	}
+	return "";
+}
+
 void KFritzWindow::dialNumber() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
-	std::string currentNumber;
-	if (currentView)
-		currentNumber = currentView->currentNumber();
-	DialDialog *d = new DialDialog(this, currentNumber);
-	d->show();
-	// TODO: possible memleak?
+	DialDialog d(this, getCurrentNumber());
+	d.exec();
 }
 
 void KFritzWindow::copyNumberToClipboard() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
-	std::string currentNumber;
-	if (currentView)
-		currentNumber = currentView->currentNumber();
-	KApplication::kApplication()->clipboard()->setText(currentNumber.c_str());
+	KApplication::kApplication()->clipboard()->setText(getCurrentNumber().c_str());
 }
 
 void KFritzWindow::setDefaultType() {
-	QAdaptTreeView *currentView = static_cast<QAdaptTreeView *>(tabWidget->currentWidget());
-	KFonbookModel *fonbookModel = static_cast<KFonbookModel *>(currentView->model());
-	fonbookModel->setDefaultType(currentView->currentIndex());
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (container->isFonbook()) {
+		container->getFonbookModel()->setDefaultType(treeView->currentIndex());
+	}
 }
 
 void KFritzWindow::reload() {
@@ -498,6 +549,97 @@ void KFritzWindow::reconnectISP() {
 void KFritzWindow::getIP() {
 	fritz::FritzClient fc;
 	KMessageBox::information(this, i18n("Current IP address is: %1", fc.getCurrentIP().c_str()));
+}
+
+void KFritzWindow::addEntry(fritz::FonbookEntry *fe) {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (container->isFonbook()) {
+		KFonbookModel *model = container->getFonbookModel();
+		if (fe)
+			model->insertFonbookEntry(treeView->currentIndex(), *fe);
+		else
+			model->insertRows(container->getTreeView()->currentIndex().row(), 1, QModelIndex());
+		treeView->scrollTo(container->getTreeView()->currentIndex());
+		treeView->setCurrentIndex(model->index(treeView->currentIndex().row()-1,0,QModelIndex()));
+	}
+}
+
+void KFritzWindow::deleteEntry() {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (container->isFonbook()) {
+		KFonbookModel *model = container->getFonbookModel();
+		size_t newRow = treeView->currentIndex().row();
+		if (treeView->currentIndex().row() == model->rowCount()-1)
+			newRow--;
+		QModelIndex index = model->index(newRow, treeView->currentIndex().column());
+		model->removeRows(treeView->currentIndex().row(), 1, QModelIndex());
+		treeView->setCurrentIndex(index);
+	}
+}
+
+void KFritzWindow::cutEntry() {
+	copyEntry();
+	deleteEntry();
+}
+
+void KFritzWindow::copyEntry() {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+
+	if (container->isFonbook()) {
+		KFonbookModel *model = container->getFonbookModel();
+		const fritz::FonbookEntry *fe = model->retrieveFonbookEntry(treeView->currentIndex());
+		QMimeData* mimeData = new MimeFonbookEntry(*fe);
+		QApplication::clipboard()->setMimeData(mimeData);
+	}
+	if (container->isCalllist()) {
+		KCalllistProxyModel *model = container->getCalllistModel();
+		const fritz::CallEntry *ce = model->retrieveCallEntry(treeView->currentIndex());
+		fritz::FonbookEntry fe(ce->remoteName);
+		fe.AddNumber(ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
+		QMimeData* mimeData = new MimeFonbookEntry(fe);
+		QApplication::clipboard()->setMimeData(mimeData);
+	}
+}
+
+void KFritzWindow::pasteEntry() {
+	const QMimeData *mime = QApplication::clipboard()->mimeData();
+	if (mime) {
+		const MimeFonbookEntry *mimeFonbookEntry = qobject_cast<const MimeFonbookEntry *>(mime);
+		if (mimeFonbookEntry) {
+			fritz::FonbookEntry *fe = mimeFonbookEntry->retrieveFonbookEntry();
+			if (fe)
+				addEntry(fe);
+		}
+	}
+}
+
+void KFritzWindow::resolveNumber() {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (container->isCalllist()) {
+		std::string currentNumber = getCurrentNumber();
+		fritz::Fonbook::sResolveResult result = fritz::FonbookManager::GetFonbook()->ResolveToName(currentNumber);
+		if (!result.name.compare(currentNumber)) {
+			statusBar()->showMessage(i18n("%1 did not resolve.", QString(currentNumber.c_str())), 0);
+		} else {
+			fritz::CallEntry *entry = container->getCalllistModel()->retrieveCallEntry(treeView->currentIndex());
+			entry->remoteName = result.name;
+			//TODO: change all calllist entries with this number
+		    statusBar()->showMessage(i18n("%1 resolves to \"%2\".", QString(currentNumber.c_str()), QString(result.name.c_str())), 0);
+		}
+	}
+}
+
+void KFritzWindow::updateActionProperties(int tabIndex __attribute__((unused))) {
+	KXmlGuiWindow::stateChanged("NoEdit");
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	if (container->isFonbook()) {
+		if (container->getFonbookModel()->flags(QModelIndex()) & QFlag(Qt::ItemIsEditable))
+			KXmlGuiWindow::stateChanged("WriteableFB");
+	}
 }
 
 void KFritzWindow::setProgressIndicator(QString message) {
@@ -520,6 +662,7 @@ void KFritzWindow::setProgressIndicator(QString message) {
 		progressIndicator->layout()->addWidget(label);
 		progressIndicator->layout()->addWidget(bar);
 		progressIndicator->layout()->setMargin(0);
-		statusBar()->insertPermanentWidget(1, progressIndicator);
+		statusBar()->insertPermanentWidget(0, progressIndicator);
 	}
 }
+

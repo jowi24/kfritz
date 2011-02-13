@@ -19,32 +19,18 @@
  *
  */
 
-#ifndef KFRITZMODEL_H_
-#define KFRITZMODEL_H_
+#ifndef FILTERPROXYMODEL_H_
+#define FILTERPROXYMODEL_H_
 
-#include <QAbstractItemModel>
-#include <QTextCodec>
-#include <QTimer>
+#include <QSortFilterProxyModel>
+#include <CallList.h>
 
-class KFritzModel : public QAbstractItemModel {
-	Q_OBJECT
+class KCalllistProxyModel : public QSortFilterProxyModel {
 public:
-	KFritzModel();
-	virtual ~KFritzModel();
-    virtual QModelIndex index(int row, int column,
-    		                  const QModelIndex &parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex &child) const;
-    QString toUnicode(const std::string str) const;
-    std::string fromUnicode(const QString str) const;
-    virtual std::string number(const QModelIndex &index) const = 0;
-Q_SIGNALS:
-	void updated();
-protected Q_SLOTS:
-	virtual void check() = 0;
-protected:
-	QTimer *timer;
-private:
-	QTextCodec *inputCodec;
+	KCalllistProxyModel(QObject *parent);
+	virtual ~KCalllistProxyModel();
+	virtual fritz::CallEntry *retrieveCallEntry(const QModelIndex &index) const;
+	virtual std::string number(const QModelIndex &index) const;
 };
 
-#endif /* KFRITZMODEL_H_ */
+#endif /* FILTERPROXYMODEL_H_ */
