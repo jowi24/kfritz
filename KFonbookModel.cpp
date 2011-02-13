@@ -241,7 +241,7 @@ bool KFonbookModel::removeRows(int row, int count __attribute__((unused)), const
 		return false;
 }
 
-Qt::ItemFlags KFonbookModel::flags(const QModelIndex & index __attribute__((unused))) const {
+Qt::ItemFlags KFonbookModel::flags(const QModelIndex & index) const {
 	if (fonbook->isWriteable())
 		return Qt::ItemFlags(QAbstractItemModel::flags(index) | QFlag(Qt::ItemIsEditable));
 	else

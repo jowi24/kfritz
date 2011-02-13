@@ -114,6 +114,7 @@ KFritzWindow::KFritzWindow()
 	setupActions();
 
 	setupGUI();
+	KXmlGuiWindow::stateChanged("NoEdit");
 
 	// remove handbook menu entry
 	actionCollection()->action("help_contents")->setVisible(false);
@@ -639,8 +640,8 @@ void KFritzWindow::updateActionProperties(int tabIndex __attribute__((unused))) 
 	KXmlGuiWindow::stateChanged("NoEdit");
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	if (container->isFonbook()) {
-		//TODO only in editable phone books
-		KXmlGuiWindow::stateChanged("WriteableFB");
+		if (container->getFonbookModel()->flags(QModelIndex()) & QFlag(Qt::ItemIsEditable))
+			KXmlGuiWindow::stateChanged("WriteableFB");
 	}
 }
 
