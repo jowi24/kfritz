@@ -16,6 +16,12 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "%1 did not resolve."
+msgstr "Kein Treffer für %1."
+
+msgid "%1 resolves to \"%2\"."
+msgstr "%1 gehört zu \"%2\"."
+
 msgid "(c) 2008-2011"
 msgstr "(c) 2008-2011"
 

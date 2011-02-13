@@ -467,6 +467,7 @@ void KFritzWindow::updateMainWidgets(bool b)
     	} while( first != fm->GetTechId() );
     }
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(updateActionProperties(int)));
+    connect(tabWidget, SIGNAL(currentChanged(int)), statusBar(), SLOT(clearMessage()));
     updateActionProperties(tabWidget->currentIndex());
 }
 
@@ -619,19 +620,16 @@ void KFritzWindow::pasteEntry() {
 void KFritzWindow::resolveNumber() {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	QAdaptTreeView *treeView = container->getTreeView();
-//TODO setProgressIndicator(i18n("Resolving..."));
 	if (container->isCalllist()) {
 		std::string currentNumber = getCurrentNumber();
 		fritz::Fonbook::sResolveResult result = fritz::FonbookManager::GetFonbook()->ResolveToName(currentNumber);
 		if (!result.name.compare(currentNumber)) {
-			// TODO: message: no result
-//TODO		statusBar()->insertItem(i18n("%1 did not resolve.", QString(currentNumber.c_str())), 0);
-			DBG("Did not resolve.");
+			statusBar()->showMessage(i18n("%1 did not resolve.", QString(currentNumber.c_str())), 0);
 		} else {
 			fritz::CallEntry *entry = container->getCalllistModel()->retrieveCallEntry(treeView->currentIndex());
 			entry->remoteName = result.name;
-//TODO		statusBar()->insertItem(i18n("%1 resolves to %2.", QString(currentNumber.c_str()), QString(result.name.c_str())), 0);
-			DBG("Resolves to: " << result.name);
+			//TODO: change all calllist entries with this number
+		    statusBar()->showMessage(i18n("%1 resolves to \"%2\".", QString(currentNumber.c_str()), QString(result.name.c_str())), 0);
 		}
 	}
 }
