@@ -103,7 +103,7 @@ QVariant KCalllistModel::headerData(int section, Qt::Orientation orientation, in
 	}
 }
 
-const fritz::CallEntry *KCalllistModel::retrieveCallEntry(const QModelIndex &index) const {
+fritz::CallEntry *KCalllistModel::retrieveCallEntry(const QModelIndex &index) const {
 	return calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
 }
 

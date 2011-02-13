@@ -628,7 +628,7 @@ void KFritzWindow::resolveNumber() {
 //TODO		statusBar()->insertItem(i18n("%1 did not resolve.", QString(currentNumber.c_str())), 0);
 			DBG("Did not resolve.");
 		} else {
-			fritz::CallEntry *entry = fritz::CallList::getCallList()->RetrieveEntry(fritz::CallEntry::ALL, container->getCalllistModel()->mapToSource(treeView->currentIndex()).row()); //TODO: no direct access to calllist
+			fritz::CallEntry *entry = container->getCalllistModel()->retrieveCallEntry(treeView->currentIndex());
 			entry->remoteName = result.name;
 //TODO		statusBar()->insertItem(i18n("%1 resolves to %2.", QString(currentNumber.c_str()), QString(result.name.c_str())), 0);
 			DBG("Resolves to: " << result.name);

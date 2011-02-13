@@ -29,7 +29,7 @@ class KCalllistProxyModel : public QSortFilterProxyModel {
 public:
 	KCalllistProxyModel(QObject *parent);
 	virtual ~KCalllistProxyModel();
-	virtual const fritz::CallEntry *retrieveCallEntry(const QModelIndex &index) const;
+	virtual fritz::CallEntry *retrieveCallEntry(const QModelIndex &index) const;
 	virtual std::string number(const QModelIndex &index) const;
 };
 

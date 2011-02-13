@@ -29,7 +29,7 @@ KCalllistProxyModel::KCalllistProxyModel(QObject *parent)
 KCalllistProxyModel::~KCalllistProxyModel() {
 }
 
-const fritz::CallEntry *KCalllistProxyModel::retrieveCallEntry(const QModelIndex &index) const {
+fritz::CallEntry *KCalllistProxyModel::retrieveCallEntry(const QModelIndex &index) const {
 	return static_cast<KCalllistModel *>(sourceModel())->retrieveCallEntry(mapToSource(index));
 }
 
