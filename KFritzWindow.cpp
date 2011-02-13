@@ -520,9 +520,8 @@ std::string KFritzWindow::getCurrentNumber() {
 }
 
 void KFritzWindow::dialNumber() {
-	DialDialog *d = new DialDialog(this, getCurrentNumber());
-	d->show();
-	// TODO: possible memleak?
+	DialDialog d(this, getCurrentNumber());
+	d.exec();
 }
 
 void KFritzWindow::copyNumberToClipboard() {
