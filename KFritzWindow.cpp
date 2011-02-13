@@ -663,7 +663,7 @@ void KFritzWindow::setProgressIndicator(QString message) {
 		progressIndicator->layout()->addWidget(label);
 		progressIndicator->layout()->addWidget(bar);
 		progressIndicator->layout()->setMargin(0);
-		statusBar()->insertPermanentWidget(1, progressIndicator);
+		statusBar()->insertPermanentWidget(0, progressIndicator);
 	}
 }
 
