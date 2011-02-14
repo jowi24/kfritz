@@ -5,7 +5,7 @@ project (KFRITZ)
 #set(CMAKE_VERBOSE_MAKEFILE true) # <-- enable for debugging
 #set(CMAKE_BUILD_TYPE "Debug")    # <-- enable for debugging 
 set(CMAKE_SKIP_RPATH TRUE)
-set(CMAKE_MODULE_PATH "${KFRITZ_SOURCE_DIR}/CMakeModules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${KFRITZ_SOURCE_DIR}/CMakeModules")
 
 find_package(PkgConfig REQUIRED)
 
