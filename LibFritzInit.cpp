@@ -71,7 +71,7 @@ void LibFritzInit::run() {
 		KSettings::self()->writeConfig();
 	}
 
-	fritz::Config::SetupConfigDir(KStandardDirs::locateLocal("data", KGlobal::mainComponent().aboutData()->appName()+"/").toStdString());
+	fritz::Config::SetupConfigDir(KStandardDirs::locateLocal("data", KGlobal::mainComponent().aboutData()->appName()+'/').toStdString());
 
 	std::vector<std::string> vMsn;
 	QStringList msnList = KSettings::mSNFilter();

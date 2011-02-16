@@ -49,7 +49,7 @@ QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
 
 	switch (index.column()) {
 		case 1:
-			return QVariant(toUnicode((ce->date+" "+ce->time)));
+			return QVariant(toUnicode((ce->date + ' ' + ce->time)));
 			break;
 		case 2:
 			if (ce->remoteName.size() == 0)

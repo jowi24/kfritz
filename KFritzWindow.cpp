@@ -138,7 +138,7 @@ void KFritzWindow::HandleCall(bool outgoing, int connId __attribute__((unused)),
 	QString qTypeName      = KFonbookModel::getTypeName(type);
 
 	if (qTypeName.size() > 0)
-		qRemoteName += " (" + qTypeName + ")";
+		qRemoteName += " (" + qTypeName + ')';
 
 	//QString qLocalParty = inputCodec->toUnicode(localParty.c_str());
 	QString qMediumName    = inputCodec->toUnicode(mediumName.c_str());
