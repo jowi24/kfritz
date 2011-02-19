@@ -1,0 +1,8 @@
+i18n("das-oertliche.de")
+i18n("Fritz!Box phone book")
+i18n("ISDN")
+i18n("Local phone book")
+i18n("nummerzoeker.com")
+i18n("POTS")
+i18n("tel.local.ch")
+i18n("unknown")
