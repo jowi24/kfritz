@@ -295,7 +295,7 @@ void KFritzWindow::setupActions() {
 	connect(aReload, SIGNAL(triggered(bool)), this, SLOT(reload()));
 
 	KAction *aReconnectISP = new KAction(this);
-	aReconnectISP->setText(i18n("Reconnect to internet"));
+	aReconnectISP->setText(i18n("Reconnect to the Internet"));
 	aReconnectISP->setIcon(KIcon("network-workgroup"));
 	actionCollection()->addAction("reconnectISP", aReconnectISP);
 	connect(aReconnectISP, SIGNAL(triggered(bool)), this, SLOT(reconnectISP()));
