@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=KFritz
 Name[de]=KFritz
+Name[nds]=KFritz
 Name[nl]=KFritz
 Name[pt]=KFritz
 Name[sv]=Kfritz
@@ -11,6 +12,7 @@ Icon=modem
 Exec=kfritz
 GenericName=Call notificator
 GenericName[de]=Anruf-Benachrichtigung
+GenericName[nds]=Anroop-Bescheden
 GenericName[nl]=Oproepmelder
 GenericName[pt]=Notificador de chamadas
 GenericName[sv]=Samtalsunderrättelse

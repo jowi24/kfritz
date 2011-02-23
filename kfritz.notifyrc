@@ -4,6 +4,7 @@ IconName=modem
 [Event/incomingCall]
 Name=Incoming Call
 Name[de]=Eingehender Anruf
+Name[nds]=Ankamen Anroop
 Name[nl]=Inkomende oproep
 Name[pt]=Chamada Recebida
 Name[sv]=Inkommande samtal
