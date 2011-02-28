@@ -36,3 +36,7 @@ fritz::CallEntry *KCalllistProxyModel::retrieveCallEntry(const QModelIndex &inde
 std::string KCalllistProxyModel::number(const QModelIndex &index) const {
 	return static_cast<KCalllistModel *>(sourceModel())->number(mapToSource(index));
 }
+
+void KCalllistProxyModel::sort(int column, Qt::SortOrder order) {
+	static_cast<KCalllistModel *>(sourceModel())->sort(column, order);
+}
