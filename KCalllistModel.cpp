@@ -156,7 +156,12 @@ void KCalllistModel::check() {
 	}
 }
 
-std::string KCalllistModel::number(const QModelIndex &i) const {
-	fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL,i.row());
+std::string KCalllistModel::number(const QModelIndex &index) const {
+	fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
 	return ce->remoteNumber;
+}
+
+std::string KCalllistModel::name(const QModelIndex &index) const {
+	fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
+	return ce->remoteName;
 }

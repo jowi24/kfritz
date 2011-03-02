@@ -39,6 +39,7 @@ public:
     virtual fritz::CallEntry *retrieveCallEntry(const QModelIndex &index) const;
     virtual void sort(int column, Qt::SortOrder order);
     virtual std::string number(const QModelIndex &index) const;
+    virtual std::string name(const QModelIndex &index) const;
 
 private:
 	fritz::CallList *calllist;
