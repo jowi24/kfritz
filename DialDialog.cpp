@@ -45,6 +45,21 @@ DialDialog::DialDialog(QWidget *parent, std::string number)
 	QRegExpValidator *validator = new QRegExpValidator(rx, this);
 	ui->numberLine->setValidator(validator);
 	ui->numberLine->setFocus();
+
+	// populate msn combo box
+	std::vector<std::string> names = fritz::gConfig->getSipNames();
+	std::vector<std::string> msns = fritz::gConfig->getSipMsns();
+	ui->msnComboBox->addItem(i18n("Default"), "");
+	QString line("*111# - ");
+	line.append(i18n("Conventional telephone network"));
+	ui->msnComboBox->addItem(line, "*111#");
+	for (size_t i=0; i<names.size(); i++) {
+		std::stringstream prefix;
+		prefix << "*12" << (i+1) << "#";
+		std::stringstream line;
+		line << prefix.str() << " - " << names[i] << " (" << msns[i] << ")";
+		ui->msnComboBox->addItem(line.str().c_str(), prefix.str().c_str());
+	}
 }
 
 DialDialog::~DialDialog() {
@@ -53,8 +68,11 @@ DialDialog::~DialDialog() {
 
 void DialDialog::dialNumber() {
 	DBG("Dialing number = " << ui->numberLine->text().toStdString());
-	fritz::FritzClient fc;
 	std::string number = ui->numberLine->text().toStdString();
+	std::string prefix = ui->msnComboBox->itemData(ui->msnComboBox->currentIndex()).toString().toStdString();
+	number.insert(0, prefix);
+
+	fritz::FritzClient fc;
 	fc.InitCall(number);
 	hide();
 	KMessageBox::information(this, i18n("Dialing initiated, pick up your phone now."));

@@ -7,27 +7,50 @@
     <x>0</x>
     <y>0</y>
     <width>191</width>
-    <height>32</height>
+    <height>65</height>
    </rect>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Number</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Number</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KLineEdit" name="numberLine"/>
+     </item>
+    </layout>
    </item>
    <item>
-    <widget class="KLineEdit" name="numberLine"/>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Provider</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KComboBox" name="msnComboBox"/>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
    <class>KLineEdit</class>
-   <extends></extends>
+   <extends>QLineEdit</extends>
    <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
