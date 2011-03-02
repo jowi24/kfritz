@@ -106,6 +106,7 @@ public Q_SLOTS:
     void pasteEntry();
     void resolveNumber();
     void updateActionProperties(int tabIndex);
+    void updateCallListContextMenu(const QModelIndex &current, const QModelIndex &previous);
 
 };
 

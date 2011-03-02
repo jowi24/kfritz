@@ -469,6 +469,7 @@ void KFritzWindow::updateMainWidgets(bool b)
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(updateActionProperties(int)));
     connect(tabWidget, SIGNAL(currentChanged(int)), statusBar(), SLOT(clearMessage()));
     updateActionProperties(tabWidget->currentIndex());
+    connect(treeCallList->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateCallListContextMenu(const QModelIndex&, const QModelIndex&)));
 }
 
 void KFritzWindow::find() {
@@ -639,6 +640,15 @@ void KFritzWindow::updateActionProperties(int tabIndex __attribute__((unused))) 
 	if (container->isFonbook()) {
 		if (container->getFonbookModel()->flags(QModelIndex()) & QFlag(Qt::ItemIsEditable))
 			KXmlGuiWindow::stateChanged("WriteableFB");
+	}
+}
+
+void KFritzWindow::updateCallListContextMenu(const QModelIndex &current, const QModelIndex &previous __attribute__((unused))) {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	if (container->isCalllist()) {
+		KCalllistProxyModel *model = container->getCalllistModel();
+		bool canResolve = (model->name(current).compare(model->number(current)) == 0);
+		actionCollection()->action("resolveNumber")->setEnabled(canResolve);
 	}
 }
 
