@@ -157,11 +157,17 @@ void KCalllistModel::check() {
 }
 
 std::string KCalllistModel::number(const QModelIndex &index) const {
-	fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
-	return ce->remoteNumber;
+	if (index.isValid()) {
+		fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
+		return ce->remoteNumber;
+	} else
+		return "";
 }
 
 std::string KCalllistModel::name(const QModelIndex &index) const {
-	fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
-	return ce->remoteName;
+	if (index.isValid()) {
+		fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
+		return ce->remoteName;
+	} else
+		return "";
 }
