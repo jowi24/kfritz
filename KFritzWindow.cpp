@@ -321,7 +321,7 @@ void KFritzWindow::setupActions() {
 	connect(aDeleteEntry, SIGNAL(triggered(bool)), this, SLOT(deleteEntry()));
 
 	KAction *aResolveNumber = new KAction(this);
-	aResolveNumber->setText(i18n("Resolve number"));
+	aResolveNumber->setText(i18n("Look up number in phone books"));
 	actionCollection()->addAction("resolveNumber", aResolveNumber);
 	connect(aResolveNumber, SIGNAL(triggered(bool)), this, SLOT(resolveNumber()));
 
