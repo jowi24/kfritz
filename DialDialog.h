@@ -30,7 +30,7 @@ class DialDialog: public KDialog {
 private:
 	Ui::DialDialog *ui;
 public:
-	DialDialog(QWidget *parent, std::string number = "");
+	explicit DialDialog(QWidget *parent, std::string number = "");
 	virtual ~DialDialog();
 public Q_SLOTS:
 	void dialNumber();
