@@ -26,7 +26,6 @@
 #include <KLocale>
 #include <KAboutData>
 #include <KFilterProxySearchLine>
-#include <KFindDialog>
 #include <KStandardAction>
 #include <KService>
 #include <KStatusBar>
@@ -469,22 +468,6 @@ void KFritzWindow::updateMainWidgets(bool b)
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(updateActionProperties(int)));
     connect(tabWidget, SIGNAL(currentChanged(int)), statusBar(), SLOT(clearMessage()));
     updateActionProperties(tabWidget->currentIndex());
-}
-
-void KFritzWindow::find() {
-	QStringList findStrings;
-	KFindDialog dlg(this, 0, findStrings, true, false);
-	if (dlg.exec() != QDialog::Accepted)
-		return;
-
-}
-
-void KFritzWindow::findNext() {
-
-}
-
-void KFritzWindow::findPrev() {
-
 }
 
 void KFritzWindow::showMainWindow() {
