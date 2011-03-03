@@ -174,7 +174,7 @@ void KFritzWindow::slotNotification(QString event, QString qMessage, bool persis
 	notification = new KNotification (event, this, persistent ? KNotification::Persistent : KNotification::CloseOnTimeout);
 	KIcon ico(event == "incomingCall" ? "incoming-call" :
 			  event == "outgoingCall" ? "outgoing-call" :
-					                    "internet-telephony");
+					                    "internet-telephony"); //krazy:exclude=spelling
 	notification->setTitle(programName);
 	notification->setPixmap(ico.pixmap(64, 64));
 	notification->setText(qMessage);
@@ -269,7 +269,7 @@ void KFritzWindow::setupActions() {
 
 	KAction *aDialNumber = new KAction(this);
 	aDialNumber->setText(i18n("Dial number"));
-	aDialNumber->setIcon(KIcon("internet-telephony"));
+	aDialNumber->setIcon(KIcon("internet-telephony")); //krazy:exclude=spelling
 	actionCollection()->addAction("dialNumber", aDialNumber);
 	connect(aDialNumber, SIGNAL(triggered(bool)), this, SLOT(dialNumber()));
 

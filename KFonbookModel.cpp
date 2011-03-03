@@ -279,7 +279,7 @@ void KFonbookModel::sort(int column, Qt::SortOrder order) {
 		element = fritz::FonbookEntry::ELEM_VANITY;
 		break;
 	default:
-		ERR("Invalid column adressed while sorting.");
+		ERR("Invalid column addressed while sorting.");
 		return;
 	}
 	fonbook->Sort(element, order == Qt::AscendingOrder);
