@@ -19,13 +19,14 @@
  *
  */
 
-#ifndef KSETTINGSFONBOOKS_H_
-#define KSETTINGSFONBOOKS_H_
+#ifndef KSETTINGSFONBOOKS_H
+#define KSETTINGSFONBOOKS_H
 
 #include <QWidget>
 
-#include "ui_KSettingsFonbooks.h"
 #include <FonbookManager.h>
+
+#include "ui_KSettingsFonbooks.h"
 
 // use this class to add a configuration page to a KConfigDialog
 

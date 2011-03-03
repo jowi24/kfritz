@@ -19,6 +19,7 @@
  *
  */
 
+#include "DialDialog.h"
 
 #include <KLocale>
 #include <KMessageBox>
@@ -26,7 +27,6 @@
 
 #include <FritzClient.h>
 
-#include "DialDialog.h"
 #include "Log.h"
 
 DialDialog::DialDialog(QWidget *parent, std::string number)

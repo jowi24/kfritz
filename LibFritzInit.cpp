@@ -21,8 +21,6 @@
 
 #include "LibFritzInit.h"
 
-#include <FonbookManager.h>
-#include <Config.h>
 #include <CallList.h>
 #include <KGlobal>
 #include <KCmdLineArgs>
@@ -31,6 +29,9 @@
 #include <KComponentData>
 #include <KAboutData>
 #include <KStandardDirs>
+
+#include <FonbookManager.h>
+#include <Config.h>
 
 #include "KSettings.h"
 #include "Log.h"

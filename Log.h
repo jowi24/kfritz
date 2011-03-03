@@ -23,11 +23,12 @@
 #include <KTextEdit>
 
 #include <Config.h> // logging macros DBG, INF, ERR
+
 #undef NAMESPACE
 #define NAMESPACE "kfritz"
 
-#ifndef LOG_H_
-#define LOG_H_
+#ifndef LOG_H
+#define LOG_H
 
 class LogBuf : public QObject, public std::streambuf {
 	Q_OBJECT

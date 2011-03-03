@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef KCALLLISTMODEL_H_
-#define KCALLLISTMODEL_H_
+#ifndef KCALLLISTMODEL_H
+#define KCALLLISTMODEL_H
 
 #include <CallList.h>
 

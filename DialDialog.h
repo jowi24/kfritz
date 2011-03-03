@@ -19,10 +19,11 @@
  *
  */
 
-#ifndef DIALDIALOG_H_
-#define DIALDIALOG_H_
+#ifndef DIALDIALOG_H
+#define DIALDIALOG_H
 
 #include <KDialog>
+
 #include "ui_DialDialog.h"
 
 class DialDialog: public KDialog {

@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef KSETTINGSMISC_H_
-#define KSETTINGSMISC_H_
+#ifndef KSETTINGSMISC_H
+#define KSETTINGSMISC_H
 
 #include <QWidget>
 

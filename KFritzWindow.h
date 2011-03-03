@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef KFRITZBOXWINDOW_H_
-#define KFRITZBOXWINDOW_H_
+#ifndef KFRITZWINDOW_H
+#define KFRITZWINDOW_H
 
 #include <KXmlGuiWindow>
 #include <KTextEdit>

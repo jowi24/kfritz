@@ -19,10 +19,11 @@
  *
  */
  
-#ifndef CONTAINERWIDGET_H_
-#define CONTAINERWIDGET_H_
+#ifndef CONTAINERWIDGET_H
+#define CONTAINERWIDGET_H
 
 #include <QWidget>
+
 #include "QAdaptTreeView.h"
 #include "KFonbookModel.h"
 #include "KCalllistProxyModel.h"
