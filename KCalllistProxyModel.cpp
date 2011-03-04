@@ -20,6 +20,7 @@
  */
 
 #include "KCalllistProxyModel.h"
+
 #include "KCalllistModel.h"
 
 KCalllistProxyModel::KCalllistProxyModel(QObject *parent)

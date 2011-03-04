@@ -19,10 +19,11 @@
  *
  */
 
-#ifndef FILTERPROXYMODEL_H_
-#define FILTERPROXYMODEL_H_
+#ifndef KCALLLISTPROXYMODEL_H
+#define KCALLLISTPROXYMODEL_H
 
 #include <QSortFilterProxyModel>
+
 #include <CallList.h>
 
 class KCalllistProxyModel : public QSortFilterProxyModel {

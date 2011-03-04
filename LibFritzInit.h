@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef LIBFRITZINIT_H_
-#define LIBFRITZINIT_H_
+#ifndef LIBFRITZINIT_H
+#define LIBFRITZINIT_H
 
 #include <QThread>
 

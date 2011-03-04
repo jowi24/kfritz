@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef KFRITZBOXWINDOW_H_
-#define KFRITZBOXWINDOW_H_
+#ifndef KFRITZWINDOW_H
+#define KFRITZWINDOW_H
 
 #include <KXmlGuiWindow>
 #include <KTextEdit>
@@ -76,9 +76,6 @@ public  Q_SLOTS:
     void updateMissedCallsIndicator();
     void showStatusbarBoxBusy(bool b);
     void updateMainWidgets(bool b);
-    void find();
-    void findNext();
-    void findPrev();
 public:
     KFritzWindow();
     virtual ~KFritzWindow();

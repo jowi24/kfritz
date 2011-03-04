@@ -26,7 +26,6 @@
 #include <KLocale>
 #include <KAboutData>
 #include <KFilterProxySearchLine>
-#include <KFindDialog>
 #include <KStandardAction>
 #include <KService>
 #include <KStatusBar>
@@ -175,7 +174,7 @@ void KFritzWindow::slotNotification(QString event, QString qMessage, bool persis
 	notification = new KNotification (event, this, persistent ? KNotification::Persistent : KNotification::CloseOnTimeout);
 	KIcon ico(event == "incomingCall" ? "incoming-call" :
 			  event == "outgoingCall" ? "outgoing-call" :
-					                    "internet-telephony");
+					                    "internet-telephony"); //krazy:exclude=spelling
 	notification->setTitle(programName);
 	notification->setPixmap(ico.pixmap(64, 64));
 	notification->setText(qMessage);
@@ -270,7 +269,7 @@ void KFritzWindow::setupActions() {
 
 	KAction *aDialNumber = new KAction(this);
 	aDialNumber->setText(i18n("Dial number"));
-	aDialNumber->setIcon(KIcon("internet-telephony"));
+	aDialNumber->setIcon(KIcon("internet-telephony")); //krazy:exclude=spelling
 	actionCollection()->addAction("dialNumber", aDialNumber);
 	connect(aDialNumber, SIGNAL(triggered(bool)), this, SLOT(dialNumber()));
 
@@ -470,22 +469,6 @@ void KFritzWindow::updateMainWidgets(bool b)
     connect(tabWidget, SIGNAL(currentChanged(int)), statusBar(), SLOT(clearMessage()));
     updateActionProperties(tabWidget->currentIndex());
     connect(treeCallList->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateCallListContextMenu(const QModelIndex&, const QModelIndex&)));
-}
-
-void KFritzWindow::find() {
-	QStringList findStrings;
-	KFindDialog dlg(this, 0, findStrings, true, false);
-	if (dlg.exec() != QDialog::Accepted)
-		return;
-
-}
-
-void KFritzWindow::findNext() {
-
-}
-
-void KFritzWindow::findPrev() {
-
 }
 
 void KFritzWindow::showMainWindow() {

@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef KFONBOOKMODEL_H_
-#define KFONBOOKMODEL_H_
+#ifndef KFONBOOKMODEL_H
+#define KFONBOOKMODEL_H
 
 #include <FonbookManager.h>
 

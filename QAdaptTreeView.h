@@ -19,10 +19,10 @@
  *
  */
 
-#ifndef QADAPTTREEVIEW_H_
-#define QADAPTTREEVIEW_H_
+#ifndef QADAPTTREEVIEW_H
+#define QADAPTTREEVIEW_H
 
-#include <qtreeview.h>
+#include <QTreeView>
 
 class QAdaptTreeView: public QTreeView {
 	Q_OBJECT

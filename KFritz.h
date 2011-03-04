@@ -19,14 +19,16 @@
  *
  */
 
-#ifndef KFRITZBOX_H_
-#define KFRITZBOX_H_
+#ifndef KFRITZBOX_H
+#define KFRITZBOX_H
 
 #include <QObject>
 #include <KSystemTrayIcon>
 #include <KAboutData>
-#include "KFritzWindow.h"
+
 #include <Listener.h>
+
+#include "KFritzWindow.h"
 
 class KFritz : public KSystemTrayIcon
 {

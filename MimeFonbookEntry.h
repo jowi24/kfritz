@@ -19,11 +19,12 @@
  *
  */
 
-#ifndef MIMEFONBOOKENTRY_H_
-#define MIMEFONBOOKENTRY_H_
+#ifndef MIMEFONBOOKENTRY_H
+#define MIMEFONBOOKENTRY_H
 
 #include <QMimeData>
 #include <QStringList>
+
 #include <Fonbook.h>
 
 class MimeFonbookEntry: public QMimeData {
