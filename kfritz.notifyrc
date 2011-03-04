@@ -3,6 +3,7 @@ IconName=modem
 
 [Event/incomingCall]
 Name=Incoming Call
+Name[cs]=Příchozí hovor
 Name[de]=Eingehender Anruf
 Name[nds]=Ankamen Anroop
 Name[nl]=Inkomende oproep
@@ -15,6 +16,7 @@ Sound=KDE-Im-New-Mail.ogg
 
 [Event/outgoingCall]
 Name=Outgoing Call
+Name[cs]=Odchozí hovor
 Name[de]=Ausgehender Anruf
 Name[nl]=Uitgaande oproep
 Name[pt]=Chamada Enviada
@@ -26,6 +28,7 @@ Sound=KDE-Im-New-Mail.ogg
 
 [Event/callConnected]
 Name=Call got connected
+Name[cs]=Hovor byl spojen
 Name[de]=Der Anruf wurde angenommen
 Name[nl]=Oproep werd verbonden
 Name[pt]=A chamada foi estabelecida
@@ -36,6 +39,7 @@ Action=Popup
 
 [Event/callDisconnected]
 Name=Call got disconnected
+Name[cs]=Hovor byl odpojen
 Name[de]=Der Anruf wurde beendet
 Name[nl]=Verbinding werd verbroken
 Name[pt]=A chamada terminou
