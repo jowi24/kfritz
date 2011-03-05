@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef KFRITZMODEL_H_
-#define KFRITZMODEL_H_
+#ifndef KFRITZMODEL_H
+#define KFRITZMODEL_H
 
 #include <QAbstractItemModel>
 #include <QTextCodec>

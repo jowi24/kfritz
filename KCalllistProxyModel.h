@@ -19,10 +19,11 @@
  *
  */
 
-#ifndef FILTERPROXYMODEL_H_
-#define FILTERPROXYMODEL_H_
+#ifndef KCALLLISTPROXYMODEL_H
+#define KCALLLISTPROXYMODEL_H
 
 #include <QSortFilterProxyModel>
+
 #include <CallList.h>
 
 class KCalllistProxyModel : public QSortFilterProxyModel {
@@ -31,6 +32,7 @@ public:
 	virtual ~KCalllistProxyModel();
 	virtual fritz::CallEntry *retrieveCallEntry(const QModelIndex &index) const;
 	virtual std::string number(const QModelIndex &index) const;
+	virtual std::string name(const QModelIndex &index) const;
 	virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 };
 

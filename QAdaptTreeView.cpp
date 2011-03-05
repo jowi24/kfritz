@@ -20,8 +20,9 @@
  */
 
 #include "QAdaptTreeView.h"
-#include "KFritzModel.h"
+
 #include "KCalllistProxyModel.h"
+#include "KFritzModel.h"
 
 QAdaptTreeView::QAdaptTreeView(QWidget *parent)
 :QTreeView(parent) {

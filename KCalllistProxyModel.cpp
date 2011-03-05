@@ -20,6 +20,7 @@
  */
 
 #include "KCalllistProxyModel.h"
+
 #include "KCalllistModel.h"
 
 KCalllistProxyModel::KCalllistProxyModel(QObject *parent)
@@ -35,6 +36,10 @@ fritz::CallEntry *KCalllistProxyModel::retrieveCallEntry(const QModelIndex &inde
 
 std::string KCalllistProxyModel::number(const QModelIndex &index) const {
 	return static_cast<KCalllistModel *>(sourceModel())->number(mapToSource(index));
+}
+
+std::string KCalllistProxyModel::name(const QModelIndex &index) const {
+	return static_cast<KCalllistModel *>(sourceModel())->name(mapToSource(index));
 }
 
 void KCalllistProxyModel::sort(int column, Qt::SortOrder order) {

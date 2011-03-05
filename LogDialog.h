@@ -20,8 +20,8 @@
  */
 
 
-#ifndef LOGDIALOG_H_
-#define LOGDIALOG_H_
+#ifndef LOGDIALOG_H
+#define LOGDIALOG_H
 
 #include <KDialog>
 #include <KTextEdit>

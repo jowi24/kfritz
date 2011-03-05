@@ -21,6 +21,7 @@
 
 
 #include "LogDialog.h"
+
 #include <KLocale>
 
 LogDialog::LogDialog(QWidget *parent)

@@ -19,10 +19,11 @@
  *
  */
 
-#ifndef DIALDIALOG_H_
-#define DIALDIALOG_H_
+#ifndef DIALDIALOG_H
+#define DIALDIALOG_H
 
 #include <KDialog>
+
 #include "ui_DialDialog.h"
 
 class DialDialog: public KDialog {
@@ -30,7 +31,7 @@ class DialDialog: public KDialog {
 private:
 	Ui::DialDialog *ui;
 public:
-	DialDialog(QWidget *parent, std::string number = "");
+	explicit DialDialog(QWidget *parent, std::string number = "");
 	virtual ~DialDialog();
 public Q_SLOTS:
 	void dialNumber();

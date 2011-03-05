@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef KCALLLISTMODEL_H_
-#define KCALLLISTMODEL_H_
+#ifndef KCALLLISTMODEL_H
+#define KCALLLISTMODEL_H
 
 #include <CallList.h>
 
@@ -39,6 +39,7 @@ public:
     virtual fritz::CallEntry *retrieveCallEntry(const QModelIndex &index) const;
     virtual void sort(int column, Qt::SortOrder order);
     virtual std::string number(const QModelIndex &index) const;
+    virtual std::string name(const QModelIndex &index) const;
 
 private:
 	fritz::CallList *calllist;

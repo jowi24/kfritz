@@ -19,12 +19,13 @@
  *
  */
 
-#ifndef KSETTINGSFRITZBOX_H_
-#define KSETTINGSFRITZBOX_H_
+#ifndef KSETTINGSFRITZBOX_H
+#define KSETTINGSFRITZBOX_H
 
 #include <QWidget>
 #include <QListWidgetItem>
 #include <KEditListBox>
+
 #include "ui_KSettingsFritzBox.h"
 
 // use this class to add a configuration page to a KConfigDialog
