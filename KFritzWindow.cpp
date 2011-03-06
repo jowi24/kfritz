@@ -532,7 +532,8 @@ void KFritzWindow::reconnectISP() {
 
 void KFritzWindow::getIP() {
 	fritz::FritzClient fc;
-	KMessageBox::information(this, i18n("Current IP address is: %1", fc.getCurrentIP().c_str()));
+	std::string ip = fc.getCurrentIP();
+	KMessageBox::information(this, i18n("Current IP address is: %1", ip.size() ? ip.c_str() : i18n("unknown")));
 }
 
 void KFritzWindow::addEntry(fritz::FonbookEntry *fe) {

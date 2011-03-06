@@ -1,26 +1,22 @@
 VERSION = $(shell grep 'static const char \*VERSION *=' KFritz.cpp | awk '{ print $$6 }' | sed -e 's/[";]//g')
 WDIR    = $(shell pwd)
-PODIR   = po
-POTFILE = $(PODIR)/kfritz.pot
-POFILES = $(wildcard $(PODIR)/*.po)
 
-
-cmake:
+cmake: LibFritzI18N.cpp
 	@if test ! -d build; \
 	then mkdir -p build; \
 	cd build; cmake ..; \
 	fi
 
-cmake-debug:
+cmake-debug: LibFritzI18N.cpp
 	@if test ! -d build; \
 	then mkdir -p build; \
 	cd build; cmake -DCMAKE_BUILD_TYPE:STRING=Debug ..; \
 	fi
 
-all: cmake $(POFILES) $(POTFILE)
+all: cmake 
 	cd build; make 
 	
-debug: cmake-debug $(POFILES) $(POTFILE)
+debug: cmake-debug 
 	cd build; make 
 
 clean:
@@ -29,11 +25,30 @@ clean:
 	@-rm ../kfritz-${VERSION}.orig.tar.gz
 	@-rm -rf build
 	
-dist: clean
-	tar cvz --dereference \
+dist: clean update-po
+	tar cvz --dereference --exclude=l10n-kde4 \
 	        --exclude-vcs --exclude="debian" --exclude=".settings" --exclude=".project" \
 	        --exclude=".cproject" --exclude=".cdtproject" --exclude="test" --exclude=".git*" \
 	        -f ../kfritz_${VERSION}.orig.tar.gz ../kfritz
+	        
+fetch-po:
+	@if test ! -d l10n-kde4; \
+	then svn co --depth=immediates svn+ssh://joachimwilke@svn.kde.org/home/kde/trunk/l10n-kde4/ ; \
+	for LCODE in `cat l10n-kde4/subdirs`; do svn up --set-depth=empty l10n-kde4/$$LCODE/messages/ ; done ; \
+	for LCODE in `cat l10n-kde4/subdirs`; do svn up --set-depth=files l10n-kde4/$$LCODE/messages/playground-network/ ; done ; \
+	fi
+	
+update-po: fetch-po
+	svn up l10n-kde4
+	for LCODE in `cat l10n-kde4/subdirs`; do \
+	if test -e l10n-kde4/$$LCODE/messages/playground-network/kfritz.po; then \
+	cp l10n-kde4/$$LCODE/messages/playground-network/kfritz.po po/$$LCODE.po ; fi ; done
+	
+LibFritzI18N.cpp: libfritz++/*.cpp
+	mv $@ $@.old 
+	cat $@.old | grep -v i18n > $@
+	rm $@.old
+	grep -ir I18N_NOOP libfritz++/*.cpp | sed -e 's/.*I18N_NOOP(\([^)]*\).*/i18n(\1)/' | sort | uniq >> $@
 
 kde-install: all
 	cd build; kdesudo make install
@@ -49,15 +64,3 @@ deb: dist
 
 deb-src: dist
 	debuild -S -i"(\.svn|\.settings|\.(c|cdt|)project|test)"
-	
-$(POTFILE): $(wildcard *.cpp) $(wildcard libfritz++/*.cpp) $(wildcard *.kcfg) $(wildcard *.rc) 
-	xgettext --from-code=UTF-8 -C -kde -ci18n -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3 -ktr2i18n:1\
-	         -kI18N_NOOP:1 -kI18N_NOOP2:1c,2 -kaliasLocale -kki18n:1 -kki18nc:1c,2 -kki18np:1,2 -kki18ncp:1c,2,3 \
-	         --msgid-bugs-address="kfritz@joachim-wilke.de" --no-location -s \
-	         -D ${WDIR} -o $(POTFILE) *.h *.cpp *.kcfg *.rc build/*.h
-	grep -v POT-Creation $(POTFILE) > $(POTFILE)~
-	mv $(POTFILE)~ $(POTFILE)
-	         
-po/%.po: $(POTFILE)
-	msgmerge -U --no-wrap -s --backup=none -q $@ $<
-	@touch $@

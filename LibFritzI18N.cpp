@@ -18,7 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
- Automatically created by MessagesLib.sh
+
+// Automatically updated by 'make LibFritzI18N.cpp'
 
 i18n("das-oertliche.de")
 i18n("Fritz!Box phone book")
@@ -27,4 +28,3 @@ i18n("Local phone book")
 i18n("nummerzoeker.com")
 i18n("POTS")
 i18n("tel.local.ch")
-i18n("unknown")
