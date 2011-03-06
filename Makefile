@@ -1,13 +1,13 @@
 VERSION = $(shell grep 'static const char \*VERSION *=' KFritz.cpp | awk '{ print $$6 }' | sed -e 's/[";]//g')
 WDIR    = $(shell pwd)
 
-cmake:
+cmake: LibFritzI18N.cpp
 	@if test ! -d build; \
 	then mkdir -p build; \
 	cd build; cmake ..; \
 	fi
 
-cmake-debug:
+cmake-debug: LibFritzI18N.cpp
 	@if test ! -d build; \
 	then mkdir -p build; \
 	cd build; cmake -DCMAKE_BUILD_TYPE:STRING=Debug ..; \
@@ -43,6 +43,12 @@ update-po: fetch-po
 	for LCODE in `cat l10n-kde4/subdirs`; do \
 	if test -e l10n-kde4/$$LCODE/messages/playground-network/kfritz.po; then \
 	cp l10n-kde4/$$LCODE/messages/playground-network/kfritz.po po/$$LCODE.po ; fi ; done
+	
+LibFritzI18N.cpp: libfritz++/*.cpp
+	mv $@ $@.old 
+	cat $@.old | grep -v i18n > $@
+	rm $@.old
+	grep -ir I18N_NOOP libfritz++/*.cpp | sed -e 's/.*I18N_NOOP(\([^)]*\).*/i18n(\1)/' | sort | uniq >> $@
 
 kde-install: all
 	cd build; kdesudo make install
