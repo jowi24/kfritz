@@ -36,13 +36,6 @@
   </group>  
   <group name="GUI">
   	<entry name="LastKnownMissedCall" type="LongLong">
-  		<label>Last missed call known to gui</label>
-  		<whatsthis>Used internally.</whatsthis>
-  	</entry>
-  	<entry name="ShowLog" type="Bool">
-  		<label>Show log window</label>
-  		<tooltip>Displays a tab with logging messages</tooltip>
-  		<default>false</default>
   	</entry>
   	<entry name="StartMinimized" type="Bool">
   		<label>Start KFritz minimized</label>
