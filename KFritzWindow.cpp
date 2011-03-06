@@ -526,8 +526,10 @@ void KFritzWindow::reload() {
 
 void KFritzWindow::reconnectISP() {
 	fritz::FritzClient fc;
-	fc.reconnectISP();
-	KMessageBox::information(this, i18n("Reconnect initiated."));
+	if (fc.reconnectISP())
+		KMessageBox::information(this, i18n("Reconnect initiated."));
+	else
+		KMessageBox::error(this, i18n("Reconnect failed."));
 }
 
 void KFritzWindow::getIP() {
