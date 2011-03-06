@@ -39,7 +39,7 @@
   	</entry>
   	<entry name="StartMinimized" type="Bool">
   		<label>Start KFritz minimized</label>
-  		<default>false</default>
+  		<default>true</default>
   	</entry>
   </group> 
 </kcfg>
