@@ -86,7 +86,7 @@ void LibFritzInit::run() {
 	QStringList phonebookList = KSettings::phonebookList();
 	while (phonebookList.count())
 		vFonbook.push_back(phonebookList.takeFirst().toStdString());
-	fritz::FonbookManager::CreateFonbookManager(vFonbook, "");
+	fritz::FonbookManager::CreateFonbookManager(vFonbook, "", false);
 
 	fritz::CallList::CreateCallList();
 
