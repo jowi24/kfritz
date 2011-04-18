@@ -76,6 +76,7 @@ public  Q_SLOTS:
     void updateMissedCallsIndicator();
     void showStatusbarBoxBusy(bool b);
     void updateMainWidgets(bool b);
+    void quit();
 public:
     KFritzWindow();
     virtual ~KFritzWindow();

@@ -335,7 +335,7 @@ void KFritzWindow::setupActions() {
 	KStandardAction::cut(this, SLOT(cutEntry()), actionCollection());
 	KStandardAction::copy(this, SLOT(copyEntry()), actionCollection());
 	KStandardAction::paste(this, SLOT(pasteEntry()), actionCollection());
-	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
+	KStandardAction::quit(this, SLOT(quit()), actionCollection());
 
 }
 
@@ -469,6 +469,31 @@ void KFritzWindow::updateMainWidgets(bool b)
     connect(tabWidget, SIGNAL(currentChanged(int)), statusBar(), SLOT(clearMessage()));
     updateActionProperties(tabWidget->currentIndex());
     connect(treeCallList->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateCallListContextMenu(const QModelIndex&, const QModelIndex&)));
+}
+
+//TODO: quit using systray
+void KFritzWindow::quit() {
+	// check for pending changes
+	fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
+	std::string first = fm->GetTechId();
+	if (first.length()) {
+		do {
+			if (fm->isModified()) {
+				switch (KMessageBox::warningYesNoCancel( this, i18n("Save changes to %1?", fm->GetTitle().c_str()))) {
+				case KMessageBox::Yes :
+					fm->Save();
+					break;
+				case KMessageBox::No :
+					break;
+				default: // cancel
+					return;
+				}
+			}
+			fm->NextFonbook();
+		} while (first != fm->GetTechId());
+	}
+
+	QApplication::quit();
 }
 
 void KFritzWindow::showMainWindow() {

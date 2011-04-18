@@ -38,11 +38,15 @@ KFritz::KFritz(KFritzWindow *mainWindow, KAboutData *aboutData)
 :KSystemTrayIcon("modem", mainWindow) {
 	this->aboutData = aboutData;
 	this->mainWindow = mainWindow;
+	connect(this, SIGNAL(quitSelected()), mainWindow, SLOT(quit()));
 }
 
 KFritz::~KFritz() {
 }
 
+bool KFritz::parentWidgetTrayClose() {
+	return true;
+}
 
 int main (int argc, char *argv[]) {
 	// init KDE-stuff
