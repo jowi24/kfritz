@@ -44,7 +44,7 @@ KFritz::KFritz(KFritzWindow *mainWindow, KAboutData *aboutData)
 KFritz::~KFritz() {
 }
 
-bool KFritz::parentWidgetTrayClose() {
+bool KFritz::parentWidgetTrayClose() const {
 	return true;
 }
 

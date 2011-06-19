@@ -37,7 +37,7 @@ class KFritz : public KSystemTrayIcon
 public:
 	KFritz(KFritzWindow *mainWindow, KAboutData *aboutData);
 	virtual ~KFritz();
-	bool parentWidgetTrayClose();
+	bool parentWidgetTrayClose() const;
 private:
 	KAboutData 	 *aboutData;
 	KFritzWindow *mainWindow;
