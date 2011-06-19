@@ -43,7 +43,6 @@ LibFritzInit::LibFritzInit(QString password, fritz::EventHandler *eventHandler) 
 }
 
 LibFritzInit::~LibFritzInit() {
-	fritz::Listener::DeleteListener();
 }
 
 void LibFritzInit::run() {

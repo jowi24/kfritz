@@ -91,5 +91,6 @@ int main (int argc, char *argv[]) {
 	KFritz *trayIcon 	    = new KFritz(&mainWindow, &aboutData);
 	trayIcon->show();
 	int ret = app.exec();
+	fritz::Config::Shutdown();
 	return ret;
 }

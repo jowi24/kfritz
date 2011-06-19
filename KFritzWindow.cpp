@@ -124,9 +124,6 @@ KFritzWindow::~KFritzWindow()
 	// move logging to console
 	fritz::Config::SetupLogging(&std::clog, &std::cout, &std::cerr);
 
-	fritz::FonbookManager::DeleteFonbookManager();
-	fritz::CallList::DeleteCallList();
-
 	delete libFritzInit;
 }
 
