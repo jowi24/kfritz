@@ -93,7 +93,7 @@ public Q_SLOTS:
 	void showLog();
     void dialNumber();
     void copyNumberToClipboard();
-    void setDefaultType();
+    void setDefault();
     void reload();
     void reconnectISP();
     void getIP();

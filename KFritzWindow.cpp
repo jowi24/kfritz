@@ -283,7 +283,7 @@ void KFritzWindow::setupActions() {
 	aSetDefaultType->setText(i18n("Set as default"));
 	aSetDefaultType->setIcon(KIcon("favorites"));
 	actionCollection()->addAction("setDefaultType", aSetDefaultType);
-	connect(aSetDefaultType, SIGNAL(triggered(bool)), this, SLOT(setDefaultType()));
+	connect(aSetDefaultType, SIGNAL(triggered(bool)), this, SLOT(setDefault()));
 
 	//TODO: Set Important
 
@@ -537,11 +537,11 @@ void KFritzWindow::copyNumberToClipboard() {
 	KApplication::kApplication()->clipboard()->setText(getCurrentNumber().c_str());
 }
 
-void KFritzWindow::setDefaultType() {
+void KFritzWindow::setDefault() {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	QAdaptTreeView *treeView = container->getTreeView();
 	if (container->isFonbook()) {
-		container->getFonbookModel()->setDefaultType(treeView->currentIndex());
+		container->getFonbookModel()->setDefault(treeView->currentIndex());
 	}
 }
 
@@ -610,7 +610,7 @@ void KFritzWindow::copyEntry() {
 		KCalllistProxyModel *model = container->getCalllistModel();
 		const fritz::CallEntry *ce = model->retrieveCallEntry(treeView->currentIndex());
 		fritz::FonbookEntry fe(ce->remoteName);
-		fe.AddNumber(ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
+		fe.AddNumber(0, ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
 		QMimeData* mimeData = new MimeFonbookEntry(fe);
 		QApplication::clipboard()->setMimeData(mimeData);
 	}

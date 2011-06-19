@@ -32,9 +32,9 @@
 
 enum modelColumns {
 	COLUMN_NAME,
-	COLUMN_NUMBER_HOME,
-	COLUMN_NUMBER_MOBILE,
-	COLUMN_NUMBER_WORK,
+	COLUMN_NUMBER_1,
+	COLUMN_NUMBER_2,
+	COLUMN_NUMBER_3,
 	COLUMN_QUICKDIAL,
 	COLUMN_VANITY,
 	COLUMNS_COUNT
@@ -72,12 +72,12 @@ QVariant KFonbookModel::headerData(int section, Qt::Orientation orientation, int
 		switch (section) {
 		case COLUMN_NAME:
 			return i18n("Name");
-		case COLUMN_NUMBER_HOME:
-			return i18n("Home");
-		case COLUMN_NUMBER_MOBILE:
-			return i18n("Mobile");
-		case COLUMN_NUMBER_WORK:
-			return i18n("Work");
+		case COLUMN_NUMBER_1:
+			return i18n("Number 1");
+		case COLUMN_NUMBER_2:
+			return i18n("Number 2");
+		case COLUMN_NUMBER_3:
+			return i18n("Number 3");
 		case COLUMN_QUICKDIAL:
 			return i18n("Quickdial");
 		case COLUMN_VANITY:
@@ -109,26 +109,32 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 	// Indicate default number using bold font face and tooltip
 	if (role == Qt::FontRole || role == Qt::ToolTipRole) {
 		bool defaultNumber = false;
+		fritz::FonbookEntry::eType type = fritz::FonbookEntry::TYPE_NONE;
 		switch(index.column()) {
-		case COLUMN_NUMBER_HOME:
-			defaultNumber = (fe->GetPriority(fritz::FonbookEntry::TYPE_HOME) == 1);
+		case COLUMN_NUMBER_1:
+			defaultNumber = (fe->GetPriority(0) == 1);
+			type = fe->GetType(0);
 			break;
-		case COLUMN_NUMBER_MOBILE:
-			defaultNumber = (fe->GetPriority(fritz::FonbookEntry::TYPE_MOBILE) == 1);
+		case COLUMN_NUMBER_2:
+			defaultNumber = (fe->GetPriority(1) == 1);
+			type = fe->GetType(1);
 			break;
-		case COLUMN_NUMBER_WORK:
-			defaultNumber = (fe->GetPriority(fritz::FonbookEntry::TYPE_WORK) == 1);
+		case COLUMN_NUMBER_3:
+			defaultNumber = (fe->GetPriority(2) == 1);
+			type = fe->GetType(2);
 			break;
 		}
+		QString tooltip = getTypeName(type);
 		if (defaultNumber) {
 			if (role == Qt::FontRole) {
 				QFont font;
 				font.setBold(true);
 				return font;
 			}
-			if (role == Qt::ToolTipRole)
-				return i18n("Default number");
+			tooltip += " ("+ (i18n("Default number")) + ")";
 		}
+		if (role == Qt::ToolTipRole)
+			return tooltip;
 	}
 
 	// Skip all other requests, except for displayed text
@@ -138,14 +144,12 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 	switch (index.column()) {
 	case COLUMN_NAME:
 		return QVariant(toUnicode(fe->GetName()));
-	case COLUMN_NUMBER_HOME:
-		if (fe->GetNumber(fritz::FonbookEntry::TYPE_NONE).length())
-			return QVariant(fe->GetNumber(fritz::FonbookEntry::TYPE_NONE).c_str());
-		return QVariant(toUnicode(fe->GetNumber(fritz::FonbookEntry::TYPE_HOME)));
-	case COLUMN_NUMBER_MOBILE:
-		return QVariant(toUnicode(fe->GetNumber(fritz::FonbookEntry::TYPE_MOBILE)));
-	case COLUMN_NUMBER_WORK:
-		return QVariant(toUnicode(fe->GetNumber(fritz::FonbookEntry::TYPE_WORK)));
+	case COLUMN_NUMBER_1:
+		return QVariant(toUnicode(fe->GetNumber(0)));
+	case COLUMN_NUMBER_2:
+		return QVariant(toUnicode(fe->GetNumber(1)));
+	case COLUMN_NUMBER_3:
+		return QVariant(toUnicode(fe->GetNumber(2)));
 	case COLUMN_QUICKDIAL:
 		if (role == Qt::EditRole)
 			return QVariant(toUnicode(fe->GetQuickdial()));
@@ -169,14 +173,14 @@ bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, 
 		case COLUMN_NAME:
 			fe.SetName(fromUnicode(value.toString()));
 			break;
-		case COLUMN_NUMBER_HOME:
-			fe.SetNumber(fromUnicode(value.toString()), fritz::FonbookEntry::TYPE_HOME);
+		case COLUMN_NUMBER_1:
+			fe.SetNumber(fromUnicode(value.toString()), 0);
 			break;
-		case COLUMN_NUMBER_MOBILE:
-			fe.SetNumber(fromUnicode(value.toString()), fritz::FonbookEntry::TYPE_MOBILE);
+		case COLUMN_NUMBER_2:
+			fe.SetNumber(fromUnicode(value.toString()), 1);
 			break;
-		case COLUMN_NUMBER_WORK:
-			fe.SetNumber(fromUnicode(value.toString()), fritz::FonbookEntry::TYPE_WORK);
+		case COLUMN_NUMBER_3:
+			fe.SetNumber(fromUnicode(value.toString()), 2);
 			break;
 		case COLUMN_QUICKDIAL:
 			fe.SetQuickdial(fromUnicode(value.toString()));
@@ -194,22 +198,22 @@ bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, 
 	return false;
 }
 
-void KFonbookModel::setDefaultType(const QModelIndex &index) {
+void KFonbookModel::setDefault(const QModelIndex &index) {
 	switch(index.column()) {
-	case COLUMN_NUMBER_HOME:
-		fonbook->SetDefaultType(index.row(), fritz::FonbookEntry::TYPE_HOME);
+	case COLUMN_NUMBER_1:
+		fonbook->SetDefault(index.row(), 0);
 		break;
-	case COLUMN_NUMBER_MOBILE:
-		fonbook->SetDefaultType(index.row(), fritz::FonbookEntry::TYPE_MOBILE);
+	case COLUMN_NUMBER_2:
+		fonbook->SetDefault(index.row(), 1);
 		break;
-	case COLUMN_NUMBER_WORK:
-		fonbook->SetDefaultType(index.row(), fritz::FonbookEntry::TYPE_WORK);
+	case COLUMN_NUMBER_3:
+		fonbook->SetDefault(index.row(), 2);
 		break;
 	default:
 		return;
 	}
-	QModelIndex indexLeft = createIndex(index.row(), COLUMN_NUMBER_HOME);
-	QModelIndex indexRight = createIndex(index.row(), COLUMN_NUMBER_WORK);
+	QModelIndex indexLeft = createIndex(index.row(), COLUMN_NUMBER_1);
+	QModelIndex indexRight = createIndex(index.row(), COLUMN_NUMBER_3);
 	emit dataChanged(indexLeft, indexRight); // we changed up to three elements
 }
 
@@ -267,9 +271,9 @@ void KFonbookModel::sort(int column, Qt::SortOrder order) {
 	case COLUMN_NAME:
 		element = fritz::FonbookEntry::ELEM_NAME;
 		break;
-	case COLUMN_NUMBER_HOME:
-	case COLUMN_NUMBER_MOBILE:
-	case COLUMN_NUMBER_WORK:
+	case COLUMN_NUMBER_1:
+	case COLUMN_NUMBER_2:
+	case COLUMN_NUMBER_3:
 
 		return; //TODO: sorting - does this need anybody?
 	case COLUMN_QUICKDIAL:
@@ -291,12 +295,12 @@ std::string KFonbookModel::number(const QModelIndex &i) const {
 	if (!i.parent().isValid()) {
 		const fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(i.row());
 		switch (i.column()) {
-		case COLUMN_NUMBER_HOME:
-			return fe->GetNumber(fritz::FonbookEntry::TYPE_HOME);
-		case COLUMN_NUMBER_MOBILE:
-			return fe->GetNumber(fritz::FonbookEntry::TYPE_MOBILE);
-		case COLUMN_NUMBER_WORK:
-			return fe->GetNumber(fritz::FonbookEntry::TYPE_WORK);
+		case COLUMN_NUMBER_1:
+			return fe->GetNumber(0);
+		case COLUMN_NUMBER_2:
+			return fe->GetNumber(1);
+		case COLUMN_NUMBER_3:
+			return fe->GetNumber(2);
 		default:
 			return "";
 		}
@@ -318,7 +322,7 @@ void KFonbookModel::check() {
 	if (lastRows != rowCount(QModelIndex())) {
 		reset();
 		emit updated();
-		// stop time, because no more changes are expected
+		// stop timer, because no more changes are expected
 		timer->stop();
 		lastRows = rowCount(QModelIndex());
 	}
