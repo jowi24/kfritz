@@ -454,6 +454,8 @@ void KFritzWindow::updateMainWidgets(bool b)
     		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
     		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
 
+    		//TODO: TAB-order by row (not by column) reimplement moveCursor( )
+
     		ContainerWidget *fonbookContainer = new ContainerWidget(this, treeFonbook, modelFonbook);
     		new QVBoxLayout(fonbookContainer);
     		fonbookContainer->layout()->addWidget(treeFonbook);
@@ -543,7 +545,7 @@ void KFritzWindow::setDefault() {
 }
 
 void KFritzWindow::reload() {
-	updateConfiguration();
+	updateConfiguration();  //TODO: pending changes are lost without warning
 }
 
 void KFritzWindow::reconnectISP() {

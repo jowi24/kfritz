@@ -183,10 +183,10 @@ bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, 
 			fe.SetNumber(fromUnicode(value.toString()), 2);
 			break;
 		case COLUMN_QUICKDIAL:
-			fe.SetQuickdial(fromUnicode(value.toString()));
+			fe.SetQuickdial(fromUnicode(value.toString()));  //TODO: check if unique
 			break;
 		case COLUMN_VANITY:
-			fe.SetVanity(fromUnicode(value.toString()));
+			fe.SetVanity(fromUnicode(value.toString()));     //TODO: check if unique
 			break;
 		default:
 			return false;
