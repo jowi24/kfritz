@@ -112,6 +112,8 @@ KFritzWindow::KFritzWindow()
 
 	setupActions();
 
+	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
+
 	setupGUI();
 	KXmlGuiWindow::stateChanged("NoEdit");
 
@@ -127,17 +129,20 @@ KFritzWindow::~KFritzWindow()
 	delete libFritzInit;
 }
 
+QString KFritzWindow::toUnicode(const std::string string) const {
+	return inputCodec->toUnicode(string.c_str());
+}
+
 void KFritzWindow::HandleCall(bool outgoing, int connId __attribute__((unused)), std::string remoteNumber, std::string remoteName, fritz::FonbookEntry::eType type, std::string localParty __attribute__((unused)), std::string medium __attribute__((unused)), std::string mediumName)
 {
-	QTextCodec *inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
-	QString qRemoteName    = inputCodec->toUnicode(remoteName.c_str());
+	QString qRemoteName    = toUnicode(remoteName);
 	QString qTypeName      = KFonbookModel::getTypeName(type);
 
 	if (qTypeName.size() > 0)
 		qRemoteName += " (" + qTypeName + ')';
 
-	//QString qLocalParty = inputCodec->toUnicode(localParty.c_str());
-	QString qMediumName    = inputCodec->toUnicode(mediumName.c_str());
+	//QString qLocalParty = toUnicode(localParty);
+	QString qMediumName    = toUnicode(mediumName);
 	QString qMessage;
 	if (outgoing)
 		qMessage=i18n("Outgoing call to <b>%1</b><br/>using %2",   qRemoteName.size() ? qRemoteName : remoteNumber.c_str(),                                    qMediumName);
@@ -634,12 +639,12 @@ void KFritzWindow::resolveNumber() {
 		std::string currentNumber = getCurrentNumber();
 		fritz::Fonbook::sResolveResult result = fritz::FonbookManager::GetFonbook()->ResolveToName(currentNumber);
 		if (!result.name.compare(currentNumber)) {
-			statusBar()->showMessage(i18n("%1 did not resolve.", QString(currentNumber.c_str())), 0);
+			statusBar()->showMessage(i18n("%1 did not resolve.", toUnicode(currentNumber)), 0);
 		} else {
 			fritz::CallEntry *entry = container->getCalllistModel()->retrieveCallEntry(treeView->currentIndex());
 			entry->remoteName = result.name;
 			//TODO: change all calllist entries with this number
-		    statusBar()->showMessage(i18n("%1 resolves to \"%2\".", QString(currentNumber.c_str()), QString(result.name.c_str())), 0);
+		    statusBar()->showMessage(i18n("%1 resolves to \"%2\".", toUnicode(currentNumber), toUnicode(result.name), 0));
 		}
 	}
 }

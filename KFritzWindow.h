@@ -60,6 +60,8 @@ private:
 	QAdaptTreeView *treeCallList;
 	QIndicate::Indicator *missedCallsIndicator;
 	QWidget *progressIndicator;
+	QTextCodec *inputCodec;
+	QString toUnicode(const std::string string) const;
 	void saveToWallet(KWallet::Wallet *wallet);
 	bool showPasswordDialog(QString &password, bool offerSaving = false);
 	void setupActions();
