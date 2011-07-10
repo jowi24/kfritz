@@ -634,17 +634,19 @@ void KFritzWindow::pasteEntry() {
 
 void KFritzWindow::resolveNumber() {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
-	QAdaptTreeView *treeView = container->getTreeView();
 	if (container->isCalllist()) {
 		std::string currentNumber = getCurrentNumber();
 		fritz::Fonbook::sResolveResult result = fritz::FonbookManager::GetFonbook()->ResolveToName(currentNumber);
 		if (!result.name.compare(currentNumber)) {
 			statusBar()->showMessage(i18n("%1 did not resolve.", toUnicode(currentNumber)), 0);
 		} else {
-			fritz::CallEntry *entry = container->getCalllistModel()->retrieveCallEntry(treeView->currentIndex());
-			entry->remoteName = result.name;
-			//TODO: change all calllist entries with this number
-		    statusBar()->showMessage(i18n("%1 resolves to \"%2\".", toUnicode(currentNumber), toUnicode(result.name), 0));
+			KCalllistProxyModel *model = container->getCalllistModel();
+			for (int pos = 0; pos < model->rowCount(QModelIndex()); pos++) {
+				fritz::CallEntry *entry = model->retrieveCallEntry(model->index(pos, 0, QModelIndex()));
+				if (entry->MatchesRemoteNumber(currentNumber))
+					entry->remoteName = result.name;
+			}
+			statusBar()->showMessage(i18n("%1 resolves to \"%2\".", toUnicode(currentNumber), toUnicode(result.name), 0));
 		}
 	}
 }
