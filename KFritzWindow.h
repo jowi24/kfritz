@@ -96,7 +96,7 @@ public Q_SLOTS:
     void dialNumber();
     void copyNumberToClipboard();
     void setDefault();
-    //TODO: add slot setType()
+    void setType(int index);
     void reload();
     void reconnectISP();
     void getIP();
@@ -108,6 +108,7 @@ public Q_SLOTS:
     void resolveNumber();
     void updateActionProperties(int tabIndex);
     void updateCallListContextMenu(const QModelIndex &current, const QModelIndex &previous);
+    void updateFonbookContextMenu(const QModelIndex &current, const QModelIndex &previous);
 
 };
 

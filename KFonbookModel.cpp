@@ -217,6 +217,14 @@ void KFonbookModel::setDefault(const QModelIndex &index) {
 	emit dataChanged(indexLeft, indexRight); // we changed up to three elements
 }
 
+void KFonbookModel::setType(const QModelIndex &index, fritz::FonbookEntry::eType type) {
+	const fritz::FonbookEntry *_fe = fonbook->RetrieveFonbookEntry(index.row());
+	fritz::FonbookEntry fe(*_fe);
+	fe.SetType(type, index.column()-1); //TODO: extract mapping GUI columns to array in FonbookEntry to method
+	fonbook->ChangeFonbookEntry(index.row(), fe);
+	emit dataChanged(index, index);
+}
+
 bool KFonbookModel::insertRows(int row, int count __attribute__((unused)), const QModelIndex &parent) {
 	beginInsertRows(parent, row, row);
 	fritz::FonbookEntry fe(i18n("New Entry").toStdString());

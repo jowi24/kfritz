@@ -22,6 +22,7 @@
 
 #include <KApplication>
 #include <KAction>
+#include <KSelectAction>
 #include <KActionCollection>
 #include <KLocale>
 #include <KAboutData>
@@ -287,6 +288,16 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("setDefaultType", aSetDefaultType);
 	connect(aSetDefaultType, SIGNAL(triggered(bool)), this, SLOT(setDefault()));
 
+	KSelectAction *aSetType = new KSelectAction(this);
+	aSetType->setText(i18n("Set type"));
+	for (size_t p = fritz::FonbookEntry::TYPE_HOME; p < fritz::FonbookEntry::TYPES_COUNT; p++) {
+		aSetType->addAction(KFonbookModel::getTypeName((fritz::FonbookEntry::eType) p));
+	}
+
+	//TODO: icon?
+	actionCollection()->addAction("setType", aSetType);
+	connect(aSetType, SIGNAL(triggered(int)), this, SLOT(setType(int)));
+
 	//TODO: Set Important
 
 	KAction *aReload = new KAction(this);
@@ -456,8 +467,11 @@ void KFritzWindow::updateMainWidgets(bool b)
     		treeFonbook->addAction(actionCollection()->action("separator2"));
     		treeFonbook->addAction(actionCollection()->action("dialNumber"));
     		treeFonbook->addAction(actionCollection()->action("copyNumber"));
-    		treeFonbook->addAction(actionCollection()->action("setDefaultType"));
+    		treeFonbook->addAction(actionCollection()->action("setDefaultType")); //TODO: misleading name 'type'
+    		treeFonbook->addAction(actionCollection()->action("setType"));
     		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
+    		connect(treeFonbook->selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateFonbookContextMenu(const QModelIndex&, const QModelIndex&)));
+    		//TODO: also reaction on data changes (dataChanged on model)
 
     		//TODO: TAB-order by row (not by column) reimplement moveCursor( )
 
@@ -546,6 +560,14 @@ void KFritzWindow::setDefault() {
 	QAdaptTreeView *treeView = container->getTreeView();
 	if (container->isFonbook()) {
 		container->getFonbookModel()->setDefault(treeView->currentIndex());
+	}
+}
+
+void KFritzWindow::setType(int index) {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	QAdaptTreeView *treeView = container->getTreeView();
+	if (container->isFonbook()) {
+		container->getFonbookModel()->setType(treeView->currentIndex(), (fritz::FonbookEntry::eType)(index+1)); //TODO: improve mapping index->type
 	}
 }
 
@@ -666,6 +688,26 @@ void KFritzWindow::updateCallListContextMenu(const QModelIndex &current, const Q
 		KCalllistProxyModel *model = container->getCalllistModel();
 		bool canResolve = (model->name(current).compare(model->number(current)) == 0);
 		actionCollection()->action("resolveNumber")->setEnabled(canResolve);
+	}
+}
+
+void KFritzWindow::updateFonbookContextMenu(const QModelIndex &current, const QModelIndex &previous __attribute__((unused))) {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	KSelectAction *action = static_cast<KSelectAction *>(actionCollection()->action("setType"));
+	if (container->isFonbook()) {
+		if (current.column() > 0 && current.column() <= fritz::FonbookEntry::MAX_NUMBERS) {
+			KFonbookModel *model = container->getFonbookModel();
+			const fritz::FonbookEntry *entry = model->retrieveFonbookEntry(current);
+			fritz::FonbookEntry::eType type = entry->GetType(current.column()-1);
+			if (entry->GetNumber(current.column()-1).size()) {
+				action->setCurrentItem(type-1);
+				action->setEnabled(true);
+			} else {
+				action->setEnabled(false);
+			}
+		} else {
+			action->setEnabled(false);
+		}
 	}
 }
 
