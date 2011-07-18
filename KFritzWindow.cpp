@@ -282,11 +282,11 @@ void KFritzWindow::setupActions() {
 	actionCollection()->addAction("copyNumber", aCopyNumber);
 	connect(aCopyNumber, SIGNAL(triggered(bool)), this, SLOT(copyNumberToClipboard()));
 
-	KAction *aSetDefaultType = new KAction(this);
-	aSetDefaultType->setText(i18n("Set as default"));
-	aSetDefaultType->setIcon(KIcon("favorites"));
-	actionCollection()->addAction("setDefaultType", aSetDefaultType);
-	connect(aSetDefaultType, SIGNAL(triggered(bool)), this, SLOT(setDefault()));
+	KAction *aSetDefault = new KAction(this);
+	aSetDefault->setText(i18n("Set as default"));
+	aSetDefault->setIcon(KIcon("favorites"));
+	actionCollection()->addAction("setDefault", aSetDefault);
+	connect(aSetDefault, SIGNAL(triggered(bool)), this, SLOT(setDefault()));
 
 	KSelectAction *aSetType = new KSelectAction(this);
 	aSetType->setText(i18n("Set type"));
@@ -467,7 +467,7 @@ void KFritzWindow::updateMainWidgets(bool b)
     		treeFonbook->addAction(actionCollection()->action("separator2"));
     		treeFonbook->addAction(actionCollection()->action("dialNumber"));
     		treeFonbook->addAction(actionCollection()->action("copyNumber"));
-    		treeFonbook->addAction(actionCollection()->action("setDefaultType")); //TODO: misleading name 'type'
+    		treeFonbook->addAction(actionCollection()->action("setDefault"));
     		treeFonbook->addAction(actionCollection()->action("setType"));
     		treeFonbook->setContextMenuPolicy(Qt::ActionsContextMenu);
     		connect(treeFonbook->selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateFonbookContextMenu(const QModelIndex&, const QModelIndex&)));
