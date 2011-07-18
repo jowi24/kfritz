@@ -32,9 +32,9 @@
 
 enum modelColumns {
 	COLUMN_NAME,
-	COLUMN_NUMBER_1,
+	COLUMN_NUMBER_FIRST,
 	COLUMN_NUMBER_2,
-	COLUMN_NUMBER_3,
+	COLUMN_NUMBER_LAST,
 	COLUMN_QUICKDIAL,
 	COLUMN_VANITY,
 	COLUMNS_COUNT
@@ -72,11 +72,11 @@ QVariant KFonbookModel::headerData(int section, Qt::Orientation orientation, int
 		switch (section) {
 		case COLUMN_NAME:
 			return i18n("Name");
-		case COLUMN_NUMBER_1:
+		case COLUMN_NUMBER_FIRST:
 			return i18n("Number 1");
 		case COLUMN_NUMBER_2:
 			return i18n("Number 2");
-		case COLUMN_NUMBER_3:
+		case COLUMN_NUMBER_LAST:
 			return i18n("Number 3");
 		case COLUMN_QUICKDIAL:
 			return i18n("Quickdial");
@@ -111,18 +111,9 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 		bool defaultNumber = false;
 		fritz::FonbookEntry::eType type = fritz::FonbookEntry::TYPE_NONE;
 		switch(index.column()) {
-		case COLUMN_NUMBER_1:
-			defaultNumber = (fe->GetPriority(0) == 1);
-			type = fe->GetType(0);
-			break;
-		case COLUMN_NUMBER_2:
-			defaultNumber = (fe->GetPriority(1) == 1);
-			type = fe->GetType(1);
-			break;
-		case COLUMN_NUMBER_3:
-			defaultNumber = (fe->GetPriority(2) == 1);
-			type = fe->GetType(2);
-			break;
+		case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
+			defaultNumber = (fe->GetPriority(index.column() - COLUMN_NUMBER_FIRST) == 1);
+			type = fe->GetType(index.column() - COLUMN_NUMBER_FIRST);
 		}
 		QString tooltip = getTypeName(type);
 		if (defaultNumber) {
@@ -144,12 +135,8 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 	switch (index.column()) {
 	case COLUMN_NAME:
 		return QVariant(toUnicode(fe->GetName()));
-	case COLUMN_NUMBER_1:
-		return QVariant(toUnicode(fe->GetNumber(0)));
-	case COLUMN_NUMBER_2:
-		return QVariant(toUnicode(fe->GetNumber(1)));
-	case COLUMN_NUMBER_3:
-		return QVariant(toUnicode(fe->GetNumber(2)));
+	case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
+		return QVariant(toUnicode(fe->GetNumber(index.column() - COLUMN_NUMBER_FIRST)));
 	case COLUMN_QUICKDIAL:
 		if (role == Qt::EditRole)
 			return QVariant(toUnicode(fe->GetQuickdial()));
@@ -173,14 +160,8 @@ bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, 
 		case COLUMN_NAME:
 			fe.SetName(fromUnicode(value.toString()));
 			break;
-		case COLUMN_NUMBER_1:
-			fe.SetNumber(fromUnicode(value.toString()), 0);
-			break;
-		case COLUMN_NUMBER_2:
-			fe.SetNumber(fromUnicode(value.toString()), 1);
-			break;
-		case COLUMN_NUMBER_3:
-			fe.SetNumber(fromUnicode(value.toString()), 2);
+		case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
+			fe.SetNumber(fromUnicode(value.toString()), index.column() - COLUMN_NUMBER_FIRST);
 			break;
 		case COLUMN_QUICKDIAL:
 			fe.SetQuickdial(fromUnicode(value.toString()));  //TODO: check if unique
@@ -200,20 +181,14 @@ bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, 
 
 void KFonbookModel::setDefault(const QModelIndex &index) {
 	switch(index.column()) {
-	case COLUMN_NUMBER_1:
-		fonbook->SetDefault(index.row(), 0);
-		break;
-	case COLUMN_NUMBER_2:
-		fonbook->SetDefault(index.row(), 1);
-		break;
-	case COLUMN_NUMBER_3:
-		fonbook->SetDefault(index.row(), 2);
+	case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
+		fonbook->SetDefault(index.row(), index.column() - COLUMN_NUMBER_FIRST);
 		break;
 	default:
 		return;
 	}
-	QModelIndex indexLeft = createIndex(index.row(), COLUMN_NUMBER_1);
-	QModelIndex indexRight = createIndex(index.row(), COLUMN_NUMBER_3);
+	QModelIndex indexLeft = createIndex(index.row(), COLUMN_NUMBER_FIRST);
+	QModelIndex indexRight = createIndex(index.row(), COLUMN_NUMBER_LAST);
 	emit dataChanged(indexLeft, indexRight); // we changed up to three elements
 }
 
@@ -283,10 +258,7 @@ void KFonbookModel::sort(int column, Qt::SortOrder order) {
 	case COLUMN_NAME:
 		element = fritz::FonbookEntry::ELEM_NAME;
 		break;
-	case COLUMN_NUMBER_1:
-	case COLUMN_NUMBER_2:
-	case COLUMN_NUMBER_3:
-
+	case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
 		return; //TODO: sorting - does this need anybody?
 	case COLUMN_QUICKDIAL:
 		element = fritz::FonbookEntry::ELEM_QUICKDIAL;
@@ -307,12 +279,8 @@ std::string KFonbookModel::number(const QModelIndex &i) const {
 	if (!i.parent().isValid()) {
 		const fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(i.row());
 		switch (i.column()) {
-		case COLUMN_NUMBER_1:
-			return fe->GetNumber(0);
-		case COLUMN_NUMBER_2:
-			return fe->GetNumber(1);
-		case COLUMN_NUMBER_3:
-			return fe->GetNumber(2);
+		case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
+			return fe->GetNumber(i.column() - COLUMN_NUMBER_FIRST);
 		default:
 			return "";
 		}
