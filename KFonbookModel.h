@@ -56,6 +56,7 @@ public Q_SLOTS:
 private:
 	fritz::Fonbook *fonbook;
 	int lastRows;
+	size_t mapColumnToNumberIndex(int column);
 };
 
 #endif /* KFONBOOKMODEL_H_ */
