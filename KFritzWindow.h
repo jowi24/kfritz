@@ -69,6 +69,7 @@ private:
     void setProgressIndicator(QString message = QString());
     virtual bool queryClose();
     std::string getCurrentNumber();
+    fritz::FonbookEntry::eType mapIndexToType(int index);
 Q_SIGNALS:
 	void signalNotification(QString event, QString qMessage, bool persistent);
 private Q_SLOTS:

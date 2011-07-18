@@ -290,11 +290,10 @@ void KFritzWindow::setupActions() {
 
 	KSelectAction *aSetType = new KSelectAction(this);
 	aSetType->setText(i18n("Set type"));
+	// WARNING: mapIndexToType() has to be checked if code changes here:
 	for (size_t p = fritz::FonbookEntry::TYPE_HOME; p < fritz::FonbookEntry::TYPES_COUNT; p++) {
 		aSetType->addAction(KFonbookModel::getTypeName((fritz::FonbookEntry::eType) p));
 	}
-
-	//TODO: icon?
 	actionCollection()->addAction("setType", aSetType);
 	connect(aSetType, SIGNAL(triggered(int)), this, SLOT(setType(int)));
 
@@ -563,11 +562,15 @@ void KFritzWindow::setDefault() {
 	}
 }
 
+fritz::FonbookEntry::eType KFritzWindow::mapIndexToType(int index) {
+	return static_cast<fritz::FonbookEntry::eType>(index+1);
+}
+
 void KFritzWindow::setType(int index) {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	QAdaptTreeView *treeView = container->getTreeView();
 	if (container->isFonbook()) {
-		container->getFonbookModel()->setType(treeView->currentIndex(), (fritz::FonbookEntry::eType)(index+1)); //TODO: improve mapping index->type
+		container->getFonbookModel()->setType(treeView->currentIndex(), mapIndexToType(index));
 	}
 }
 
