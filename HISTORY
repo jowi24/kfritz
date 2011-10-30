@@ -241,3 +241,51 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
 - Add "Resolve number" action in call list
 - Copy elements from call list and non-writeable phone books
 - New setup option "Start minimized"
+
+2011-10-30: Version 0.0.8
+- Important changes in libfritz++
+  * Added parsing of SIP MSNs
+  * Fix logging into Fritz!Box without password
+  * Fix compile error with libcommoncpp2 / IPv6
+  * Initialization speedup
+  * Adapt to more flexible Fritz!Box phone books
+  * Fix resolve in OertlichesFonbook
+- Adapted to KDE's translation process
+- Updated contributed translations from KDE SVN
+- Fix sorting in call list. Sorting by date was wrong after the introduction of 
+  KCalllistProxyModel
+  (reported by Richard Bos)
+- Only active "Resolve number" context menu entry where it makes sense.
+  Entries with already resolved numbers or unknown caller are excluded.
+  (suggested by Richard Bos)
+- Renamed context menu entry of resolveNumber action
+  (suggested by Richard Bos)
+- Fixed possible crash caused by number() and name() in KCalllistModel
+- Add provider selection in dial dialog
+  (closes #267338 in KDE bugtracker)
+- Fix logging into Fritz!Box without password
+  (closes #267478 in KDE bugtracker)
+- Code cleanup
+- Fix missing translation of 'unknown'
+- Changed default value of 'Start minimized'
+  Default behaviour before introduction of this parameter
+  was to start minimized
+  (closes #267820 in KDE bugtracker)
+- Fix 'reconnect ISP' and 'Get current IP'
+  Both crashed if no connection to the fritz box is available
+- Do not save changes on shutdown per default
+  Ask on application quit if pending changes should be saved
+- Adapt to new Fritzbox features
+  * Phone book entries with more then one numbers of the same
+    type (home, mobile, ...) are supported now
+  * The number columns got more generic names
+  * The type of a phone number is shown as tooltip
+- Fix possible crash on shutdown of KFritz
+- Fix resolving numbers with das-oertliche.de
+  (closes #277230 in KDE bugtracker)
+- Fix encoding of data received from libfritz++ and shown in kfritz GUI
+  (closes #277228 in KDE bugtracker)
+- Call list now resolves all occurences of the same number
+  (closes #277229 in KDE bugtracker)
+- Add possibility to change type of phone numbers
+
