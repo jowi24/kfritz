@@ -18,6 +18,7 @@ Type=Application
 Icon=modem
 Exec=kfritz
 GenericName=Call notificator
+GenericName[cs]=Upozorňování na hovory
 GenericName[de]=Anruf-Benachrichtigung
 GenericName[es]=Notificación de llamada
 GenericName[et]=Telefonikõnede märguandja
