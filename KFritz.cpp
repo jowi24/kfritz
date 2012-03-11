@@ -32,7 +32,7 @@
 
 #include "KSettings.h"
 
-static const char *VERSION        = "0.0.7";
+static const char *VERSION        = "0.0.8";
 
 KFritz::KFritz(KFritzWindow *mainWindow, KAboutData *aboutData)
 :KSystemTrayIcon("modem", mainWindow) {
