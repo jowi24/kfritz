@@ -289,3 +289,10 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
   (closes #277229 in KDE bugtracker)
 - Add possibility to change type of phone numbers
 
+2012-03-11: Version 0.0.9
+- Changes in libfritz++
+  * Fixed resolving numbers with "Das Oertliche" phone book
+    (patch provided by Kurt Wanner)
+- Updated various translations
+
+
