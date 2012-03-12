@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see /usr/share/kde4/config/ui/ui_standards.rc -->
-<gui name="kfritz" version="18"
+<gui name="kfritz" version="22"
 	xmlns="http://www.kde.org/standards/kxmlgui/1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0 http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
@@ -46,5 +46,21 @@
   		<Action name="deleteEntry"/>  	
   	</disable>
   </State>
+  <State name="DirtyFB">
+    <enable>
+      <Action name="file_save"/>
+    </enable>
+  </State>
+  <State name="CleanFB">
+    <disable>
+      <Action name="file_save"/>
+    </disable>
+  </State>
+  <State name="NoFB">
+    <disable>
+      <Action name="file_save"/>
+    </disable>
+  </State>
+  
   <!-- TODO: use state tag -->
 </gui>

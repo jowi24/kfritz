@@ -79,6 +79,7 @@ public  Q_SLOTS:
     void updateMissedCallsIndicator();
     void showStatusbarBoxBusy(bool b);
     void updateMainWidgets(bool b);
+    void save();
     void quit();
 public:
     KFritzWindow();
@@ -110,7 +111,7 @@ public Q_SLOTS:
     void updateActionProperties(int tabIndex);
     void updateCallListContextMenu(const QModelIndex &current, const QModelIndex &previous);
     void updateFonbookContextMenu(const QModelIndex &current, const QModelIndex &previous);
-
+    void updateFonbookState();
 };
 
 #endif /*KFRITZBOXWINDOW_H_*/

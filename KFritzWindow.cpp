@@ -117,6 +117,8 @@ KFritzWindow::KFritzWindow()
 
 	setupGUI();
 	KXmlGuiWindow::stateChanged("NoEdit");
+	KXmlGuiWindow::stateChanged("NoFB");
+
 
 	// remove handbook menu entry
 	actionCollection()->action("help_contents")->setVisible(false);
@@ -344,11 +346,11 @@ void KFritzWindow::setupActions() {
 	aSeparator->setSeparator(true);
 	actionCollection()->addAction("separator2", aSeparator);
 
+	KStandardAction::save(this, SLOT(save()), actionCollection());
 	KStandardAction::cut(this, SLOT(cutEntry()), actionCollection());
 	KStandardAction::copy(this, SLOT(copyEntry()), actionCollection());
 	KStandardAction::paste(this, SLOT(pasteEntry()), actionCollection());
 	KStandardAction::quit(this, SLOT(quit()), actionCollection());
-
 }
 
 void KFritzWindow::initIndicator() {
@@ -450,6 +452,7 @@ void KFritzWindow::updateMainWidgets(bool b)
     if (first.length()) {
     	do {
     		KFonbookModel *modelFonbook = new KFonbookModel(fm->GetTechId());
+    		connect(modelFonbook, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(updateFonbookState()));
 
     		QAdaptTreeView *treeFonbook = new QAdaptTreeView(this);
     		treeFonbook->setAlternatingRowColors(true);
@@ -486,6 +489,20 @@ void KFritzWindow::updateMainWidgets(bool b)
     connect(tabWidget, SIGNAL(currentChanged(int)), statusBar(), SLOT(clearMessage()));
     updateActionProperties(tabWidget->currentIndex());
     connect(treeCallList->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateCallListContextMenu(const QModelIndex&, const QModelIndex&)));
+}
+
+void KFritzWindow::save() {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+
+	if (container->isFonbook()) {
+		std::string techid = container->getFonbookModel()->getFonbook()->GetTechId();
+		fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
+		fritz::Fonbooks *fbs = fm->GetFonbooks();
+		fritz::Fonbook  *fb  = (*fbs)[techid];
+		fb->Save();
+		statusBar()->showMessage(i18n("%1 saved.", toUnicode(fb->GetTitle())), 0);
+		updateFonbookState();
+	}
 }
 
 //TODO: quit using systray
@@ -682,7 +699,14 @@ void KFritzWindow::updateActionProperties(int tabIndex __attribute__((unused))) 
 	if (container->isFonbook()) {
 		if (container->getFonbookModel()->flags(QModelIndex()) & QFlag(Qt::ItemIsEditable))
 			KXmlGuiWindow::stateChanged("WriteableFB");
+		if (container->getFonbookModel()->getFonbook()->isModified())
+			KXmlGuiWindow::stateChanged("DirtyFB");
+		else
+			KXmlGuiWindow::stateChanged("CleanFB");
+	} else {
+		KXmlGuiWindow::stateChanged("NoFB");
 	}
+
 }
 
 void KFritzWindow::updateCallListContextMenu(const QModelIndex &current, const QModelIndex &previous __attribute__((unused))) {
@@ -711,6 +735,18 @@ void KFritzWindow::updateFonbookContextMenu(const QModelIndex &current, const QM
 		} else {
 			action->setEnabled(false);
 		}
+	}
+}
+
+void KFritzWindow::updateFonbookState() {
+	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
+	if (container->isFonbook()) {
+		if (container->getFonbookModel()->getFonbook()->isModified())
+			KXmlGuiWindow::stateChanged("DirtyFB");
+		else
+			KXmlGuiWindow::stateChanged("CleanFB");
+	} else {
+		KXmlGuiWindow::stateChanged("NoFB");
 	}
 }
 
