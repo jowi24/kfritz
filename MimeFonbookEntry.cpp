@@ -29,7 +29,7 @@ MimeFonbookEntry::~MimeFonbookEntry() {
 	delete fonbookEntry;
 }
 
-QVariant MimeFonbookEntry::retrieveData(const QString &mimetype, QVariant::Type preferredType) const {
+QVariant MimeFonbookEntry::retrieveData(__attribute__((unused)) const QString &mimetype, __attribute__((unused)) QVariant::Type preferredType) const {
 	return QVariant();
 }
 

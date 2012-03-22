@@ -354,9 +354,9 @@ void KFritzWindow::setupActions() {
 }
 
 void KFritzWindow::initIndicator() {
-	QIndicate::Server *iServer = NULL;
 	missedCallsIndicator = NULL;
 #ifdef INDICATEQT_FOUND
+	QIndicate::Server *iServer = NULL;
 	iServer = QIndicate::Server::defaultInstance();
 	iServer->setType("message.irc");
 	KService::Ptr service = KService::serviceByDesktopName(appName);
@@ -383,8 +383,8 @@ void KFritzWindow::updateMissedCallsIndicator() {
 	fritz::CallList *callList = fritz::CallList::getCallList(false);
 	if (!callList)
 		return;
-	size_t missedCallCount = callList->MissedCalls(KSettings::lastKnownMissedCall());
 #ifdef INDICATEQT_FOUND
+	size_t missedCallCount = callList->MissedCalls(KSettings::lastKnownMissedCall());
 	missedCallsIndicator->setCountProperty(missedCallCount);
 	if (missedCallCount == 0)
 		missedCallsIndicator->hide();
@@ -722,7 +722,7 @@ void KFritzWindow::updateFonbookContextMenu(const QModelIndex &current, const QM
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	KSelectAction *action = static_cast<KSelectAction *>(actionCollection()->action("setType"));
 	if (container->isFonbook()) {
-		if (current.column() > 0 && current.column() <= fritz::FonbookEntry::MAX_NUMBERS) {
+		if (current.column() > 0 && current.column() <= ((int) fritz::FonbookEntry::MAX_NUMBERS)) {
 			KFonbookModel *model = container->getFonbookModel();
 			const fritz::FonbookEntry *entry = model->retrieveFonbookEntry(current);
 			fritz::FonbookEntry::eType type = entry->GetType(current.column()-1);
