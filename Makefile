@@ -21,7 +21,6 @@ debug: cmake-debug
 
 clean:
 	@-make -C libfritz++ clean
-	@-make -C libtcpclient++ clean
 	@-rm ../kfritz-${VERSION}.orig.tar.gz
 	@-rm -rf build
 	
