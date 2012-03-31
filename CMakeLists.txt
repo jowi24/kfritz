@@ -79,9 +79,11 @@ kde4_add_kcfg_files(kfritzbox_SRCS GENERATE_MOC KSettings.kcfgc)
 kde4_add_ui_files(kfritzbox_SRCS KSettingsFritzBox.ui KSettingsFonbooks.ui KSettingsMisc.ui DialDialog.ui)
 
 configure_file(pkg-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/pkg-config.h)
-kde4_add_executable(kfritz ${kfritzbox_SRCS})
-target_link_libraries(kfritz ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
-                                fritz++ ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS})
+kde4_add_library(kfritzstatic STATIC ${kfritzbox_SRCS}) 
+kde4_add_executable(kfritz main.cpp)
+target_link_libraries(kfritz kfritzstatic fritz++ 
+                      ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
+                      ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS})
 if (INDICATEQT_FOUND)
 	target_link_libraries(kfritz ${INDICATEQT_LIBRARIES})
 endif (INDICATEQT_FOUND)
