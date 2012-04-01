@@ -596,16 +596,18 @@ void KFritzWindow::reload() {
 }
 
 void KFritzWindow::reconnectISP() {
-	fritz::FritzClient fc;
-	if (fc.reconnectISP())
+	fritz::FritzClient *fc = fritz::gConfig->fritzClientFactory->create();
+	if (fc->reconnectISP())
 		KMessageBox::information(this, i18n("Reconnect initiated."));
 	else
 		KMessageBox::error(this, i18n("Reconnect failed."));
+	delete fc;
 }
 
 void KFritzWindow::getIP() {
-	fritz::FritzClient fc;
-	std::string ip = fc.getCurrentIP();
+	fritz::FritzClient *fc = fritz::gConfig->fritzClientFactory->create();;
+	std::string ip = fc->getCurrentIP();
+	delete fc;
 	KMessageBox::information(this, i18n("Current IP address is: %1", ip.size() ? ip.c_str() : i18n("unknown")));
 }
 

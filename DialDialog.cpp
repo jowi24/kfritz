@@ -26,6 +26,7 @@
 #include <QRegExpValidator>
 
 #include <FritzClient.h>
+#include <Config.h>
 
 #include "Log.h"
 
@@ -72,8 +73,9 @@ void DialDialog::dialNumber() {
 	std::string prefix = ui->msnComboBox->itemData(ui->msnComboBox->currentIndex()).toString().toStdString();
 	number.insert(0, prefix);
 
-	fritz::FritzClient fc;
-	fc.InitCall(number);
+	fritz::FritzClient *fc = fritz::gConfig->fritzClientFactory->create();
+	fc->InitCall(number);
+	delete fc;
 	hide();
 	KMessageBox::information(this, i18n("Dialing initiated, pick up your phone now."));
 }

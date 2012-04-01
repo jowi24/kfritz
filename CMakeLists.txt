@@ -4,8 +4,9 @@ project (KFRITZ)
 
 #set(CMAKE_VERBOSE_MAKEFILE true) # <-- enable for debugging
 #set(CMAKE_BUILD_TYPE "Debug")    # <-- enable for debugging 
-set(CMAKE_SKIP_RPATH TRUE)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${KFRITZ_SOURCE_DIR}/CMakeModules")
+set (KDE4_BUILD_TESTS true)
+set (CMAKE_SKIP_RPATH TRUE)
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${KFRITZ_SOURCE_DIR}/CMakeModules")
 
 find_package(PkgConfig REQUIRED)
 
@@ -67,7 +68,6 @@ if(GETTEXT_MSGFMT_EXECUTABLE)
 endif(GETTEXT_MSGFMT_EXECUTABLE)
 
 # --- compile and link --------------------------------------------------------
-
 set(kfritzbox_SRCS ContainerWidget.cpp DialDialog.cpp KFritz.cpp KFritzWindow.cpp KFonbookModel.cpp 
                    KSettingsFonbooks.cpp KSettingsFritzBox.cpp KSettingsMisc.cpp KFritzModel.cpp 
                    KCalllistModel.cpp KCalllistProxyModel.cpp 
@@ -88,6 +88,16 @@ if (INDICATEQT_FOUND)
 	target_link_libraries(kfritz ${INDICATEQT_LIBRARIES})
 endif (INDICATEQT_FOUND)
 
+# --- tests -------------------------------------------------------------------
+
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undef")
+include_directories(test)
+AUX_SOURCE_DIRECTORY(test TESTFILES)
+kde4_add_unit_test(kfritztest ${TESTFILES} test/gtest/gtest-all.cc test/gtest/gtest_main.cc)
+target_link_libraries(kfritztest kfritzstatic fritz++ 
+                      ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
+                      ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS})
 
 # --- installs ----------------------------------------------------------------                                
 install(TARGETS kfritz ${INSTALL_TARGETS_DEFAULT_ARGS})
