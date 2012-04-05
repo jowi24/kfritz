@@ -17,6 +17,8 @@
 #include <KFritzWindow.h>
 #include <Listener.h>
 
+namespace test {
+
 class FritzEventHandler : public ::testing::Test {
 private:
 	KApplication *app;
@@ -44,7 +46,6 @@ protected:
 		delete spy;
 		delete window;
 		delete app;
-
 	}
 };
 
@@ -78,4 +79,4 @@ TEST_F(FritzEventHandler, Connect) {
 	ASSERT_EQ(arguments.at(2).toBool(), false);
 }
 
-
+}
