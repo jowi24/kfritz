@@ -59,6 +59,13 @@ void LibFritzInit::run() {
 	}
 	// start libfritz++
 	fritz::Config::Setup(KSettings::hostname().toStdString(), password.toStdString(), args->isSet("log-personal-info"));
+
+	std::vector<std::string> vFonbook;
+	QStringList phonebookList = KSettings::phonebookList();
+	while (phonebookList.count())
+		vFonbook.push_back(phonebookList.takeFirst().toStdString());
+	fritz::FonbookManager::CreateFonbookManager(vFonbook, "", false);
+
 	bool validPassword = fritz::Config::Init(&locationSettingsDetected, &countryCode, &areaCode);
 	if (!validPassword) {
 		emit invalidPassword();
@@ -80,12 +87,6 @@ void LibFritzInit::run() {
 	fritz::Config::SetupMsnFilter(vMsn);
 
 	fritz::Listener::CreateListener(eventHandler);
-
-	std::vector<std::string> vFonbook;
-	QStringList phonebookList = KSettings::phonebookList();
-	while (phonebookList.count())
-		vFonbook.push_back(phonebookList.takeFirst().toStdString());
-	fritz::FonbookManager::CreateFonbookManager(vFonbook, "", false);
 
 	fritz::CallList::CreateCallList();
 
