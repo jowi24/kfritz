@@ -4,7 +4,7 @@ project (KFRITZ)
 
 #set(CMAKE_VERBOSE_MAKEFILE true) # <-- enable for debugging
 #set(CMAKE_BUILD_TYPE "Debug")    # <-- enable for debugging 
-set (KDE4_BUILD_TESTS true)
+set (KDE4_BUILD_TESTS ON)
 set (CMAKE_SKIP_RPATH TRUE)
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${KFRITZ_SOURCE_DIR}/CMakeModules")
 
@@ -89,8 +89,6 @@ if (INDICATEQT_FOUND)
 endif (INDICATEQT_FOUND)
 
 # --- tests -------------------------------------------------------------------
-
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undef")
 include_directories(test)
 AUX_SOURCE_DIRECTORY(test TESTFILES)
