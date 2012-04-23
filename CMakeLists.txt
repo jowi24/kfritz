@@ -89,14 +89,18 @@ if (INDICATEQT_FOUND)
 endif (INDICATEQT_FOUND)
 
 # --- tests -------------------------------------------------------------------
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undef")
-include_directories(test)
-AUX_SOURCE_DIRECTORY(test TESTFILES)
-kde4_add_unit_test(kfritztest ${TESTFILES} test/gtest/gtest-all.cc test/gtest/gtest_main.cc)
-target_link_libraries(kfritztest kfritzstatic fritz++ 
-                      ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
-                      ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS})
-
+if (EXISTS ${KFRITZ_SOURCE_DIR}/test)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undef")
+  include_directories(test)
+  AUX_SOURCE_DIRECTORY(test TESTFILES)
+  kde4_add_unit_test(kfritztest ${TESTFILES} test/gtest/gtest-all.cc test/gtest/gtest_main.cc)
+  target_link_libraries(kfritztest kfritzstatic fritz++ 
+                        ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
+                        ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS})
+  if (INDICATEQT_FOUND)
+	  target_link_libraries(kfritztest ${INDICATEQT_LIBRARIES})
+  endif (INDICATEQT_FOUND)
+endif (EXISTS ${KFRITZ_SOURCE_DIR}/test)
 # --- installs ----------------------------------------------------------------                                
 install(TARGETS kfritz ${INSTALL_TARGETS_DEFAULT_ARGS})
 # TODO: kfritz.notifyrc is installed in /usr/local/share/apps/kfritz/ -> does not work (use /usr/share/kde4/apps/kfritz/ instead)
