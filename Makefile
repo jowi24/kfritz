@@ -1,4 +1,4 @@
-VERSION = $(shell grep 'static const char \*VERSION *=' KFritz.cpp | awk '{ print $$6 }' | sed -e 's/[";]//g')
+VERSION = $(shell grep 'static const char \*VERSION *=' main.cpp | awk '{ print $$6 }' | sed -e 's/[";]//g')
 WDIR    = $(shell pwd)
 
 cmake: LibFritzI18N.cpp
