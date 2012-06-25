@@ -1,16 +1,27 @@
 VERSION = $(shell grep 'static const char \*VERSION *=' main.cpp | awk '{ print $$6 }' | sed -e 's/[";]//g')
 WDIR    = $(shell pwd)
 
+ifdef DEVELOPMENT_INSTALL
+  CWD = $(shell pwd)
+  PREFIX = ${CWD}/build/install
+ifeq ($(shell uname -m),x86_64)
+  LIB=lib64
+else
+  LIB=lib
+endif
+  CMAKE_OPTS = -DCMAKE_INSTALL_PREFIX=${PREFIX} -DLIB_INSTALL_DIR=${PREFIX}/${LIB}
+endif
+
 cmake: LibFritzI18N.cpp
 	@if test ! -d build; \
 	then mkdir -p build; \
-	cd build; cmake ..; \
+	cd build; cmake ${CMAKE_OPTS} ..; \
 	fi
 
 cmake-debug: LibFritzI18N.cpp
 	@if test ! -d build; \
 	then mkdir -p build; \
-	cd build; cmake -DCMAKE_BUILD_TYPE:STRING=Debug ..; \
+	cd build; cmake -DCMAKE_BUILD_TYPE:STRING=Debug ${CMAKE_OPTS} ..; \
 	fi
 
 all: cmake 
@@ -49,14 +60,8 @@ LibFritzI18N.cpp: libfritz++/*.cpp
 	rm $@.old
 	grep -ir I18N_NOOP libfritz++/*.cpp | sed -e 's/.*I18N_NOOP(\([^)]*\).*/i18n(\1)/' | sort | uniq >> $@
 
-kde-install: all
-	cd build; kdesudo make install
-
-kde-install-debug: debug
-	cd build; kdesudo make install
-
-install:
-	cd build; sudo make install
+install: all
+	cd build; make install
 
 deb: dist
 	debuild -i"(\.svn|\.settings|\.(c|cdt|)project|test)"
