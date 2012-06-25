@@ -33,7 +33,7 @@
 #include "KSettings.h"
 
 KFritz::KFritz(KFritzWindow *mainWindow, KAboutData *aboutData)
-:KSystemTrayIcon("modem", mainWindow) {
+:KSystemTrayIcon("kfritz-tray", mainWindow) {
 	this->aboutData = aboutData;
 	this->mainWindow = mainWindow;
 	connect(this, SIGNAL(quitSelected()), mainWindow, SLOT(quit()));
