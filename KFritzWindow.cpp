@@ -66,6 +66,8 @@ KFritzWindow::KFritzWindow()
 
 	connect(this, SIGNAL(signalNotification(QString, QString, bool)), this, SLOT(slotNotification(QString, QString, bool)));
 
+	dbusIface = new KFritzDbusService(this);
+
 	initIndicator();
 	updateMissedCallsIndicator();
 	progressIndicator = NULL;
@@ -129,6 +131,7 @@ KFritzWindow::~KFritzWindow()
 	// move logging to console
 	fritz::Config::SetupLogging(&std::clog, &std::cout, &std::cerr);
 
+	delete dbusIface;
 	delete libFritzInit;
 }
 

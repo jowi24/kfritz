@@ -33,9 +33,10 @@
 
 #include "KFonbookModel.h"
 #include "KCalllistModel.h"
+#include "KFritzDbusService.h"
 #include "LibFritzInit.h"
-#include "QAdaptTreeView.h"
 #include "LogDialog.h"
+#include "QAdaptTreeView.h"
 
 #include "pkg-config.h"
 #ifdef INDICATEQT_FOUND
@@ -53,6 +54,7 @@ private:
 	KTabWidget *tabWidget;
 	LogDialog *logDialog;
 	LibFritzInit *libFritzInit;
+	KFritzDbusService *dbusIface;
 	QString fbPassword;
 	QString appName;
 	QString programName;
