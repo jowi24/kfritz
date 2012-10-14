@@ -60,6 +60,8 @@ void LibFritzInit::run() {
 	// start libfritz++
 	fritz::Config::Setup(KSettings::hostname().toStdString(), password.toStdString(), args->isSet("log-personal-info"));
 
+	fritz::Config::SetupConfigDir(KStandardDirs::locateLocal("data", KGlobal::mainComponent().aboutData()->appName()+'/').toStdString());
+
 	std::vector<std::string> vFonbook;
 	QStringList phonebookList = KSettings::phonebookList();
 	while (phonebookList.count())
@@ -77,8 +79,6 @@ void LibFritzInit::run() {
 		KSettings::setAreaCode(QString(areaCode.c_str()));
 		KSettings::self()->writeConfig();
 	}
-
-	fritz::Config::SetupConfigDir(KStandardDirs::locateLocal("data", KGlobal::mainComponent().aboutData()->appName()+'/').toStdString());
 
 	std::vector<std::string> vMsn;
 	QStringList msnList = KSettings::mSNFilter();
