@@ -295,4 +295,21 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
     (patch provided by Kurt Wanner)
 - Updated various translations
 
+2012-10-14: Version 0.0.10
+- Important changes in libfritz++
+* Fixes a deadlock when initializating call list and phone books
+- Add Save action to save changed phone book explicitly
+- Add caching to lookup phone books
+- Fix unnecessary clean in Makefile
+- Fix compiler warnings -Wsign-compare, -Wunused-parameter
+- Refactored build process
+- Fix a crash when accessing settings dialog
+  (closes #297527 in KDE bugtracker)
+- Fixed resolv in TelLocalChFonbook 
+  (closes #298763 in KDE bugtracker)
+- Added DBus interface
+  (based on a patch provided by Christian Holzberger)
+- New tray icon in black-and-white style
+- Updated various translations
+
 
