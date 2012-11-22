@@ -47,7 +47,7 @@ int main (int argc, char *argv[]) {
 			// The license this code is released under
 			KAboutData::License_GPL,
 			// Copyright Statement
-			ki18n("(c) 2008-2011"),
+			ki18n("(c) 2008-2012"),
 			// Optional text shown in the About box.
 			// Can contain any information desired.
 			ki18n("Developed by Matthias Becker and Joachim Wilke."),
