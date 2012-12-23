@@ -312,4 +312,11 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
 - New tray icon in black-and-white style
 - Updated various translations
 
-
+2012-12-23: Version 0.0.11
+- Support for new FB firmware versions xx.05.50
+- Important changes in libfritz++
+  * Hide msn in syslog if logPersonalInfo is disabled
+  * Adapt to new FW version 05.50
+  * Implement new login scheme using login_sid.lua for FB firmware >= xx.05.50
+  * Adapt sip settings, location settings, call list and phone book requests
+    to new uris and format
