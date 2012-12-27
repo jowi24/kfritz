@@ -320,3 +320,10 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
   * Implement new login scheme using login_sid.lua for FB firmware >= xx.05.50
   * Adapt sip settings, location settings, call list and phone book requests
     to new uris and format
+    
+2012-12-27: Version 0.0.12
+- Fixes compatibility issues with older fw-versions
+- Important changes in libfritz++
+  * Fixes login problems with old fw-versions that return 404 on login_sid.lua
+  (closes #312204 in KDE bugtracker)
+  * Fix encoding conversion when requesting call list
