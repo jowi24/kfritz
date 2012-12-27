@@ -38,7 +38,7 @@ clean:
 dist: clean update-po
 	tar cvz --dereference --exclude=l10n-kde4 \
 	        --exclude-vcs --exclude="debian" --exclude=".settings" --exclude=".project" \
-	        --exclude=".cproject" --exclude=".cdtproject" --exclude="test" --exclude=".git*" \
+	        --exclude=".cproject" --exclude=".cdtproject" --exclude="test" --exclude="test.old" --exclude=".git*" \
 	        -f ../kfritz_${VERSION}.orig.tar.gz ../kfritz
 	        
 fetch-po:
