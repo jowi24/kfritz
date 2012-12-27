@@ -28,7 +28,7 @@
 
 #include "KSettings.h"
 
-static const char *VERSION        = "0.0.12";
+static const char *VERSION        = "0.0.12a";
 
 int main (int argc, char *argv[]) {
 	// init KDE-stuff
