@@ -304,9 +304,9 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
 - Fix compiler warnings -Wsign-compare, -Wunused-parameter
 - Refactored build process
 - Fix a crash when accessing settings dialog
-  (closes #297527 in KDE bugtracker)
+  (closes #297527 in KDE bugtracker, reported by Alfred Egger)
 - Fixed resolv in TelLocalChFonbook 
-  (closes #298763 in KDE bugtracker)
+  (closes #298763 in KDE bugtracker, reported by Luca Giambonini)
 - Added DBus interface
   (based on a patch provided by Christian Holzberger)
 - New tray icon in black-and-white style
@@ -325,5 +325,12 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
 - Fixes compatibility issues with older fw-versions
 - Important changes in libfritz++
   * Fixes login problems with old fw-versions that return 404 on login_sid.lua
-  (closes #312204 in KDE bugtracker)
+  (reported by sofasurfer)
   * Fix encoding conversion when requesting call list
+  
+2012-12-28: Version 0.0.12a
+- Fixes compatibility issues with older fw-versions
+- Important changes in libfritz++
+  * Further fixes to allow access to older FB firmwares
+  (closes #312204 in KDE bugtracker, reported by sofasurfer)
+  
