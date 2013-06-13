@@ -60,10 +60,10 @@ KFonbooksWidget::KFonbooksWidget(QWidget *parent, KActionSelector *actionSelecto
     fritz::FonbookManager *fbm = fritz::FonbookManager::GetFonbookManager();
     if (!fbm)
     	return;
-    fonbooks = fbm->GetFonbooks();
+    fonbooks = fbm->getFonbooks();
     for (size_t pos=0; pos < fonbooks->size(); pos++)
-    	new KFonbooksWidgetListItem(i18n((*fonbooks)[pos]->GetTitle().c_str()),
-    			                    (*fonbooks)[pos]->GetTechId().c_str(),
+        new KFonbooksWidgetListItem(i18n((*fonbooks)[pos]->getTitle().c_str()),
+                                    (*fonbooks)[pos]->getTechId().c_str(),
     			                    actionSelector->availableListWidget());
 }
 

@@ -24,7 +24,7 @@
 
 #include <QSortFilterProxyModel>
 
-#include <CallList.h>
+#include "libfritz++/CallList.h"
 
 class KCalllistProxyModel : public QSortFilterProxyModel {
 public:

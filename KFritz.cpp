@@ -21,14 +21,14 @@
 
 #include "KFritz.h"
 
+#include <vector>
 #include <KApplication>
 #include <KAboutData>
 #include <KCmdLineArgs>
 #include <KMessageBox>
-#include <vector>
 
-#include <Config.h>
-#include <FonbookManager.h>
+#include "libfritz++/Config.h"
+#include "libfritz++/FonbookManager.h"
 
 #include "KSettings.h"
 
@@ -36,7 +36,7 @@ KFritz::KFritz(KFritzWindow *mainWindow, KAboutData *aboutData)
 :KSystemTrayIcon("kfritz-tray", mainWindow) {
 	this->aboutData = aboutData;
 	this->mainWindow = mainWindow;
-	connect(this, SIGNAL(quitSelected()), mainWindow, SLOT(quit()));
+    connect(this, SIGNAL(quitSelected()), mainWindow, SLOT(quit()));
 }
 
 KFritz::~KFritz() {

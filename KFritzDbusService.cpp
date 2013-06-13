@@ -22,7 +22,7 @@
 #include "KFritzDbusService.h"
 #include "KFritzDbusServiceAdaptor.h"
 #include <iostream>
-#include "Log.h"
+#include "liblog++/Log.h"
 #include "DialDialog.h"
 
 KFritzDbusService::KFritzDbusService(KMainWindow *parent)

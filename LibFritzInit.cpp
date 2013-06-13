@@ -30,11 +30,11 @@
 #include <KAboutData>
 #include <KStandardDirs>
 
-#include <FonbookManager.h>
-#include <Config.h>
+#include "libfritz++/FonbookManager.h"
+#include "libfritz++/Config.h"
 
 #include "KSettings.h"
-#include "Log.h"
+#include "liblog++/Log.h"
 
 LibFritzInit::LibFritzInit(QString password, fritz::EventHandler *eventHandler) {
 	setTerminationEnabled(true);

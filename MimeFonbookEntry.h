@@ -25,7 +25,7 @@
 #include <QMimeData>
 #include <QStringList>
 
-#include <Fonbook.h>
+#include "libfritz++/Fonbook.h"
 
 class MimeFonbookEntry: public QMimeData {
 	Q_OBJECT

@@ -1,7 +1,7 @@
 /*
  * KFritz
  *
- * Copyright (C) 2010-2012 Joachim Wilke <kfritz@joachim-wilke.de>
+ * Copyright (C) 2010-2013 Joachim Wilke <kfritz@joachim-wilke.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,14 +21,13 @@
 
 #include "DialDialog.h"
 
+#include <QRegExpValidator>
 #include <KLocale>
 #include <KMessageBox>
-#include <QRegExpValidator>
 
-#include <FritzClient.h>
-#include <Config.h>
-
-#include "Log.h"
+#include "liblog++/Log.h"
+#include "libfritz++/FritzClient.h"
+#include "libfritz++/Config.h"
 
 DialDialog::DialDialog(QWidget *parent, std::string number)
 :KDialog(parent) {
@@ -74,7 +73,7 @@ void DialDialog::dialNumber() {
 	number.insert(0, prefix);
 
 	fritz::FritzClient *fc = fritz::gConfig->fritzClientFactory->create();
-	fc->InitCall(number);
+	fc->initCall(number);
 	delete fc;
 	hide();
 	KMessageBox::information(this, i18n("Dialing initiated, pick up your phone now."));

@@ -1,7 +1,7 @@
 /*
  * KFritz
  *
- * Copyright (C) 2010-2012 Joachim Wilke <kfritz@joachim-wilke.de>
+ * Copyright (C) 2010-2013 Joachim Wilke <kfritz@joachim-wilke.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,14 +22,15 @@
 #ifndef KFRITZWINDOW_H
 #define KFRITZWINDOW_H
 
+#include <vector>
+#include <QtCore>
+#include <QTreeView>
+#include <QTextCodec>
 #include <KXmlGuiWindow>
 #include <KTextEdit>
 #include <KTabWidget>
 #include <KNotification>
 #include <KWallet/Wallet>
-#include <QTreeView>
-#include <QTextCodec>
-#include <vector>
 
 #include "KFonbookModel.h"
 #include "KCalllistModel.h"
@@ -86,9 +87,9 @@ public  Q_SLOTS:
 public:
     KFritzWindow();
     virtual ~KFritzWindow();
-	virtual void HandleCall(bool outgoing, int connId, std::string remoteNumber, std::string remoteName, fritz::FonbookEntry::eType, std::string localParty, std::string medium, std::string mediumName);
-	virtual void HandleConnect(int connId);
-	virtual void HandleDisconnect(int connId, std::string duration);
+    virtual void handleCall(bool outgoing, int connId, std::string remoteNumber, std::string remoteName, fritz::FonbookEntry::eType, std::string localParty, std::string medium, std::string mediumName) override;
+    virtual void handleConnect(int connId) override;
+    virtual void handleDisconnect(int connId, std::string duration) override;
 public Q_SLOTS:
 	void showSettings();
 	void showNotificationSettings();

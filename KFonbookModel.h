@@ -22,7 +22,7 @@
 #ifndef KFONBOOKMODEL_H
 #define KFONBOOKMODEL_H
 
-#include <FonbookManager.h>
+#include "libfritz++/FonbookManager.h"
 
 #include "KFritzModel.h"
 

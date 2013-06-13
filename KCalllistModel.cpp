@@ -26,7 +26,7 @@
 #include <iostream>
 
 KCalllistModel::KCalllistModel() {
-	calllist = fritz::CallList::getCallList(false);
+	calllist = fritz::CallList::GetCallList(false);
 	lastCall = 0;
 }
 
@@ -34,7 +34,7 @@ KCalllistModel::~KCalllistModel() {
 }
 
 QVariant KCalllistModel::data(const QModelIndex & index, int role) const {
-	fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL,index.row());
+	fritz::CallEntry *ce = calllist->retrieveEntry(fritz::CallEntry::ALL,index.row());
 	if (role == Qt::DecorationRole && index.column() == 0)
 		return QVariant(KIcon(ce->type == fritz::CallEntry::INCOMING ? "incoming-call" :
 				              ce->type == fritz::CallEntry::OUTGOING ? "outgoing-call" :
@@ -104,7 +104,7 @@ QVariant KCalllistModel::headerData(int section, Qt::Orientation orientation, in
 }
 
 fritz::CallEntry *KCalllistModel::retrieveCallEntry(const QModelIndex &index) const {
-	return calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
+	return calllist->retrieveEntry(fritz::CallEntry::ALL, index.row());
 }
 
 int KCalllistModel::columnCount(const QModelIndex & parent __attribute__((unused))) const {
@@ -117,7 +117,7 @@ int KCalllistModel::rowCount(const QModelIndex & parent) const {
 		// the model does not have any hierarchy
 		return 0;
 	else
-		return calllist->GetSize(fritz::CallEntry::ALL);
+		return calllist->getSize(fritz::CallEntry::ALL);
 }
 
 void KCalllistModel::sort(int column, Qt::SortOrder order) {
@@ -143,22 +143,22 @@ void KCalllistModel::sort(int column, Qt::SortOrder order) {
 		return;
 		break;
 	}
-	calllist->Sort(element, order == Qt::AscendingOrder);
+    calllist->sort(element, order == Qt::AscendingOrder);
 	emit dataChanged(index(0,                       0,                          QModelIndex()),
 			index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
 }
 
 void KCalllistModel::check() {
-	if (lastCall != calllist->LastCall()) {
+    if (lastCall != calllist->getLastCall()) {
 		reset();
 		emit updated();
-		lastCall = calllist->LastCall();
+        lastCall = calllist->getLastCall();
 	}
 }
 
 std::string KCalllistModel::number(const QModelIndex &index) const {
 	if (index.isValid()) {
-		fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
+		fritz::CallEntry *ce = calllist->retrieveEntry(fritz::CallEntry::ALL, index.row());
 		return ce->remoteNumber;
 	} else
 		return "";
@@ -166,7 +166,7 @@ std::string KCalllistModel::number(const QModelIndex &index) const {
 
 std::string KCalllistModel::name(const QModelIndex &index) const {
 	if (index.isValid()) {
-		fritz::CallEntry *ce = calllist->RetrieveEntry(fritz::CallEntry::ALL, index.row());
+		fritz::CallEntry *ce = calllist->retrieveEntry(fritz::CallEntry::ALL, index.row());
 		return ce->remoteName;
 	} else
 		return "";

@@ -24,7 +24,7 @@
 
 #include <QThread>
 
-#include <Listener.h>
+#include "libfritz++/Listener.h"
 
 class LibFritzInit : public QThread {
 	Q_OBJECT;

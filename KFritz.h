@@ -26,7 +26,7 @@
 #include <KSystemTrayIcon>
 #include <KAboutData>
 
-#include <Listener.h>
+#include "libfritz++/Listener.h"
 
 #include "KFritzWindow.h"
 

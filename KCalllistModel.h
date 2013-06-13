@@ -22,7 +22,7 @@
 #ifndef KCALLLISTMODEL_H
 #define KCALLLISTMODEL_H
 
-#include <CallList.h>
+#include "libfritz++/CallList.h"
 
 #include "KFritzModel.h"
 

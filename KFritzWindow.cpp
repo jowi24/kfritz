@@ -43,10 +43,10 @@
 #include <QProgressBar>
 #include <QStackedLayout>
 
-#include <Config.h>
-#include <Tools.h>
-#include <CallList.h>
-#include <FritzClient.h>
+#include "libfritz++/Config.h"
+#include "libfritz++/Tools.h"
+#include "libfritz++/CallList.h"
+#include "libfritz++/FritzClient.h"
 
 #include "ContainerWidget.h"
 #include "DialDialog.h"
@@ -56,6 +56,8 @@
 #include "KSettingsFritzBox.h"
 #include "KSettingsMisc.h"
 #include "Log.h"
+#include "liblog++/Log.h"
+#include "libconv++/CharsetConverter.h"
 #include "MimeFonbookEntry.h"
 
 KFritzWindow::KFritzWindow()
@@ -74,9 +76,10 @@ KFritzWindow::KFritzWindow()
 
 	logDialog = new LogDialog(this);
 	KTextEdit *logArea = logDialog->getLogArea();
-	fritz::Config::SetupLogging(LogStream::getLogStream(LogBuf::DEBUG)->setLogWidget(logArea),
-							    LogStream::getLogStream(LogBuf::INFO)->setLogWidget(logArea),
-					            LogStream::getLogStream(LogBuf::ERROR)->setLogWidget(logArea));
+	logger::Log::setPrefix("kfritz");
+    logger::Log::setCustomLogger([logArea](const std::string &msg) { logArea->insertPlainText(msg.c_str()); std::cout << msg; },
+                                 [logArea](const std::string &msg) { logArea->insertPlainText(msg.c_str()); std::cout << msg; },
+                                 [logArea](const std::string &msg) { logArea->insertPlainText(msg.c_str()); std::cout << msg; });
 	bool savetoWallet = false;
 	bool requestPassword = true;
 
@@ -87,7 +90,7 @@ KFritzWindow::KFritzWindow()
 			if (wallet->hasEntry(KSettings::hostname())) {
 				if (wallet->readPassword(KSettings::hostname(), fbPassword) == 0) {
 					DBG("Got password data from KWallet.");
-						requestPassword = false;
+                    requestPassword = false;
 				}
 			} else {
 				DBG("No password for this host available.");
@@ -115,7 +118,7 @@ KFritzWindow::KFritzWindow()
 
 	setupActions();
 
-	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
+	inputCodec  = QTextCodec::codecForName(convert::CharsetConverter::GetDefaultCharset().size() ? convert::CharsetConverter::GetDefaultCharset().c_str() : "UTF-8");
 
 	setupGUI();
 	KXmlGuiWindow::stateChanged("NoEdit");
@@ -129,8 +132,9 @@ KFritzWindow::KFritzWindow()
 KFritzWindow::~KFritzWindow()
 {
 	// move logging to console
-	fritz::Config::SetupLogging(&std::clog, &std::cout, &std::cerr);
-
+    logger::Log::setCustomLogger([](const std::string &msg) { std::cout << msg; },
+                                 [](const std::string &msg) { std::cout << msg; },
+                                 [](const std::string &msg) { std::cout << msg; });
 	delete dbusIface;
 	delete libFritzInit;
 }
@@ -139,7 +143,7 @@ QString KFritzWindow::toUnicode(const std::string string) const {
 	return inputCodec->toUnicode(string.c_str());
 }
 
-void KFritzWindow::HandleCall(bool outgoing, int connId __attribute__((unused)), std::string remoteNumber, std::string remoteName, fritz::FonbookEntry::eType type, std::string localParty __attribute__((unused)), std::string medium __attribute__((unused)), std::string mediumName)
+void KFritzWindow::handleCall(bool outgoing, int connId __attribute__((unused)), std::string remoteNumber, std::string remoteName, fritz::FonbookEntry::eType type, std::string localParty __attribute__((unused)), std::string medium __attribute__((unused)), std::string mediumName)
 {
 	QString qRemoteName    = toUnicode(remoteName);
 	QString qTypeName      = KFonbookModel::getTypeName(type);
@@ -158,14 +162,14 @@ void KFritzWindow::HandleCall(bool outgoing, int connId __attribute__((unused)),
 	emit signalNotification(outgoing ? "outgoingCall" : "incomingCall", qMessage, true);
 }
 
-void KFritzWindow::HandleConnect(int connId __attribute__((unused)))
+void KFritzWindow::handleConnect(int connId __attribute__((unused)))
 {
 	if (notification)
 		notification->close();
 	emit signalNotification("callConnected", i18n("Call connected."), false);
 }
 
-void KFritzWindow::HandleDisconnect(int connId __attribute__((unused)), std::string duration)
+void KFritzWindow::handleDisconnect(int connId __attribute__((unused)), std::string duration)
 {
 	if (notification)
 		notification->close();
@@ -383,7 +387,7 @@ bool KFritzWindow::queryClose() {
 }
 
 void KFritzWindow::updateMissedCallsIndicator() {
-	fritz::CallList *callList = fritz::CallList::getCallList(false);
+	fritz::CallList *callList = fritz::CallList::GetCallList(false);
 	if (!callList)
 		return;
 #ifdef INDICATEQT_FOUND
@@ -451,10 +455,10 @@ void KFritzWindow::updateMainWidgets(bool b)
 
 	// init fonbooks, add to tabWidget
     fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
-    std::string first = fm->GetTechId();
+    std::string first = fm->getTechId();
     if (first.length()) {
     	do {
-    		KFonbookModel *modelFonbook = new KFonbookModel(fm->GetTechId());
+    		KFonbookModel *modelFonbook = new KFonbookModel(fm->getTechId());
     		connect(modelFonbook, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(updateFonbookState()));
 
     		QAdaptTreeView *treeFonbook = new QAdaptTreeView(this);
@@ -483,10 +487,10 @@ void KFritzWindow::updateMainWidgets(bool b)
     		ContainerWidget *fonbookContainer = new ContainerWidget(this, treeFonbook, modelFonbook);
     		new QVBoxLayout(fonbookContainer);
     		fonbookContainer->layout()->addWidget(treeFonbook);
-    		tabWidget->insertTab(0, fonbookContainer,  KIcon("x-office-address-book"), 	i18n(fm->GetTitle().c_str()));
+    		tabWidget->insertTab(0, fonbookContainer,  KIcon("x-office-address-book"), 	i18n(fm->getTitle().c_str()));
 
-    		fm->NextFonbook();
-    	} while( first != fm->GetTechId() );
+    		fm->nextFonbook();
+    	} while( first != fm->getTechId() );
     }
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(updateActionProperties(int)));
     connect(tabWidget, SIGNAL(currentChanged(int)), statusBar(), SLOT(clearMessage()));
@@ -498,12 +502,12 @@ void KFritzWindow::save() {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 
 	if (container->isFonbook()) {
-		std::string techid = container->getFonbookModel()->getFonbook()->GetTechId();
+		std::string techid = container->getFonbookModel()->getFonbook()->getTechId();
 		fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
-		fritz::Fonbooks *fbs = fm->GetFonbooks();
+		fritz::Fonbooks *fbs = fm->getFonbooks();
 		fritz::Fonbook  *fb  = (*fbs)[techid];
-		fb->Save();
-		statusBar()->showMessage(i18n("%1 saved.", toUnicode(fb->GetTitle())), 0);
+		fb->save();
+		statusBar()->showMessage(i18n("%1 saved.", toUnicode(fb->getTitle())), 0);
 		updateFonbookState();
 	}
 }
@@ -512,13 +516,13 @@ void KFritzWindow::save() {
 void KFritzWindow::quit() {
 	// check for pending changes
 	fritz::FonbookManager *fm = fritz::FonbookManager::GetFonbookManager();
-	std::string first = fm->GetTechId();
+	std::string first = fm->getTechId();
 	if (first.length()) {
 		do {
 			if (fm->isModified()) {
-				switch (KMessageBox::warningYesNoCancel( this, i18n("Save changes to %1?", fm->GetTitle().c_str()))) {
+				switch (KMessageBox::warningYesNoCancel( this, i18n("Save changes to %1?", fm->getTitle().c_str()))) {
 				case KMessageBox::Yes :
-					fm->Save();
+					fm->save();
 					break;
 				case KMessageBox::No :
 					break;
@@ -526,8 +530,8 @@ void KFritzWindow::quit() {
 					return;
 				}
 			}
-			fm->NextFonbook();
-		} while (first != fm->GetTechId());
+			fm->nextFonbook();
+		} while (first != fm->getTechId());
 	}
 
 	QApplication::quit();
@@ -544,8 +548,8 @@ void KFritzWindow::showMissedCalls(QIndicate::Indicator* indicator __attribute__
 	if (missedCallsIndicator)
 		missedCallsIndicator->hide();
 #endif
-	fritz::CallList *callList = fritz::CallList::getCallList(false);
-	KSettings::setLastKnownMissedCall(callList->LastMissedCall());
+	fritz::CallList *callList = fritz::CallList::GetCallList(false);
+	KSettings::setLastKnownMissedCall(callList->getLastMissedCall());
 	KSettings::self()->writeConfig();
 	updateMissedCallsIndicator();
 }
@@ -661,7 +665,7 @@ void KFritzWindow::copyEntry() {
 		KCalllistProxyModel *model = container->getCalllistModel();
 		const fritz::CallEntry *ce = model->retrieveCallEntry(treeView->currentIndex());
 		fritz::FonbookEntry fe(ce->remoteName);
-		fe.AddNumber(0, ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
+		fe.addNumber(0, ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
 		QMimeData* mimeData = new MimeFonbookEntry(fe);
 		QApplication::clipboard()->setMimeData(mimeData);
 	}
@@ -683,14 +687,14 @@ void KFritzWindow::resolveNumber() {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	if (container->isCalllist()) {
 		std::string currentNumber = getCurrentNumber();
-		fritz::Fonbook::sResolveResult result = fritz::FonbookManager::GetFonbook()->ResolveToName(currentNumber);
+		fritz::Fonbook::sResolveResult result = fritz::FonbookManager::GetFonbook()->resolveToName(currentNumber);
 		if (!result.name.compare(currentNumber)) {
 			statusBar()->showMessage(i18n("%1 did not resolve.", toUnicode(currentNumber)), 0);
 		} else {
 			KCalllistProxyModel *model = container->getCalllistModel();
 			for (int pos = 0; pos < model->rowCount(QModelIndex()); pos++) {
 				fritz::CallEntry *entry = model->retrieveCallEntry(model->index(pos, 0, QModelIndex()));
-				if (entry->MatchesRemoteNumber(currentNumber))
+				if (entry->matchesRemoteNumber(currentNumber))
 					entry->remoteName = result.name;
 			}
 			statusBar()->showMessage(i18n("%1 resolves to \"%2\".", toUnicode(currentNumber), toUnicode(result.name), 0));
@@ -727,11 +731,11 @@ void KFritzWindow::updateFonbookContextMenu(const QModelIndex &current, const QM
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
 	KSelectAction *action = static_cast<KSelectAction *>(actionCollection()->action("setType"));
 	if (container->isFonbook()) {
-		if (current.column() > 0 && current.column() <= ((int) fritz::FonbookEntry::MAX_NUMBERS)) {
+		if (current.column() > 0 && current.column() <= 3) { //XXX((int) fritz::FonbookEntry::MAX_NUMBERS)) {
 			KFonbookModel *model = container->getFonbookModel();
 			const fritz::FonbookEntry *entry = model->retrieveFonbookEntry(current);
-			fritz::FonbookEntry::eType type = entry->GetType(current.column()-1);
-			if (entry->GetNumber(current.column()-1).size()) {
+			fritz::FonbookEntry::eType type = entry->getType(current.column()-1);
+			if (entry->getNumber(current.column()-1).size()) {
 				action->setCurrentItem(type-1);
 				action->setEnabled(true);
 			} else {

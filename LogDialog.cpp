@@ -29,6 +29,7 @@ LogDialog::LogDialog(QWidget *parent)
 	setButtons(Close | Reset);
 	logArea = new KTextEdit(this);
 	logArea->setReadOnly(true);
+    logArea->setFontFamily("Courier");
 	setMainWidget(logArea);
 	connect(this, SIGNAL(resetClicked()), this, SLOT(resetLog()));
 	resize(640,480);

@@ -21,10 +21,11 @@
 
 #include "KFonbookModel.h"
 
+#include <QFont>
 #include <KIcon>
 #include <KLocalizedString>
 
-#include "Log.h"
+#include "liblog++/Log.h"
 
 /**
  * KFonbookModel
@@ -42,7 +43,7 @@ enum modelColumns {
 
 KFonbookModel::KFonbookModel(std::string techID) {
 	// get the fonbook resource
-	fritz::Fonbooks *books = fritz::FonbookManager::GetFonbookManager()->GetFonbooks();
+    fritz::Fonbooks *books = fritz::FonbookManager::GetFonbookManager()->getFonbooks();
 	fonbook = (*books)[techID];
 	lastRows = 0;
 }
@@ -54,7 +55,7 @@ int KFonbookModel::rowCount(const QModelIndex & parent) const
 {
 	if (parent.isValid())
 		return 0;
-	return fonbook->GetFonbookSize();
+    return fonbook->getFonbookSize();
 }
 
 int KFonbookModel::columnCount(const QModelIndex & parent) const
@@ -94,7 +95,7 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 	if (index.parent().isValid())
 		return QVariant();
 
-	const fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(index.row());
+    const fritz::FonbookEntry *fe = fonbook->retrieveFonbookEntry(index.row());
 	if (!fe) {
 		ERR("No FonbookEntry for index row " << index.row());
 		return QVariant();
@@ -102,9 +103,9 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 
 	// Indicate important contacts using icon and tooltip
 	if (role == Qt::DecorationRole && index.column() == COLUMN_NAME)
-		return QVariant(fe->IsImportant() ? KIcon("emblem-important") : KIcon("x-office-contact"));
+        return QVariant(fe->isImportant() ? KIcon("emblem-important") : KIcon("x-office-contact"));
 	if (role == Qt::ToolTipRole && index.column() == COLUMN_NAME)
-		return QVariant(fe->IsImportant() ? i18n("Important contact") : "");
+        return QVariant(fe->isImportant() ? i18n("Important contact") : "");
 
 	// Indicate default number using bold font face and tooltip
 	if (role == Qt::FontRole || role == Qt::ToolTipRole) {
@@ -112,13 +113,13 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 		fritz::FonbookEntry::eType type = fritz::FonbookEntry::TYPE_NONE;
 		switch(index.column()) {
 		case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
-			defaultNumber = (fe->GetPriority(index.column() - COLUMN_NUMBER_FIRST) == 1);
-			type = fe->GetType(index.column() - COLUMN_NUMBER_FIRST);
+            defaultNumber = (fe->getPriority(index.column() - COLUMN_NUMBER_FIRST) == 1);
+            type = fe->getType(index.column() - COLUMN_NUMBER_FIRST);
 		}
 		QString tooltip = getTypeName(type);
 		if (defaultNumber) {
 			if (role == Qt::FontRole) {
-				QFont font;
+                QFont font;
 				font.setBold(true);
 				return font;
 			}
@@ -134,19 +135,19 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 
 	switch (index.column()) {
 	case COLUMN_NAME:
-		return QVariant(toUnicode(fe->GetName()));
+        return QVariant(toUnicode(fe->getName()));
 	case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
-		return QVariant(toUnicode(fe->GetNumber(index.column() - COLUMN_NUMBER_FIRST)));
+        return QVariant(toUnicode(fe->getNumber(index.column() - COLUMN_NUMBER_FIRST)));
 	case COLUMN_QUICKDIAL:
 		if (role == Qt::EditRole)
-			return QVariant(toUnicode(fe->GetQuickdial()));
+            return QVariant(toUnicode(fe->getQuickdial()));
 		else
-			return QVariant(toUnicode(fe->GetQuickdialFormatted()));
+            return QVariant(toUnicode(fe->getQuickdialFormatted()));
 	case COLUMN_VANITY:
 		if (role == Qt::EditRole)
-			return QVariant(toUnicode(fe->GetVanity()));
+            return QVariant(toUnicode(fe->getVanity()));
 		else
-			return QVariant(toUnicode(fe->GetVanityFormatted()));
+            return QVariant(toUnicode(fe->getVanityFormatted()));
 	default:
 		return QVariant();
 	}
@@ -154,25 +155,25 @@ QVariant KFonbookModel::data(const QModelIndex & index, int role) const {
 
 bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, int role) {
 	if (role == Qt::EditRole) {
-		const fritz::FonbookEntry *_fe = fonbook->RetrieveFonbookEntry(index.row());
+        const fritz::FonbookEntry *_fe = fonbook->retrieveFonbookEntry(index.row());
 		fritz::FonbookEntry fe(*_fe);
 		switch(index.column()) {
 		case COLUMN_NAME:
-			fe.SetName(fromUnicode(value.toString()));
+            fe.setName(fromUnicode(value.toString()));
 			break;
 		case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
-			fe.SetNumber(fromUnicode(value.toString()), index.column() - COLUMN_NUMBER_FIRST);
+            fe.setNumber(fromUnicode(value.toString()), index.column() - COLUMN_NUMBER_FIRST);
 			break;
 		case COLUMN_QUICKDIAL:
-			fe.SetQuickdial(fromUnicode(value.toString()));  //TODO: check if unique
+            fe.setQuickdial(fromUnicode(value.toString()));  //TODO: check if unique
 			break;
 		case COLUMN_VANITY:
-			fe.SetVanity(fromUnicode(value.toString()));     //TODO: check if unique
+            fe.setVanity(fromUnicode(value.toString()));     //TODO: check if unique
 			break;
 		default:
 			return false;
 		}
-		fonbook->ChangeFonbookEntry(index.row(), fe);
+        fonbook->changeFonbookEntry(index.row(), fe);
 		emit dataChanged(index, index); // we changed one element
 		return true;
 	}
@@ -182,7 +183,7 @@ bool KFonbookModel::setData (const QModelIndex & index, const QVariant & value, 
 void KFonbookModel::setDefault(const QModelIndex &index) {
 	switch(index.column()) {
 	case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
-		fonbook->SetDefault(index.row(), index.column() - COLUMN_NUMBER_FIRST);
+        fonbook->setDefault(index.row(), index.column() - COLUMN_NUMBER_FIRST);
 		break;
 	default:
 		return;
@@ -197,35 +198,35 @@ size_t KFonbookModel::mapColumnToNumberIndex(int column) {
 }
 
 void KFonbookModel::setType(const QModelIndex &index, fritz::FonbookEntry::eType type) {
-	const fritz::FonbookEntry *_fe = fonbook->RetrieveFonbookEntry(index.row());
+    const fritz::FonbookEntry *_fe = fonbook->retrieveFonbookEntry(index.row());
 	fritz::FonbookEntry fe(*_fe);
-	fe.SetType(type, mapColumnToNumberIndex(index.column()));
-	fonbook->ChangeFonbookEntry(index.row(), fe);
+    fe.setType(type, mapColumnToNumberIndex(index.column()));
+    fonbook->changeFonbookEntry(index.row(), fe);
 	emit dataChanged(index, index);
 }
 
 bool KFonbookModel::insertRows(int row, int count __attribute__((unused)), const QModelIndex &parent) {
 	beginInsertRows(parent, row, row);
 	fritz::FonbookEntry fe(i18n("New Entry").toStdString());
-	fonbook->AddFonbookEntry(fe, row);
+    fonbook->addFonbookEntry(fe, row);
 	endInsertRows();
 	return true;
 }
 
 bool KFonbookModel::insertFonbookEntry(const QModelIndex &index, fritz::FonbookEntry &fe) {
 	beginInsertRows(QModelIndex(), index.row(), index.row());
-	fonbook->AddFonbookEntry(fe, index.row());
+    fonbook->addFonbookEntry(fe, index.row());
 	endInsertRows();
 	return true;
 }
 
 const fritz::FonbookEntry *KFonbookModel::retrieveFonbookEntry(const QModelIndex &index) const {
-	return fonbook->RetrieveFonbookEntry(index.row());
+    return fonbook->retrieveFonbookEntry(index.row());
 }
 
 bool KFonbookModel::removeRows(int row, int count __attribute__((unused)), const QModelIndex &parent) {
 	beginRemoveRows(parent,row,row);
-	if(fonbook->DeleteFonbookEntry(row)){
+    if(fonbook->deleteFonbookEntry(row)){
 		endRemoveRows();
 		return true;
 	} else
@@ -270,17 +271,17 @@ void KFonbookModel::sort(int column, Qt::SortOrder order) {
 		ERR("Invalid column addressed while sorting.");
 		return;
 	}
-	fonbook->Sort(element, order == Qt::AscendingOrder);
+    fonbook->sort(element, order == Qt::AscendingOrder);
 	emit dataChanged(index(0,              0,                          QModelIndex()),
 			index(rowCount(QModelIndex()), columnCount(QModelIndex()), QModelIndex()));
 }
 
 std::string KFonbookModel::number(const QModelIndex &i) const {
 	if (!i.parent().isValid()) {
-		const fritz::FonbookEntry *fe = fonbook->RetrieveFonbookEntry(i.row());
+        const fritz::FonbookEntry *fe = fonbook->retrieveFonbookEntry(i.row());
 		switch (i.column()) {
 		case COLUMN_NUMBER_FIRST ... COLUMN_NUMBER_LAST:
-			return fe->GetNumber(i.column() - COLUMN_NUMBER_FIRST);
+            return fe->getNumber(i.column() - COLUMN_NUMBER_FIRST);
 		default:
 			return "";
 		}

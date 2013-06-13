@@ -21,10 +21,10 @@
 
 #include "KFritzModel.h"
 
-#include <Tools.h>
+#include "libconv++/CharsetConverter.h"
 
 KFritzModel::KFritzModel() {
-	inputCodec  = QTextCodec::codecForName(fritz::CharSetConv::SystemCharacterTable() ? fritz::CharSetConv::SystemCharacterTable() : "UTF-8");
+    inputCodec  = QTextCodec::codecForName(convert::CharsetConverter::GetDefaultCharset().size() ? convert::CharsetConverter::GetDefaultCharset().c_str() : "UTF-8");
 
 	// create timer, that periodically calls check() in the derived classes
 	// this is used, to refresh connected views in case the library has changed data in the meantime

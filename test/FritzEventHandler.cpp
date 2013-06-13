@@ -50,7 +50,7 @@ protected:
 };
 
 TEST_F(FritzEventHandler, Ring) {
-	window->HandleCall(false, 0, "1234", "Huber", fritz::FonbookEntry::TYPE_MOBILE, "1704", "SIP0", "Bestvalue VoIP");
+    window->handleCall(false, 0, "1234", "Huber", fritz::FonbookEntry::TYPE_MOBILE, "1704", "SIP0", "Bestvalue VoIP");
 
 	ASSERT_EQ(spy->count(), 1);
 	QList<QVariant> arguments = spy->takeFirst();
@@ -60,7 +60,7 @@ TEST_F(FritzEventHandler, Ring) {
 }
 
 TEST_F(FritzEventHandler, Call) {
-	window->HandleCall(true, 0, "3456", "Mayer", fritz::FonbookEntry::TYPE_HOME, "1805", "SIP1", "Trash VoIP");
+    window->handleCall(true, 0, "3456", "Mayer", fritz::FonbookEntry::TYPE_HOME, "1805", "SIP1", "Trash VoIP");
 
 	ASSERT_EQ(spy->count(), 1);
 	QList<QVariant> arguments = spy->takeFirst();
@@ -70,7 +70,7 @@ TEST_F(FritzEventHandler, Call) {
 }
 
 TEST_F(FritzEventHandler, Connect) {
-	window->HandleConnect(0);
+    window->handleConnect(0);
 
 	ASSERT_EQ(spy->count(), 1);
 	QList<QVariant> arguments = spy->takeFirst();

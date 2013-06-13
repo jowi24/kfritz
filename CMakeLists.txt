@@ -10,6 +10,9 @@ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${KFRITZ_SOURCE_DIR}/CMakeModules")
 
 find_package(PkgConfig REQUIRED)
 
+# --- boost -------------------------------------------------------------------
+find_package(Boost COMPONENTS system date_time thread regex REQUIRED)
+
 # --- kde includes ------------------------------------------------------------
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
@@ -38,6 +41,12 @@ endif (INDICATEQT_FOUND)
 
                     
 # --- include local libs ------------------------------------------------------
+subdirs(liblog++)
+INCLUDE_DIRECTORIES(liblog++)
+subdirs(libconv++)
+INCLUDE_DIRECTORIES(libconv++)
+subdirs(libnet++)
+INCLUDE_DIRECTORIES(libnet++)
 subdirs(libfritz++)
 INCLUDE_DIRECTORIES(libfritz++)
 
@@ -72,8 +81,8 @@ endif(GETTEXT_MSGFMT_EXECUTABLE)
 set(kfritzbox_SRCS ContainerWidget.cpp DialDialog.cpp KFritz.cpp KFritzWindow.cpp KFonbookModel.cpp 
                    KSettingsFonbooks.cpp KSettingsFritzBox.cpp KSettingsMisc.cpp KFritzModel.cpp 
                    KFritzDbusService.cpp KCalllistModel.cpp KCalllistProxyModel.cpp 
-                   LibFritzInit.cpp Log.cpp LogDialog.cpp MimeFonbookEntry.cpp QAdaptTreeView.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS} ${CC++_CFLAGS_OTHER}")
+                   LibFritzInit.cpp LogDialog.cpp MimeFonbookEntry.cpp QAdaptTreeView.cpp)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS} ${CC++_CFLAGS_OTHER} -std=gnu++11")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG") 
 qt4_add_dbus_adaptor(kfritzbox_SRCS org.kde.KFritz.xml KFritzDbusService.h KFritzDbusService KFritzDbusServiceAdaptor KFritzDbusServiceAdaptor)
 
@@ -82,7 +91,8 @@ kde4_add_ui_files(kfritzbox_SRCS KSettingsFritzBox.ui KSettingsFonbooks.ui KSett
 configure_file(pkg-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/pkg-config.h)
 kde4_add_library(kfritzstatic STATIC ${kfritzbox_SRCS}) 
 kde4_add_executable(kfritz main.cpp)
-target_link_libraries(kfritz kfritzstatic fritz++ 
+target_link_libraries(kfritz kfritzstatic fritz++ net++ log++ conv++
+                      ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_REGEX_LIBRARY}
                       ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
                       ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS})
 if (INDICATEQT_FOUND)
@@ -95,7 +105,8 @@ if (EXISTS ${KFRITZ_SOURCE_DIR}/test)
   include_directories(test)
   AUX_SOURCE_DIRECTORY(test TESTFILES)
   kde4_add_unit_test(kfritztest ${TESTFILES} test/gtest/gtest-all.cc test/gtest/gtest_main.cc)
-  target_link_libraries(kfritztest kfritzstatic fritz++ 
+  target_link_libraries(kfritztest kfritzstatic fritz++ net++ log++ conv++
+                        ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_REGEX_LIBRARY}
                         ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
                         ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS})
   if (INDICATEQT_FOUND)

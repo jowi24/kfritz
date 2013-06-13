@@ -24,7 +24,7 @@
 
 #include <QWidget>
 
-#include <FonbookManager.h>
+#include "libfritz++/FonbookManager.h"
 
 #include "ui_KSettingsFonbooks.h"
 

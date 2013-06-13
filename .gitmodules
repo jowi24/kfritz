@@ -1,3 +1,12 @@
 [submodule "libfritz++"]
 	path = libfritz++
 	url = git://git.joachim-wilke.de/libfritz++
+[submodule "liblog++"]
+	path = liblog++
+	url = git://git.joachim-wilke.de/liblog++
+[submodule "libconv++"]
+	path = libconv++
+	url = git://git.joachim-wilke.de/libconv++
+[submodule "libnet++"]
+	path = libnet++
+	url = git://git.joachim-wilke.de/libnet++.git
