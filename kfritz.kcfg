@@ -10,6 +10,12 @@
       <whatsthis>This is the host name of the Fritz!Box in your network. Most probably this is "fritz.box". As an alternative you can also use the IP address instead of the host name.</whatsthis>
       <default>fritz.box</default>
     </entry>
+    <entry name="Username" type="String">
+      <label>Username</label>
+      <tooltip>The username for authentication to the Fritz!Box.</tooltip>
+      <whatsthis>This can be empty, if authentication without username is configured (default for older FB firmware version).</whatsthis>
+      <default></default>
+    </entry>
     <entry name="CountryCode" type="String">
       <label>Country code</label>
       <tooltip>The country code the Fritz!Box is located in.</tooltip>

@@ -102,13 +102,14 @@ KFritzWindow::KFritzWindow()
 		INF("No access to KWallet.");
 	}
 
+    fbUsername = KSettings::username();
 	if (requestPassword)
-		savetoWallet = showPasswordDialog(fbPassword, wallet != NULL);
+        savetoWallet = showPasswordDialog(fbUsername, fbPassword, wallet != NULL);
 
 	tabWidget = NULL;
 
-	libFritzInit = new LibFritzInit(fbPassword, this);
-	connect(libFritzInit, SIGNAL(ready(bool)),       this, SLOT(showStatusbarBoxBusy(bool)));
+    libFritzInit = new LibFritzInit(fbUsername, fbPassword, this);
+    connect(libFritzInit, SIGNAL(ready(bool)),       this, SLOT(showStatusbarBoxBusy(bool)));
 	connect(libFritzInit, SIGNAL(invalidPassword()), this, SLOT(reenterPassword()));
 	connect(libFritzInit, SIGNAL(ready(bool)),       this, SLOT(updateMainWidgets(bool)));
 	libFritzInit->start();
@@ -226,14 +227,14 @@ void KFritzWindow::updateConfiguration(const QString &dialogName __attribute__((
     // clean up before changing the configuration
 	fritz::Config::Shutdown();
 
-	libFritzInit->setPassword(fbPassword);
+    libFritzInit->setCredentials(fbUsername, fbPassword);
 	libFritzInit->start();
 }
 
 void KFritzWindow::reenterPassword() {
 	KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
 
-	bool keepPassword = showPasswordDialog(fbPassword, wallet != NULL);
+    bool keepPassword = showPasswordDialog(fbUsername, fbPassword, wallet != NULL);
 
 	if (wallet && keepPassword)
 		saveToWallet(wallet);
@@ -241,6 +242,9 @@ void KFritzWindow::reenterPassword() {
 }
 
 void KFritzWindow::saveToWallet(KWallet::Wallet *wallet) {
+    KSettings::setUsername(fbUsername);
+    KSettings::self()->writeConfig();
+
 	DBG("Trying to save password...");
 	if (wallet->hasFolder(appName) || wallet->createFolder(appName)) {
 		wallet->setFolder(appName);
@@ -252,11 +256,14 @@ void KFritzWindow::saveToWallet(KWallet::Wallet *wallet) {
 	}
 }
 
-bool KFritzWindow::showPasswordDialog(QString &password, bool offerSaving) {
-	KPasswordDialog pwd(this, offerSaving ? KPasswordDialog::ShowKeepPassword : KPasswordDialog::NoFlags);
-	pwd.setPrompt(i18n("Enter your Fritz!Box password"));
+bool KFritzWindow::showPasswordDialog(QString &username, QString &password, bool offerSaving) {
+    KPasswordDialog pwd(this, (offerSaving ? KPasswordDialog::ShowKeepPassword : KPasswordDialog::NoFlags) | KPasswordDialog::ShowUsernameLine);
+    pwd.setUsername(fbUsername);
+    pwd.setPassword(fbPassword);
+    pwd.setPrompt(i18n("Enter your Fritz!Box credentials. Leave username empty if you do not have one."));
 	pwd.exec();
 	password = pwd.password();
+    username = pwd.username();
 	return pwd.keepPassword();
 }
 

@@ -47,7 +47,6 @@
 namespace QIndicate { class Indicator; class Server; }
 #endif
 
-
 class KFritzWindow : public KXmlGuiWindow, public fritz::EventHandler
 {
 	Q_OBJECT
@@ -56,6 +55,7 @@ private:
 	LogDialog *logDialog;
 	LibFritzInit *libFritzInit;
 	KFritzDbusService *dbusIface;
+    QString fbUsername;
 	QString fbPassword;
 	QString appName;
 	QString programName;
@@ -66,7 +66,7 @@ private:
 	QTextCodec *inputCodec;
 	QString toUnicode(const std::string string) const;
 	void saveToWallet(KWallet::Wallet *wallet);
-	bool showPasswordDialog(QString &password, bool offerSaving = false);
+    bool showPasswordDialog(QString &username, QString &password, bool offerSaving = false);
 	void setupActions();
     void initIndicator();
     void setProgressIndicator(QString message = QString());

@@ -29,11 +29,12 @@
 class LibFritzInit : public QThread {
 	Q_OBJECT;
 public:
-	LibFritzInit(QString password, fritz::EventHandler *eventHandler);
+    LibFritzInit(QString username, QString password, fritz::EventHandler *eventHandler);
 	virtual ~LibFritzInit();
 	void run();
-	void setPassword(QString password);
+    void setCredentials(QString username, QString password);
 private:
+    QString username;
 	QString password;
 	fritz::EventHandler *eventHandler;
 Q_SIGNALS:

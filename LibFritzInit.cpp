@@ -36,10 +36,10 @@
 #include "KSettings.h"
 #include "liblog++/Log.h"
 
-LibFritzInit::LibFritzInit(QString password, fritz::EventHandler *eventHandler) {
+LibFritzInit::LibFritzInit(QString username, QString password, fritz::EventHandler *eventHandler) {
 	setTerminationEnabled(true);
 	this->eventHandler = eventHandler;
-	setPassword(password);
+    setCredentials(username, password);
 }
 
 LibFritzInit::~LibFritzInit() {
@@ -58,7 +58,7 @@ void LibFritzInit::run() {
 		INF("Warning: Logging personal information requested!")
 	}
 	// start libfritz++
-	fritz::Config::Setup(KSettings::hostname().toStdString(), password.toStdString(), args->isSet("log-personal-info"));
+    fritz::Config::Setup(KSettings::hostname().toStdString(), username.toStdString(), password.toStdString(), args->isSet("log-personal-info"));
 
 	fritz::Config::SetupConfigDir(KStandardDirs::locateLocal("data", KGlobal::mainComponent().aboutData()->appName()+'/').toStdString());
 
@@ -93,6 +93,7 @@ void LibFritzInit::run() {
 	emit ready(true);
 }
 
-void LibFritzInit::setPassword(QString password) {
+void LibFritzInit::setCredentials(QString username, QString password) {
+    this->username = username;
 	this->password = password;
 }
