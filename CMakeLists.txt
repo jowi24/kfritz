@@ -22,11 +22,6 @@ include_directories(${KDE4_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 include("FindGcryptConfig")
 gcrypt_check(GCRYPT REQUIRED gcrypt)
 
-# --- gnu common cpp library --------------------------------------------------
-pkg_check_modules(CC++ REQUIRED libccgnu2 libccext2)
-include_directories(${CC++_INCLUDE_DIRS})
-link_directories(${CC++_LIBRARY_DIRS})
-
 # --- support for libindicate -------------------------------------------------
 pkg_check_modules(INDICATEQT indicate-qt>=0.2.2)
 macro_log_feature(INDICATEQT_FOUND "indicate-qt" "QT bindings for libindicate" 
@@ -82,7 +77,8 @@ set(kfritzbox_SRCS ContainerWidget.cpp DialDialog.cpp KFritz.cpp KFritzWindow.cp
                    KSettingsFonbooks.cpp KSettingsFritzBox.cpp KSettingsMisc.cpp KFritzModel.cpp 
                    KFritzDbusService.cpp KCalllistModel.cpp KCalllistProxyModel.cpp 
                    LibFritzInit.cpp LogDialog.cpp MimeFonbookEntry.cpp QAdaptTreeView.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS} ${CC++_CFLAGS_OTHER} -std=gnu++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} 
+${GCRYPT_CFLAGS} ${CC++_CFLAGS_OTHER} -std=gnu++11 -D_GLIBCXX_USE_NANOSLEEP")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG") 
 qt4_add_dbus_adaptor(kfritzbox_SRCS org.kde.KFritz.xml KFritzDbusService.h KFritzDbusService KFritzDbusServiceAdaptor KFritzDbusServiceAdaptor)
 
