@@ -12,6 +12,7 @@ find_package(PkgConfig REQUIRED)
 
 # --- boost -------------------------------------------------------------------
 find_package(Boost COMPONENTS system date_time thread regex REQUIRED)
+find_package(Threads)
 
 # --- kde includes ------------------------------------------------------------
 find_package(KDE4 REQUIRED)
@@ -77,8 +78,7 @@ set(kfritzbox_SRCS ContainerWidget.cpp DialDialog.cpp KFritz.cpp KFritzWindow.cp
                    KSettingsFonbooks.cpp KSettingsFritzBox.cpp KSettingsMisc.cpp KFritzModel.cpp 
                    KFritzDbusService.cpp KCalllistModel.cpp KCalllistProxyModel.cpp 
                    LibFritzInit.cpp LogDialog.cpp MimeFonbookEntry.cpp QAdaptTreeView.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} 
-${GCRYPT_CFLAGS} ${CC++_CFLAGS_OTHER} -std=gnu++11 -D_GLIBCXX_USE_NANOSLEEP")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} ${GCRYPT_CFLAGS} ${CC++_CFLAGS_OTHER} -std=gnu++11 -D_GLIBCXX_USE_NANOSLEEP")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -O0 -Wall -D_GLIBCXX_DEBUG") 
 qt4_add_dbus_adaptor(kfritzbox_SRCS org.kde.KFritz.xml KFritzDbusService.h KFritzDbusService KFritzDbusServiceAdaptor KFritzDbusServiceAdaptor)
 
@@ -90,7 +90,7 @@ kde4_add_executable(kfritz main.cpp)
 target_link_libraries(kfritz kfritzstatic fritz++ net++ log++ conv++
                       ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_REGEX_LIBRARY}
                       ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
-                      ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS})
+                      ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS} ${CMAKE_THREAD_LIBS_INIT})
 if (INDICATEQT_FOUND)
 	target_link_libraries(kfritz ${INDICATEQT_LIBRARIES})
 endif (INDICATEQT_FOUND)
@@ -104,7 +104,7 @@ if (EXISTS ${KFRITZ_SOURCE_DIR}/test)
   target_link_libraries(kfritztest kfritzstatic fritz++ net++ log++ conv++
                         ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_REGEX_LIBRARY}
                         ${KDE4_KDEUI_LIBS} ${KDE4_KNOTIFYCONFIG_LIBRARY} 
-                        ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS})
+                        ${GCRYPT_LIBRARIES} ${CC++_LDFLAGS} ${CMAKE_THREAD_LIBS_INIT})
   if (INDICATEQT_FOUND)
 	  target_link_libraries(kfritztest ${INDICATEQT_LIBRARIES})
   endif (INDICATEQT_FOUND)
