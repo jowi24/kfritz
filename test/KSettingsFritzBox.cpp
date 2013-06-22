@@ -54,12 +54,14 @@ TEST_F(KSettingsFritzBox, SettingsFritzBox) {
 //	window->showSettings();
 	QWidget w;
 	::KSettingsFritzBox *fb = new ::KSettingsFritzBox(&w);
+	delete fb;
 }
 
 TEST_F(KSettingsFritzBox, SettingsFonbooks) {
 //	window->showSettings();
 	QWidget w;
 	::KSettingsFonbooks *fb = new ::KSettingsFonbooks(&w);
+	delete fb;
 }
 
 }
