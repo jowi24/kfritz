@@ -49,7 +49,7 @@ fetch-po:
 	fi
 	
 update-po: fetch-po
-	svn up l10n-kde4
+	-svn up l10n-kde4
 	for LCODE in `cat l10n-kde4/subdirs`; do \
 	if test -e l10n-kde4/$$LCODE/messages/playground-network/kfritz.po; then \
 	cp l10n-kde4/$$LCODE/messages/playground-network/kfritz.po po/$$LCODE.po ; fi ; done
