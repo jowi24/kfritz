@@ -43,7 +43,7 @@ dist: clean update-po
 	        
 fetch-po:
 	@if test ! -d l10n-kde4; \
-	then svn co --depth=immediates svn+ssh://joachimwilke@svn.kde.org/home/kde/trunk/l10n-kde4/ ; \
+	then svn co --depth=immediates  svn://anonsvn.kde.org/home/kde/trunk/l10n-kde4/ ; \
 	for LCODE in `cat l10n-kde4/subdirs`; do svn up --set-depth=empty l10n-kde4/$$LCODE/messages/ ; done ; \
 	for LCODE in `cat l10n-kde4/subdirs`; do svn up --set-depth=files l10n-kde4/$$LCODE/messages/playground-network/ ; done ; \
 	fi
