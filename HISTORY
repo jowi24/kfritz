@@ -334,3 +334,9 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
   * Further fixes to allow access to older FB firmwares
   (closes #312204 in KDE bugtracker, reported by sofasurfer)
   
+2013-12-01: Version 0.0.13
+- Add support for username authentication
+  (closes #320853 in KDE bugtracker)
+- Fix some compiler warnings
+
+  
