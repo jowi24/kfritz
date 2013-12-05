@@ -398,7 +398,7 @@ void KFritzWindow::updateMissedCallsIndicator() {
 	if (!callList)
 		return;
 #ifdef INDICATEQT_FOUND
-	size_t missedCallCount = callList->MissedCalls(KSettings::lastKnownMissedCall());
+	size_t missedCallCount = callList->missedCalls(KSettings::lastKnownMissedCall());
 	missedCallsIndicator->setCountProperty(missedCallCount);
 	if (missedCallCount == 0)
 		missedCallsIndicator->hide();
