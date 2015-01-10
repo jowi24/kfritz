@@ -1,12 +1,12 @@
 [submodule "libfritz++"]
 	path = libfritz++
-	url = git://git.joachim-wilke.de/libfritz++
+	url = https://github.com/jowi24/libfritzpp.git
 [submodule "liblog++"]
 	path = liblog++
-	url = git://git.joachim-wilke.de/liblog++
+	url = https://github.com/jowi24/liblogpp.git
 [submodule "libconv++"]
 	path = libconv++
-	url = git://git.joachim-wilke.de/libconv++
+	url = https://github.com/jowi24/libconvpp.git
 [submodule "libnet++"]
 	path = libnet++
-	url = git://git.joachim-wilke.de/libnet++.git
+	url = https://github.com/jowi24/libnetpp.git
