@@ -339,4 +339,9 @@ Fritz!Box call monitor for KDE 'kfritz' Revision History
   (closes #320853 in KDE bugtracker)
 - Fix some compiler warnings
 
+2015-03-25: Version 0.0.14
+- Fix compiler issue with libindicate installed 
+  (closes #329249 in KDE bugtracker)
+- Fix crash on empty fritz phone book entries
+  (closes #330733 in KDE bugtracker)
   

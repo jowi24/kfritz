@@ -28,7 +28,7 @@
 
 #include "KSettings.h"
 
-static const char *VERSION        = "0.0.13";
+static const char *VERSION        = "0.0.14";
 
 int main (int argc, char *argv[]) {
 	// init KDE-stuff
@@ -47,12 +47,12 @@ int main (int argc, char *argv[]) {
 			// The license this code is released under
 			KAboutData::License_GPL,
 			// Copyright Statement
-			ki18n("(c) 2008-2012"),
+			ki18n("(c) 2008-2015"),
 			// Optional text shown in the About box.
 			// Can contain any information desired.
 			ki18n("Developed by Matthias Becker and Joachim Wilke."),
 			// The program homepage string.
-			"http://www.joachim-wilke.de/kfritz.html",
+			"https://projects.kde.org/projects/playground/network/kfritz",
 			// The bug report email address
 			"kfritz@joachim-wilke.de");
 
