@@ -54,6 +54,7 @@ Sound=KDE-Im-New-Mail.ogg
 
 [Event/callConnected]
 Name=Call got connected
+Name[bs]=Poziv je povezan
 Name[cs]=Hovor byl spojen
 Name[de]=Der Anruf wurde angenommen
 Name[es]=La llamada se ha establecido
@@ -76,6 +77,7 @@ Action=Popup
 
 [Event/callDisconnected]
 Name=Call got disconnected
+Name[bs]=Poziv je odspojen
 Name[cs]=Hovor byl odpojen
 Name[de]=Der Anruf wurde beendet
 Name[es]=La llamada se ha desconectado
