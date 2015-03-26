@@ -665,16 +665,20 @@ void KFritzWindow::copyEntry() {
 	if (container->isFonbook()) {
 		KFonbookModel *model = container->getFonbookModel();
 		const fritz::FonbookEntry *fe = model->retrieveFonbookEntry(treeView->currentIndex());
-		QMimeData* mimeData = new MimeFonbookEntry(*fe);
-		QApplication::clipboard()->setMimeData(mimeData);
+		if (fe) {
+			QMimeData* mimeData = new MimeFonbookEntry(*fe);
+			QApplication::clipboard()->setMimeData(mimeData);
+		}
 	}
 	if (container->isCalllist()) {
 		KCalllistProxyModel *model = container->getCalllistModel();
 		const fritz::CallEntry *ce = model->retrieveCallEntry(treeView->currentIndex());
-		fritz::FonbookEntry fe(ce->remoteName);
-		fe.addNumber(ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
-		QMimeData* mimeData = new MimeFonbookEntry(fe);
-		QApplication::clipboard()->setMimeData(mimeData);
+		if (ce) {
+			fritz::FonbookEntry fe(ce->remoteName);
+			fe.addNumber(ce->remoteNumber, fritz::FonbookEntry::TYPE_NONE);
+			QMimeData* mimeData = new MimeFonbookEntry(fe);
+			QApplication::clipboard()->setMimeData(mimeData);
+		}
 	}
 }
 
@@ -736,20 +740,26 @@ void KFritzWindow::updateCallListContextMenu(const QModelIndex &current, const Q
 
 void KFritzWindow::updateFonbookContextMenu(const QModelIndex &current, const QModelIndex &previous __attribute__((unused))) {
 	ContainerWidget *container = static_cast<ContainerWidget *>(tabWidget->currentWidget());
-	KSelectAction *action = static_cast<KSelectAction *>(actionCollection()->action("setType"));
 	if (container->isFonbook()) {
+		KFonbookModel *model = container->getFonbookModel();
+		KSelectAction *setTypeAction = static_cast<KSelectAction *>(actionCollection()->action("setType"));
 		if (current.column() > 0 && current.column() <= 3) { //XXX((int) fritz::FonbookEntry::MAX_NUMBERS)) {
-			KFonbookModel *model = container->getFonbookModel();
 			const fritz::FonbookEntry *entry = model->retrieveFonbookEntry(current);
 			fritz::FonbookEntry::eType type = entry->getType(current.column()-1);
 			if (entry->getNumber(current.column()-1).size()) {
-				action->setCurrentItem(type-1);
-				action->setEnabled(true);
+				setTypeAction->setCurrentItem(type-1);
+				setTypeAction->setEnabled(true);
 			} else {
-				action->setEnabled(false);
+				setTypeAction->setEnabled(false);
 			}
 		} else {
-			action->setEnabled(false);
+			setTypeAction->setEnabled(false);
+		}
+		KSelectAction *copyNumberAction = static_cast<KSelectAction *>(actionCollection()->action("copyNumber"));
+		if (model->retrieveFonbookEntry(current)) {
+			copyNumberAction->setEnabled(true);
+		} else {
+			copyNumberAction->setEnabled(false);
 		}
 	}
 }
